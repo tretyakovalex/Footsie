@@ -1,7 +1,6 @@
 import { Text, View, Image } from 'react-native';
 
 import { SmallTableDesign } from '../../../../../styles/main-styles/statistics/search-page-styles';
-import { Colours } from '../../../../../styles/global-styles/global';
 
 // Allocate correct colours to results
 function TeamRecentPerformance({ result }) {

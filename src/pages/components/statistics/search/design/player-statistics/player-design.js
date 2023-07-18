@@ -1,6 +1,6 @@
-import { View } from 'react-native';
+import { View, ScrollView, Text } from 'react-native';
 
-import { DisplayTopSection } from './display-searched';
+import { DisplayTopSection } from '../display-searched';
 
 // - - - TEMPORARY DATA - - -
 const TEMPORARY_DATA = {
@@ -39,7 +39,10 @@ export default function PlayerDisplay() {
             </View>
 
             {/* Bottom Section: Goals, Assist etc */} 
-            <View style={{flex: 4}}></View>
+            <View style={{flex: 4}}>
+                <ScrollView style={{flex: 1, borderWidth: 1, borderColor: 'red', padding: 5}}>
+                </ScrollView>
+            </View>
 
         </View>
     )

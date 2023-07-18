@@ -51,7 +51,7 @@ function IndividualOptions({ option, setSearchInput }) {
         pressAnimation.setValue(0);
       });
 
-    setSearchInput(name)
+      setSearchInput(name)
       console.log(name)
     };
   

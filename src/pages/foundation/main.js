@@ -5,8 +5,12 @@ import { MainStructure } from '../../styles/global-styles/app-structure';
 import { MatchTemplate, LeagueTemplate } from '../components/matches/matches';
 import API_Matches from '../components/matches/matchAPI';
 import { MatchFoundation } from '../../styles/main-styles/matches/foundation';
+
+// Display Search Page
 import Search from '../components/statistics/search/search';
-import PlayerDisplay from '../components/statistics/search/design/player-design';
+
+// Display Player Stats
+import PlayerDisplay from '../components/statistics/search/design/player-statistics/player-design';
 
 export default function Main({ LiveTab, LiveNav, SearchInput, setSearchInput, setSearchStatus, searchStatus }) {
   const [refreshing, setRefreshing] = useState(false);
