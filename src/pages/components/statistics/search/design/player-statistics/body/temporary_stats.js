@@ -1,4 +1,10 @@
 export const TEMP_SAKA_STATS = {
+    "Status": {
+        "retired": false,
+        "free agent": false,
+        "playing": true,
+        "on loan": false
+    },
     "Teams": {
         "Arsenal": {
             "TeamName": "Arsenal",

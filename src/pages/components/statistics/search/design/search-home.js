@@ -112,9 +112,12 @@ function SearchOptions({ userOptions, setSearchInput }) {
 // TO DO:
 // - Auto Suggestion: <SearchOptions userOptions={AutoSuggestion}
 //        Base on popularity: User Popularity / General Popularity
+// - Rename parameters
 
 export default function SearchPage({searchInput, setSearch, setSearchStatus}) {
     
+    const [ searchResults, setSearchResults ] = useState(null);
+
     // - - - TEMPORARY OPTIONS - - -
     const TEMPORARY_OPTIONS = [
         {playerName: 'Erling Halaand', ranking: 1},
