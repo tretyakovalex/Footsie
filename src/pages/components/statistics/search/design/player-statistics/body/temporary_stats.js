@@ -8,23 +8,33 @@ export const TEMP_SAKA_STATS = {
     "Teams": {
         "Arsenal": {
             "TeamName": "Arsenal",
-            "TeamLogo": "https://example.com/arsenal_logo.png"
+            "TeamLogo": "https://example.com/arsenal_logo.png",
+            "Joined": 2018,
+            "Left": 2025
         },
         "Manchester City": {
             "TeamName": "Manchester City",
-            "TeamLogo": "https://example.com/man_city_logo.png"
+            "TeamLogo": "https://example.com/man_city_logo.png",
+            "Joined": 2026,
+            "Left": 2030
         },
         "Real Madrid": {
             "TeamName": "Real Madrid",
-            "TeamLogo": "https://example.com/real_madrid_logo.png"
+            "TeamLogo": "https://example.com/real_madrid_logo.png",
+            "Joined": 2031,
+            "Left": 2035
         },
         "Bayern Munich": {
             "TeamName": "Bayern Munich",
-            "TeamLogo": "https://example.com/bayern_munich_logo.png"
+            "TeamLogo": "https://example.com/bayern_munich_logo.png",
+            "Joined": 2036,
+            "Left": 2040
         },
         "Barcelona": {
             "TeamName": "Barcelona",
-            "TeamLogo": "https://example.com/barcelona_logo.png"
+            "TeamLogo": "https://example.com/barcelona_logo.png",
+            "Joined": 2041,
+            "Left": 2045
         }
     },
     "Attacking": {

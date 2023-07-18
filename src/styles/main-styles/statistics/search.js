@@ -52,7 +52,7 @@ export const SearchBarStyle = StyleSheet.create({
         textAlign: 'center',
         color: 'red',
         fontSize: 20,
-    }
+    },
 
 
 })

@@ -7,13 +7,20 @@ import { useState, useRef } from 'react';
 import { SearchBarStyle, SearchOptionStyle, SearchPageStyle } from '../../../../../styles/main-styles/statistics/search'
 
 // Initial Search Bar
+// TODO: Create loading page
 function SearchBar({searchInput, setSearchInput, setSearchStatus}) {
 
     // - - - TEMPORARY FUNCTION - - - 
     const hardSearch = () => {
         setSearchInput(searchInput);
         setSearchStatus(true);
+        setIsLoading(true);
         console.log(searchInput);
+
+        // Simulate API call with setTimeout
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 5000); // 5000 milliseconds = 5 seconds
     }
 
     // TO DO:
@@ -115,8 +122,6 @@ function SearchOptions({ userOptions, setSearchInput }) {
 // - Rename parameters
 
 export default function SearchPage({searchInput, setSearch, setSearchStatus}) {
-    
-    const [ searchResults, setSearchResults ] = useState(null);
 
     // - - - TEMPORARY OPTIONS - - -
     const TEMPORARY_OPTIONS = [
@@ -137,10 +142,11 @@ export default function SearchPage({searchInput, setSearch, setSearchStatus}) {
         {playerName: 'Manchester United', ranking: 3},
         {playerName: 'Manchester City', ranking: 2}
     ];
-    
     return (
         <View style={SearchPageStyle.container}>
             <SearchBar searchInput={searchInput} setSearchInput={setSearch} setSearchStatus={setSearchStatus} />
+
+
             <SearchOptions userOptions={TEMPORARY_OPTIONS} setSearchInput={setSearch} />
         </View>
     )

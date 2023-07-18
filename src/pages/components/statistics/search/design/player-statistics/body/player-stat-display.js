@@ -1,17 +1,21 @@
 import { Text, ScrollView } from 'react-native';
 
+import DisplayPlayerClubHistory from './design/player-club-history';
+
 // Teams player has played for
+// TODO: Design DisplayPlayerClubHistory
 function PlayerTeamHistory({Player}) {
     return (
         <View style={{flex: 1, flexDirection: 'column', }}>
             <Text style={{fontSize: 16}}>Player History</Text>
 
-            <ScrollView style={{flex: 1, backgroundColor: 'red'}}>
-                {/* TODO: Player history goes here */}
-            </ScrollView>
+            <DisplayPlayerClubHistory PlayerClubs={Player.Teams} />
         </View>
     )
 }
+
+// TODO:
+// - Look at using the same component for attacking and defensive stats
 
 // Player attacking stats. Every team played for
 function PlayerAttackingStats({Player}) {
