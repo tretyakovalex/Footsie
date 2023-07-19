@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React from 'react';
 import { View, Text, Image, ScrollView } from 'react-native';
 
 function Team({PlayerTeamObject, TeamName}) {
@@ -13,12 +13,18 @@ function Team({PlayerTeamObject, TeamName}) {
 export default function PlayerStatTemplate({PlayerStatistics, PlayerStyle, Stats}) {
 
     const PlayerTeamHistory = PlayerStatistics.Teams["All Teams"];
+    const PlayStyle = PlayerStyle ? "Attacking" : "Defensive";
 
     return (
         <View style={{flex: 1, flexDirection: 'column'}}>
 
             {/* Display Header */}
             <View style={{flex: 1, flexDirection: 'row'}}>
+                
+                <View>
+                    <Text>Team</Text>
+                </View>
+
                 {(Stats.map((statName, index) => (
                     <View key={index}>
                         <Text>{statName}</Text>
@@ -28,12 +34,21 @@ export default function PlayerStatTemplate({PlayerStatistics, PlayerStyle, Stats
 
 
             <View>
-                {(PlayerTeamHistory.map((team, index) => (
-                    // Display Team Name and Emblem
+            {PlayerTeamHistory.map((team, index) => (
+                <React.Fragment key={index}>
+                    {/* Display Team Name and Emblem */}
+                    <Team PlayerTeamObject={PlayerStatistics.Teams[team]} TeamName={team} />
+            
+                    {/* Display Stats */}
+                    {Stats.map((stat, statIndex) => (
+                        <View key={statIndex}>
+                            <Text>{PlayerStatistics[PlayStyle][team][stat]}</Text>
+                        </View>
+                    ))}
+                </React.Fragment>
+            ))}
+        </View>
 
-                    // Display Stats
-                )))}
-            </View>
         </View>
     )
 }

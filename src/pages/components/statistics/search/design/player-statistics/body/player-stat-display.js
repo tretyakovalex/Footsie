@@ -21,7 +21,7 @@ function PlayerTeamHistory({Player}) {
 // Player attacking stats. Every team played for
 function PlayerAttackingStats({Player}) {
 
-    const AttackingStats = ["Team", "Goals", "Assists", "Shots on Target", "Key Passes", "Dribbles Completed", "Crosses"];
+    const AttackingStats = ["Goals", "Assists", "Shots on Target", "Key Passes", "Dribbles Completed", "Crosses"];
 
     return (
         <View style={{flex: 1, flexDirection: 'column', padding: 5}}>
@@ -41,7 +41,7 @@ function PlayerAttackingStats({Player}) {
 // Player defensive stats. Every team played for 
 function PlayerDefensiveStats({Player}) {
 
-    const DefensiveStats = ["Team", "Tackles", "Interceptions", "Clearances", "Aerial Duels Won", "Recoveries", "Fouls Comitted"];
+    const DefensiveStats = ["Tackles", "Interceptions", "Clearances", "Aerial Duels Won", "Recoveries", "Fouls Committed"];
 
     return (
         <View style={{flex: 1, flexDirection: 'column', padding: 5}}>
