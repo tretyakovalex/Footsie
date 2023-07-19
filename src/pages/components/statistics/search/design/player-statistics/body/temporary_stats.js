@@ -1,6 +1,7 @@
 
 // TODO:
 // - Put all the teams into one an array
+// - Get all team logo
 
 export const TEMP_SAKA_STATS = {
     "Status": {
