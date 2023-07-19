@@ -12,6 +12,7 @@ export const TEMP_SAKA_STATS = {
     },
     "Teams": {
         "All Teams": ["Arsenal", "Manchester City", "Real Madrid", "Bayern Munich", "Barcelona"],
+        "Current Team": "Arsenal",
         "Arsenal": {
             "TeamName": "Arsenal",
             "TeamLogo": "https://logos-world.net/wp-content/uploads/2020/05/Arsenal-Logo-700x394.png",
@@ -20,25 +21,25 @@ export const TEMP_SAKA_STATS = {
         },
         "Manchester City": {
             "TeamName": "Manchester City",
-            "TeamLogo": "",
+            "TeamLogo": "https://upload.wikimedia.org/wikipedia/en/thumb/e/eb/Manchester_City_FC_badge.svg/190px-Manchester_City_FC_badge.svg.png",
             "Joined": 2026,
             "Left": 2030
         },
         "Real Madrid": {
             "TeamName": "Real Madrid",
-            "TeamLogo": "",
+            "TeamLogo": "https://logowik.com/content/uploads/images/545_realmadridfc.jpg",
             "Joined": 2031,
             "Left": 2035
         },
         "Bayern Munich": {
             "TeamName": "Bayern Munich",
-            "TeamLogo": "",
+            "TeamLogo": "https://logowik.com/content/uploads/images/857_fcbayernmunich.jpg",
             "Joined": 2036,
             "Left": 2040
         },
         "Barcelona": {
             "TeamName": "Barcelona",
-            "TeamLogo": "",
+            "TeamLogo": "https://logowik.com/content/uploads/images/802_fcbarcelona.jpg",
             "Joined": 2041,
             "Left": 2045
         }

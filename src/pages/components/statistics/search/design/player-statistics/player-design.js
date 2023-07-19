@@ -1,6 +1,8 @@
 import { View, ScrollView, Text } from 'react-native';
 
 import { DisplayTopSection } from '../display-searched';
+import { TEMP_SAKA_STATS } from './body/temporary_stats';
+import { PlayerStatDisplay } from './body/player-stat-display';
 
 // - - - TEMPORARY DATA - - -
 const TEMPORARY_DATA = {
@@ -41,6 +43,7 @@ export default function PlayerDisplay() {
             {/* Bottom Section: Goals, Assist etc */} 
             <View style={{flex: 4}}>
                 <ScrollView style={{flex: 1, borderWidth: 1, borderColor: 'red', padding: 5}}>
+                    <PlayerStatDisplay Player={TEMP_SAKA_STATS}/>
                 </ScrollView>
             </View>
 

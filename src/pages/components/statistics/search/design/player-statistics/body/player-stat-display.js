@@ -2,6 +2,7 @@ import { Text, ScrollView } from 'react-native';
 
 import DisplayPlayerClubHistory from './design/player-club-history';
 import PlayerStatTemplate from './design/player-stats';
+import PlayerCurrentTeam from './design/player-current-season';
 
 // Teams player has played for
 // TODO: Design DisplayPlayerClubHistory
@@ -60,6 +61,9 @@ function PlayerDefensiveStats({Player}) {
 
 // Player stats for the current season (If actively playing)
 function PlayerCurrentSeasonStats({Player}) {
+
+    const CurrentStats = ["Total Appearances", "Goals", "Assists", "Shots on Target", "Key Passes", "Dribbles Completed", "Crosses"]
+
     return (
         <View style={{flex: 1, flexDirection: 'column', }}>
             <Text style={{fontSize: 16}}>
@@ -69,6 +73,7 @@ function PlayerCurrentSeasonStats({Player}) {
 
             <ScrollView style={{flex: 1, backgroundColor: 'orange'}}>
                 {/* TODO: Current Season Stats Goes Here */}
+                <PlayerCurrentTeam Player={Player} Stats={CurrentStats} />
             </ScrollView>
         </View>
     )
@@ -80,16 +85,16 @@ export default function PlayerStatDisplay({Player}) {
         <View style={{flexDirection: 'column'}}>
 
             {/* Top Section: Player Team History */}
-            <PlayerTeamHistory />
+            <PlayerTeamHistory Player={Player} />
 
             {/* Middle Section: Attacking and Defensive Stats */}
             <View style={{flex: 3, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', backgroundColor: 'red'}}>
-                <PlayerAttackingStats />
-                <PlayerDefensiveStats />
+                <PlayerAttackingStats Player={Player} />
+                <PlayerDefensiveStats Player={Player} />
             </View>
 
             {/* Bottom Section */}
-            <PlayerCurrentSeasonStats />
+            <PlayerCurrentSeasonStats Player={Player} />
 
         </View>
     )
