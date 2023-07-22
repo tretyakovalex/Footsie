@@ -20,6 +20,7 @@ export function DisplayTopSection({searchedInfo}) {
     return (
         <View style={{flex: 1, flexDirection: 'row',}}>
 
+            {/* Player Image */}
             <View style={{ flex: 1, marginRight: 10, alignItems: 'center', justifyContent: 'center'}}>
                 <View style={{ borderRadius: 100, height: 100, width: 100, overflow: 'hidden', backgroundColor: Colours.inactiveText, }}>
 
@@ -27,6 +28,7 @@ export function DisplayTopSection({searchedInfo}) {
                 </View>
             </View>
 
+            {/* Player Information */}
             <View style={{flex: 2.75, flexDirection: 'column', marginRight: 5}}>
                 <View style={{flex: 1, marginBottom: 10, marginLeft: 20}}>
                     <PlayerInformation player={searchedInfo.DATA.tempPlayer} />

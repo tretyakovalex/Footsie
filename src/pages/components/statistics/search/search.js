@@ -1,6 +1,4 @@
 // Public Imports
-import { View } from 'react-native';
-
 // Private Imports
 import SearchPage from './design/search-home';
 

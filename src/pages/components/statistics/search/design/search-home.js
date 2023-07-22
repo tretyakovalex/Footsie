@@ -14,13 +14,7 @@ function SearchBar({searchInput, setSearchInput, setSearchStatus}) {
     const hardSearch = () => {
         setSearchInput(searchInput);
         setSearchStatus(true);
-        setIsLoading(true);
         console.log(searchInput);
-
-        // Simulate API call with setTimeout
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 5000); // 5000 milliseconds = 5 seconds
     }
 
     // TO DO:
