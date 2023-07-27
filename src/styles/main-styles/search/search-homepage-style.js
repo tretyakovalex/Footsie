@@ -1,7 +1,5 @@
 import { StyleSheet } from 'react-native';
 
-import { Colours } from '../../global-styles/global';
-
 // Search Bar Component
 export const SearchBarStyle = StyleSheet.create({
     // CHECK HEIGHT AND WIDTH

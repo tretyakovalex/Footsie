@@ -1,13 +1,12 @@
 // Public Imports
-import { View, Pressable, Text } from 'react-native';
-import { useEffect } from 'react';
+import { View, Pressable, Text, StyleSheet } from 'react-native';
+import { useEffect, useState } from 'react';
 
 // Private Imports
-import { HeaderStructure } from '../../styles/global-styles/app-structure';
 import { TabStructure } from '../../styles/tab-styles/tabs';
 import { Colours } from '../../styles/global-styles/global';
 
-// Display tab section
+// Individual Tabs - Each tab that gets displayed
 function TabDisplay({sectionName, sectionIndex, setCurrentTab, activeTab}) {
     return (
         <View style={TabStructure.container}>
@@ -28,7 +27,7 @@ function TabDisplay({sectionName, sectionIndex, setCurrentTab, activeTab}) {
     )
 }
 
-// Display the tabs
+// Tabs holder - Holds all the current tabs on a page
 export default function Header({TabNames, activeTab , setCurrentTab,activePage}) {
 
     // Keep track of active tab
@@ -55,7 +54,3 @@ export default function Header({TabNames, activeTab , setCurrentTab,activePage})
         </View>
     );
 }
-
-
-// size: activePage == 4 ? {size: { flex: 0}} : HeaderStructure.size,
-// paddingTop: activePage == 4 ? 100 : 0v

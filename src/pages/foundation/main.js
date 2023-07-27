@@ -10,7 +10,7 @@ import { MatchFoundation } from '../../styles/main-styles/matches/foundation';
 import SearchPage from '../components/search/search-homepage';
 
 // Display Player Stats
-import PlayerDisplay from '../components/statistics/search/design/player-statistics/player-design';
+import PageHolder from '../components/search/temporary-page';
 
 export default function Main({ LiveTab, LiveNav, SearchInput, setSearchInput, setSearchStatus, searchStatus }) {
   const [refreshing, setRefreshing] = useState(false);
@@ -33,6 +33,11 @@ export default function Main({ LiveTab, LiveNav, SearchInput, setSearchInput, se
     setLoading(true);
     FetchMatches(API_Matches(LiveTab));
   }, [LiveTab]);
+
+  // Empty text - Returning from search page
+  useEffect( () => {
+    setSearchInput('');
+  }, [searchStatus])
   
 
   const FetchMatches = async (ActiveContent) => {
@@ -82,7 +87,7 @@ export default function Main({ LiveTab, LiveNav, SearchInput, setSearchInput, se
       // Show the actual content based on searchStatus
       <>
           {searchStatus ? (
-            <PlayerDisplay />
+            <PageHolder setSearchStatus={setSearchStatus}/>
           ) : (
             <View style={{ flex: 1 }}>
               <ScrollView
@@ -117,7 +122,7 @@ export default function Main({ LiveTab, LiveNav, SearchInput, setSearchInput, se
 }
 
 // What to be shown
-function Content({ Page, Tab, Matches, UserInput, setSearchInput, setSearchStatus }) {  
+function Content({ Page, Tab, Matches, UserInput, setSearchInput, setSearchStatus, searchStatus }) {  
   
 
     const pageConversion = ["news", "matches", "favourites", "tournaments", "statistics"];
@@ -194,7 +199,7 @@ function Content({ Page, Tab, Matches, UserInput, setSearchInput, setSearchStatu
       statistics: {
         default: (
           <>
-            <SearchPage searchInput={UserInput} setSearch={setSearchInput} setSearchStatus={setSearchStatus}/>
+            <SearchPage searchInput={UserInput} setSearch={setSearchInput} setSearchStatus={setSearchStatus} />
           </>
         )
           
@@ -205,4 +210,3 @@ function Content({ Page, Tab, Matches, UserInput, setSearchInput, setSearchStatu
     return Page == 4 ? contentMap[pageConversion[Page]]?.[tabConversion[Page][0]] : contentMap[pageConversion[Page]]?.[tabConversion[Page][Tab]] || 
       <Text style={{fontSize: 24, color: 'grey', textAlign: 'center', top: 300}}>Page Doesn't Exist</Text>;
 }
-
