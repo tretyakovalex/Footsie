@@ -1,5 +1,4 @@
 import { StyleSheet } from 'react-native';
-import { Colours } from '../../global-styles/global';
 
 
 // Image shown
@@ -9,11 +8,6 @@ export const PageImage = StyleSheet.create({
         width: '100%', 
     }
 });
-
-// Text in top section
-const SearchTextDesign = StyleSheet.create({
-
-})
 
 // Small table
 export const SmallTableDesign = StyleSheet.create({

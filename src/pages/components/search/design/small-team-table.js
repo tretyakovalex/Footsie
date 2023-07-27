@@ -1,6 +1,6 @@
 import { Text, View, Image } from 'react-native';
 
-import { SmallTableDesign } from '../../../../../styles/main-styles/statistics/search-page-styles';
+import { SmallTableDesign } from '../../../../../styles/main-styles/search/small-team-design';
 
 // Allocate correct colours to results
 function TeamRecentPerformance({ result }) {
@@ -113,7 +113,7 @@ function DisplayPlayerTeamInfo({Team}) {
 }
 
 
-export function DisplayTeamInfo({Team}) {
+export function SmallTeamTable({Team}) {
     return (
         <View style={{flex: 1.7, margin: 5, paddingBottom: 10}}>
             <View style={{flex: 1, justifyContent: 'center'}}>

@@ -4,7 +4,8 @@ import { useState, useRef } from 'react';
 
 
 // Private Imports
-import { SearchBarStyle, SearchOptionStyle, SearchPageStyle } from '../../../../../styles/main-styles/statistics/search'
+import { SearchBarStyle, SearchOptionStyle, SearchPageStyle }  from '../../../../styles/main-styles/search/search-homepage-style';
+import SearchPage from './design/search-home';
 
 // Initial Search Bar
 // TODO: Create loading page
@@ -145,3 +146,4 @@ export default function SearchPage({searchInput, setSearch, setSearchStatus}) {
         </View>
     )
 }
+

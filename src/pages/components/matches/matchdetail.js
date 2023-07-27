@@ -5,7 +5,6 @@ import axios from 'axios';
 import { API_KEY } from './matchAPI';
 import { MatchPopUp } from '../../../styles/main-styles/matches/foundation';
 import { TeamSection } from '../../../styles/main-styles/matches/detailed-styles';
-import { Colours } from '../../../styles/global-styles/global';
 
 
 // Match Pop Up

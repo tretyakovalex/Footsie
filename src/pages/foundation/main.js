@@ -7,7 +7,7 @@ import API_Matches from '../components/matches/matchAPI';
 import { MatchFoundation } from '../../styles/main-styles/matches/foundation';
 
 // Display Search Page
-import Search from '../components/statistics/search/search';
+import SearchPage from '../components/search/search-homepage';
 
 // Display Player Stats
 import PlayerDisplay from '../components/statistics/search/design/player-statistics/player-design';
@@ -194,7 +194,7 @@ function Content({ Page, Tab, Matches, UserInput, setSearchInput, setSearchStatu
       statistics: {
         default: (
           <>
-            <Search userSearch={UserInput} setSearch={setSearchInput} setSearchStatus={setSearchStatus}/>
+            <SearchPage searchInput={UserInput} setSearch={setSearchInput} setSearchStatus={setSearchStatus}/>
           </>
         )
           
