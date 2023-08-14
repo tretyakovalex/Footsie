@@ -7,4 +7,8 @@ Plan:
 
 API-Football:
 
+@Continents and Countries
 - For continents and countries it all keeps track of country names
+
+@ Teams
+- Doesn't show team squad, team statistics
