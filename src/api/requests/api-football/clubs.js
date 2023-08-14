@@ -30,7 +30,7 @@ const paramOptions = (URL, PARAMS) => ({
     },
 })
 
-
+// Check if the parameter is a string else show an error
 function StringCheck(StringInQuestion) {
     if (typeof StringInQuestion !== 'string') {
         throw new Error('ERROR Parameters: Must be a string.');
@@ -39,14 +39,18 @@ function StringCheck(StringInQuestion) {
 
 // V3 - Team Informations
 // Team API Football ID - Team Name - Country - Image - Tag
-async function TeamNameAndID(URL, TeamID) {
+async function TeamNameAndID({URL, TeamID}) {
     try {
         // Checks TeamID is a string
         StringCheck(TeamID);
 
         // Send Request
         const apiResponse = await axios(paramOptions(URL, {id: TeamID}));
-        const response = apiResponse.data.response.team
+
+        if (!apiResponse || apiResponse.data.response.length == 0) {
+            throw new Error("ERROR Teams: No team information found");
+        }
+        const response = apiResponse.data.response[0].team;
 
         // Team Basic Information
         const TeamInfo = {
@@ -57,28 +61,56 @@ async function TeamNameAndID(URL, TeamID) {
             logo: response.logo
         };
 
-        return TeamInfo;
+        // return TeamInfo;
+        console.log('TeamInfo:', JSON.stringify(TeamInfo, null, 2));
 
     } catch (error) {
         console.error(error)
     }
 }
 
+// Organise the coach career
+// TODO: Test this
+function OrganiseCoachCareer({Career}) {
+
+    const CareerHistory = {};
+
+    if (Career.length >= 0) {
+        for (let i = 0, clubs = Career.length - 1; i < Career.length; i++) {
+            // Get club: Name, Logo, Start Date and End Date
+            CareerHistory[clubs] = {
+                name: Career[clubs].name,
+                logo: Career[clubs].logo,
+                "start date": Career[clubs].start,
+                "end date": Career[clubs].end
+            }
+
+            clubs--;
+        }
+    }
+
+    return CareerHistory;
+}
+
 // V3 - Coaches by Team ID
 // Team Coach - Need TeamID for this to work
-async function TeamCoaches(URL, TeamID) {
+// TODO: ADD COACH CAREER
+async function TeamCoaches({URL, TeamID}) {
     try {
         // Checks TeamID is a string
         StringCheck(TeamID);
 
         const apiResponse = await axios(paramOptions(URL, {team: TeamID}))
-        const response = apiResponse.data.response;
+        const response = apiResponse.data.response[1];
+        // Put data into one object
         const CoachInfo = {
             name: response.name,
-            nationality: response.nationality
+            nationality: response.nationality,
+            image: response.photo,
+            career: OrganiseCoachCareer(response.career)
         }
 
-        return CoachInfo;
+        console.log(JSON.stringify(CoachInfo, null, 2))
 
     } catch (error) {
         console.error(error);
@@ -87,24 +119,30 @@ async function TeamCoaches(URL, TeamID) {
 
 // V3 - Standings by Team ID
 // League Information - PARAMS = {Year, TeamID}
-async function TeamLeagueInfo(URL, PARAMS, Competition) {
+// TODO: Reorganised the manual parameters and organise access to information
+export async function TeamLeagueInfo(ManuallyEnteredParameters) {
+
     try {
         // League
         let numberRepresentation = 0;
 
-        if (Competition == "cup") {
+        if (ManuallyEnteredParameters.Competition == "cup") {
             // Competition
             numberRepresentation = 1;
         }
 
         // Params have to be a string
-        StringCheck(PARAMS.year);
-        StringCheck(PARAMS.teamID)
+        StringCheck(ManuallyEnteredParameters.PARAMS.year);
+        StringCheck(ManuallyEnteredParameters.PARAMS.teamID)
 
-        const apiResponse = await axios(paramOptions(URL, {season: PARAMS.year, team: PARAMS.teamID}))
+        const apiResponse = await axios(paramOptions(ManuallyEnteredParameters.URL, {season: ManuallyEnteredParameters.PARAMS.year, team: ManuallyEnteredParameters.PARAMS.teamID}))
         // Specific responses
         const response = apiResponse.data.response[numberRepresentation].league;
-        const standingResponse = response.standings[numberRepresentation];
+
+
+        const standingResponse = response.standings[0][0];
+
+        console.log(JSON.stringify(standingResponse, null, 2))
 
         // Get information about the team positions, form etc
         const TeamLeagueInfo = {
@@ -120,7 +158,7 @@ async function TeamLeagueInfo(URL, PARAMS, Competition) {
             gd: standingResponse.all.goals.for -  standingResponse.all.goals.against
         }
 
-        return TeamLeagueInfo;
+        console.log(JSON.stringify(TeamLeagueInfo, null, 2))
     } catch (error) {
         console.error(error)
     }

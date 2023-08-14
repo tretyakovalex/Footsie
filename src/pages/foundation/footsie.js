@@ -44,6 +44,7 @@ export default function Footsie() {
   }, [currentTab]);
 
   useEffect( () => {
+
     if (currentPage != 4) {
       setSearchInput("");
       setSearchStatus(false);
