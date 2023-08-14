@@ -37,7 +37,7 @@ const StatFlexSizes = {
     points: 1
 }
   
-function DisplayPlayerTeamInfo({Team}) {
+function DisplayTeamInfo({Team}) {
     return (
         <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center'}}>
 
@@ -120,7 +120,7 @@ export function SmallTeamTable({Team}) {
                 <Text style={{fontSize: 18, color: 'white', marginLeft: 20}}>{Team.league}</Text>
             </View>
 
-            <DisplayPlayerTeamInfo Team={Team}/>
+            <DisplayTeamInfo Team={Team}/>
         </View>
     )
 }

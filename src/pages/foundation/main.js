@@ -35,6 +35,10 @@ export default function Main({ LiveTab, LiveNav, SearchInput, setSearchInput, se
   }, [LiveTab]);
 
   // Empty text - Returning from search page
+  // TODO:
+  //    Create an API
+  //    When user searches something
+  //    Catgeroies it then make sure that GetSearchPage gets the same information
   useEffect( () => {
     setSearchInput('');
   }, [searchStatus])
@@ -122,7 +126,7 @@ export default function Main({ LiveTab, LiveNav, SearchInput, setSearchInput, se
 }
 
 // What to be shown
-function Content({ Page, Tab, Matches, UserInput, setSearchInput, setSearchStatus, searchStatus }) {  
+function Content({ Page, Tab, Matches, UserInput, setSearchInput, setSearchStatus }) {  
   
 
     const pageConversion = ["news", "matches", "favourites", "tournaments", "statistics"];

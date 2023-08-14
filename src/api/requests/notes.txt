@@ -1,0 +1,10 @@
+Plan:
+- Write functions for every API request needed
+- Organise the API requests, so that I can tunnel responses into the correct catergories
+- Funnel responses (Organised) into holding database
+- Create Validation System
+- Place into Main Database
+
+API-Football:
+
+- For continents and countries it all keeps track of country names

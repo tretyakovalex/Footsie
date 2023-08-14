@@ -1,4 +1,5 @@
 import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { DropdownButton } from './design/leagues/components/league_dropdown';
 
 
 // Return button - Search Page
@@ -22,7 +23,12 @@ function ReturnButton({setSearchStatus}) {
         <Pressable onPress={ReturnHome} style={buttonStyle.button}>
         </Pressable>
     )
-  }
+}
+
+
+// TEMPORARY STATISTIC HOLDER
+const Temp_Stats = ["A", "B", "C", "D", "E", "F", "G"]
+
 
 
 export default function PageHolder({setSearchStatus}) {
@@ -33,6 +39,9 @@ export default function PageHolder({setSearchStatus}) {
             </View>
 
             <Text style={{fontSize: 24, color: 'white', textAlign: 'center'}}>Under Construction</Text>
+
+
+            <DropdownButton Placeholder={Temp_Stats}  Title={"Statistic Placeholder"} />
         </View>
     )
 }

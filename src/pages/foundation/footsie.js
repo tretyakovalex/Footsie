@@ -31,7 +31,10 @@ export default function Footsie() {
   // Track what's shown
   const [currentPage, setCurrentPage] = useState(1);
   const [currentTab, setCurrentTab] = useState(1);
+  // User search holder
   const [searchInput, setSearchInput] = useState("");
+  // Activate / Deactivate Search Bar
+  // False = No active search (Nothing in the searchbar)
   const [searchStatus, setSearchStatus] = useState(false);
 
   useEffect( () => {
