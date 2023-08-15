@@ -48,6 +48,7 @@ export async function CupNameAndCountry() {
         const response = apiResponse.data.response;
 
         // To Access Specific Elements
+        
         for (let i = 0; i < response.length; i++) {
             return response[i].league.name + " " + response[i].country.name;
         }

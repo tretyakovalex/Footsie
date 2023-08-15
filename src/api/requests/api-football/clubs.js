@@ -10,15 +10,6 @@ const Header = {
 }
 
 // Request Information
-// No Parameters
-const noParamOptions = (URL) => ({
-    method: 'GET', 
-    url: URL,
-    headers: {
-        'X-RapidAPI-Key': Header.key,
-        'X-RapidAPI-Host': Header.host
-    },
-})
 // With Parameters
 const paramOptions = (URL, PARAMS) => ({
     method: 'GET', 
@@ -39,7 +30,7 @@ function StringCheck(StringInQuestion) {
 
 // V3 - Team Informations
 // Team API Football ID - Team Name - Country - Image - Tag
-async function TeamNameAndID({URL, TeamID}) {
+export async function TeamNameAndID({URL, TeamID}) {
     try {
         // Checks TeamID is a string
         StringCheck(TeamID);
@@ -61,8 +52,8 @@ async function TeamNameAndID({URL, TeamID}) {
             logo: response.logo
         };
 
-        // return TeamInfo;
-        console.log('TeamInfo:', JSON.stringify(TeamInfo, null, 2));
+        return TeamInfo;
+        // console.log('TeamInfo:', JSON.stringify(TeamInfo, null, 2));
 
     } catch (error) {
         console.error(error)
@@ -71,37 +62,34 @@ async function TeamNameAndID({URL, TeamID}) {
 
 // Organise the coach career
 // TODO: Test this
-function OrganiseCoachCareer({Career}) {
+function OrganiseCoachCareer(Career) {
+    const CareerHistory = {}; // Initialize an empty object
 
-    const CareerHistory = {};
-
-    if (Career.length >= 0) {
-        for (let i = 0, clubs = Career.length - 1; i < Career.length; i++) {
-            // Get club: Name, Logo, Start Date and End Date
-            CareerHistory[clubs] = {
-                name: Career[clubs].name,
-                logo: Career[clubs].logo,
-                "start date": Career[clubs].start,
-                "end date": Career[clubs].end
-            }
-
-            clubs--;
-        }
+    for (let i = Career.length - 1;  i >= 0; i--) {
+        const club = Career[i];
+        CareerHistory[i] = {
+            'name': club.team.name,
+            'logo': club.team.logo,
+            "start date": club.start,
+            "end date": club.end
+        };
     }
 
     return CareerHistory;
 }
 
+
 // V3 - Coaches by Team ID
 // Team Coach - Need TeamID for this to work
 // TODO: ADD COACH CAREER
-async function TeamCoaches({URL, TeamID}) {
+export async function TeamCoaches({URL, TeamID}) {
     try {
         // Checks TeamID is a string
         StringCheck(TeamID);
 
         const apiResponse = await axios(paramOptions(URL, {team: TeamID}))
         const response = apiResponse.data.response[1];
+
         // Put data into one object
         const CoachInfo = {
             name: response.name,
@@ -110,7 +98,8 @@ async function TeamCoaches({URL, TeamID}) {
             career: OrganiseCoachCareer(response.career)
         }
 
-        console.log(JSON.stringify(CoachInfo, null, 2))
+        return CoachInfo.career[0]
+        // console.log(JSON.stringify(CoachInfo.career[0], null, 2))
 
     } catch (error) {
         console.error(error);
@@ -142,8 +131,6 @@ export async function TeamLeagueInfo(ManuallyEnteredParameters) {
 
         const standingResponse = response.standings[0][0];
 
-        console.log(JSON.stringify(standingResponse, null, 2))
-
         // Get information about the team positions, form etc
         const TeamLeagueInfo = {
             "league name": response.name,
@@ -158,7 +145,8 @@ export async function TeamLeagueInfo(ManuallyEnteredParameters) {
             gd: standingResponse.all.goals.for -  standingResponse.all.goals.against
         }
 
-        console.log(JSON.stringify(TeamLeagueInfo, null, 2))
+        return TeamLeagueInfo
+        // console.log(JSON.stringify(TeamLeagueInfo, null, 2))
     } catch (error) {
         console.error(error)
     }

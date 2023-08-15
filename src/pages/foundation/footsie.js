@@ -9,6 +9,9 @@ import Footer from './footer';
 
 import { TabNames } from './tab-information'
 
+// TEMPORARY IMPORT
+// import { TeamLeagueInfo } from './../../api/requests/api-football/clubs';
+
 // Display tabs based on current page
 function DisplayActiveTab(currentPage) {
     switch (currentPage) {
