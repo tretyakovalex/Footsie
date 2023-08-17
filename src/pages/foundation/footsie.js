@@ -10,7 +10,7 @@ import Footer from './footer';
 import { TabNames } from './tab-information'
 
 // TEMPORARY IMPORT
-// import { TeamLeagueInfo } from './../../api/requests/api-football/clubs';
+import { PlayerStatistics } from './../../api/requests/api-football/players';
 
 // Display tabs based on current page
 function DisplayActiveTab(currentPage) {
@@ -41,19 +41,27 @@ export default function Footsie() {
   const [searchStatus, setSearchStatus] = useState(false);
 
   useEffect( () => {
+
+    PlayerStatistics({
+        URL: 'https://api-football-v1.p.rapidapi.com/v3/players',
+        PARAMS: {
+            teamID: '33',
+            season: '2020'
+        }
+    })
+  
+
     if (currentTab == 4) {
       setCurrentTab(0);
     }
   }, [currentTab]);
 
   useEffect( () => {
-
     if (currentPage != 4) {
       setSearchInput("");
       setSearchStatus(false);
     }
   }, [currentPage]);
-
 
   return (
     <View style={{flex: 1}}>

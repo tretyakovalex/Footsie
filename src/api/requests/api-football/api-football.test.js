@@ -1,8 +1,9 @@
 import { CountryNameAndFlags, CupNameAndCountry } from './competitions';
-import { TeamNameAndID, TeamCoaches, TeamLeagueInfo } from './clubs';
+import { TeamNameAndID, TeamCoaches, TeamLeagueInfo, TeamSquad } from './clubs';
+import { PlayerStatistics } from './players';
 
 // Test Competition API's
-describe("API-Football\nInformation on countries and competititons", () => {
+describe("\nTESTING: API-Football\nInformation on countries and competititons", () => {
     // TODO: Add Logos for testing
     test('Country Names and Logos', async () => {
         const country = await CountryNameAndFlags();
@@ -29,7 +30,7 @@ const TeamInfo = {
 const coachInfoResults = {
     career: {
             name: "Manchester United",
-            logo: "https://media-3.api-sports.io/football/teams/33.png",
+            logo: "https://media-2.api-sports.io/football/teams/33.png",
             "start date": "2022-06-01",
             "end date": null
     }
@@ -48,9 +49,19 @@ const LeagueResults = {
     "gd": 5
 }
 
+// Squad Line up
+const LineupHeaton = {
+    "Plays For": "Manchester United",
+    "name": "T. Heaton",
+    "age": 37,
+    "number": 22,
+    "position": "Goalkeeper",
+    "photo": "https://media-1.api-sports.io/football/players/2931.png"
+}
+
 
 // Test Clubs API's
-describe("API-Football\nInformation on clubs", () => {
+describe("\nTESTING: API-Football\nInformation on clubs", () => {
 
     // Basic Team Information
     test('Basic information on team: ID, Name, Tag, Country, Logo', async () => {
@@ -77,9 +88,62 @@ describe("API-Football\nInformation on clubs", () => {
             PARAMS: {'year': '2020', 'teamID': '33'}
         });
         expect(standingHolding).toEqual(LeagueResults);
-    })
+    });
+
+    test("Squad Line Up", async () => {
+        const lineupInfo = await TeamSquad({
+            URL: 'https://api-football-v1.p.rapidapi.com/v3/players/squads',
+            TeamID: '33'
+        });
+
+        expect(lineupInfo).toEqual(LineupHeaton);
+    });
+
 })
+
+// Squad Player Example
+const DonnyPlayer = {
+    player: {
+        name: "D. van de Beek",
+        "first name": "Donny",
+        "second name": "van de Beek",
+        age: 26,
+        nationality: "Netherlands",
+        injured: false,
+        photo: "https://media-3.api-sports.io/football/players/547.png"
+    }, 
+    statistic: {
+        team: "Manchester United",
+        appearences: 19,
+        goals: 1,
+        season: 2020
+    }
+}
 
 
 
 // Test Player API's
+describe("\nTESTING: API-Football\nInformation on players", () => {
+
+    test("Donny Van De Beek 2020 Season", async () => {
+        const squadPlayers = await PlayerStatistics({
+            URL: 'https://api-football-v1.p.rapidapi.com/v3/players',
+            PARAMS: {
+                teamID: '33',
+                season: '2020'
+            }
+        });
+    
+        expect(squadPlayers).toEqual(DonnyPlayer);
+    })
+})
+
+/*
+test("Squad Players - Donny Van De Beek Example", async () => {
+    const teamSquadPlayer = await TeamSquad({
+        URL: 'https://api-football-v1.p.rapidapi.com/v3/players', 
+        TeamID: "33"
+    });
+    expect(teamSquadPlayer).toEqual(DonnyPlayer);
+})
+*/

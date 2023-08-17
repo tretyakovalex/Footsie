@@ -3,6 +3,9 @@
 // Public Imports
 import axios from 'axios';
 
+// TODO:
+//     Add error handling & No result cases
+
 // Constants
 const Header = {
     key: '060abebd44msheb1fbe6d87b8111p1c9872jsnd77b5a96aa2e',
@@ -108,23 +111,22 @@ export async function TeamCoaches({URL, TeamID}) {
 
 // V3 - Standings by Team ID
 // League Information - PARAMS = {Year, TeamID}
-// TODO: Reorganised the manual parameters and organise access to information
-export async function TeamLeagueInfo(ManuallyEnteredParameters) {
+export async function TeamLeagueInfo(ObjParameter) {
 
     try {
         // League
         let numberRepresentation = 0;
 
-        if (ManuallyEnteredParameters.Competition == "cup") {
+        if (ObjParameter.Competition == "cup") {
             // Competition
             numberRepresentation = 1;
         }
 
         // Params have to be a string
-        StringCheck(ManuallyEnteredParameters.PARAMS.year);
-        StringCheck(ManuallyEnteredParameters.PARAMS.teamID)
+        StringCheck(ObjParameter.PARAMS.year);
+        StringCheck(ObjParameter.PARAMS.teamID)
 
-        const apiResponse = await axios(paramOptions(ManuallyEnteredParameters.URL, {season: ManuallyEnteredParameters.PARAMS.year, team: ManuallyEnteredParameters.PARAMS.teamID}))
+        const apiResponse = await axios(paramOptions(ObjParameter.URL, {season: ObjParameter.PARAMS.year, team: ObjParameter.PARAMS.teamID}))
         // Specific responses
         const response = apiResponse.data.response[numberRepresentation].league;
 
@@ -149,5 +151,78 @@ export async function TeamLeagueInfo(ManuallyEnteredParameters) {
         // console.log(JSON.stringify(TeamLeagueInfo, null, 2))
     } catch (error) {
         console.error(error)
+    }
+}
+
+
+// Collect Team Squad Basic Information
+function TeamSquadBasicInfo(TeamSquad) {
+    const Squad = {};
+
+    const TeamName = TeamSquad[0].team.name
+    const SquadLineUp = TeamSquad[0].players
+
+    for (let i = 0; i < SquadLineUp.length; i++) {
+        const Players = SquadLineUp[i];
+        Squad[i] = {
+                "Plays For":  TeamName,
+                name: Players.name,
+                age: Players.age,
+                number: Players.number,
+                position: Players.position,
+                photo: Players.photo 
+            }
+    }
+
+    return Squad
+}
+
+function PlayersInPosition(Players) {
+    // attacker, defender, midfielder, goalkeeper
+    let attacker = 0;
+    let defender = 0;
+    let midfielder = 0;
+    let goalkeeper = 0;
+
+    for (let i = 0; i < Object.keys(Players).length; i++) {
+        const Footballer = Players[String(i)].position;
+        
+        switch (Footballer) {
+            case "Goalkeeper":
+                goalkeeper++;
+                break
+            case "Defender":
+                defender++;
+                break
+            case "Midfielder":
+                midfielder++;
+                break
+            case "Defender":
+                attacker++;
+                break
+        }
+    }
+}
+
+// V3 - Player Squad
+// Team Squad
+export async function TeamSquad({URL, TeamID}) {
+    try {
+        StringCheck(TeamID);
+
+        const apiResponse = await axios(paramOptions(URL, {
+            team: TeamID,
+        }));
+        const response = apiResponse.data.response;
+
+        const Squad = TeamSquadBasicInfo(response);
+        const TestSquad = Squad["0"];
+
+        // Count / Check position count
+        // PlayersInPosition(Squad);
+        return TestSquad;
+
+    } catch (error) {
+        console.error(error);
     }
 }
