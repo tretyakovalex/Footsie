@@ -1,6 +1,5 @@
 import { View, Text, Image, Pressable, Animated } from 'react-native';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 
 import { MatchFoundation, LeagueFoundation } from '../../../styles/main-styles/matches/foundation';
 import MatchDetail from './matchdetail';
@@ -50,8 +49,12 @@ export const Leagues = [
   { league: 'Liga I', country: 'Romania', apiName: 'Liga I', matches: [], logo: "" },
   { league: 'Fortuna Liga', country: 'Slovakia', apiName: 'Fortuna Liga', matches: [], logo: "" },
   { league: 'Liga BetPlay', country: 'Colombia', apiName: 'Liga BetPlay', matches: [], logo: "" },
-  { league: 'Saudi Professional League', country: 'Saudi Arabia', apiName: 'Pro League', matches: [], logo: "" },
-  { league: 'Rest Of The World', apiName: '', matches: [], logo: "" },
+  { league: 'Saudi Professional League', country: 'Saudi-Arabia', apiName: 'Pro League', matches: [], logo: "" },
+  {league: 'UEFA Europa League', country: 'World', apiName: 'UEFA Europa League', matches: [], logo: ''},
+  {league: 'UEFA Europa League Conference', country: 'World', apiName: 'UEFA Europa League Conference', matches: [], logo: ''},
+  {league: 'Qatar Stars League', country: 'Qatar', apiName: 'Stars League', matches: [], logo: ''},
+  {league: 'Qatar Stars League', country: 'Jordan', apiName: 'League', matches: [], logo: ''},
+  { league: 'Rest Of The World', apiName: '', matches: [], logo: "" }
 ];
   
 // Organise matches into the right leagues and order
@@ -62,6 +65,10 @@ function SortMatches(API_Match) {
   }
 
   let matchFound = false;
+
+  console.log(API_Match.league.name + "\n")
+  console.log(API_Match.league.country + "\n\n\n")
+
 
   for (let i = 0; i < Leagues.length; i++) {
     if (

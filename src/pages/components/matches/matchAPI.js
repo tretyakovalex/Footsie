@@ -5,17 +5,20 @@ import axios from 'axios';
 export const API_KEY = '060abebd44msheb1fbe6d87b8111p1c9872jsnd77b5a96aa2e';
 const HOST = 'api-football-v1.p.rapidapi.com';
 
+// V3 - Fixtures
 const URL = 'https://api-football-v1.p.rapidapi.com/v3/fixtures';
 
 // Parameters for API depending on ActiveTab
 const PARAMS = (ActiveTab) => { 
   switch (ActiveTab) {
+    // V3 - Fixture by Team ID
     case 0:
       const currentYear = new Date().getFullYear();
       return {
         season: String(currentYear),
         team: '33'
       }
+    // V3 - Fixture in progress
     case 1: {
       const currentYear = new Date().getFullYear();
       return {
@@ -24,11 +27,13 @@ const PARAMS = (ActiveTab) => {
         timezone: 'Europe/London'
       }
     }
+    // V3 - Fixtures to come
     case 2: {
       return {
         next: '50'
       }
     }
+    // V3 - Fixture by date
     case 3: {
       const currentDate = new Date().toISOString().split('T')[0];
       return {

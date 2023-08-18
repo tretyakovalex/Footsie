@@ -41,16 +41,6 @@ export default function Footsie() {
   const [searchStatus, setSearchStatus] = useState(false);
 
   useEffect( () => {
-
-    PlayerStatistics({
-        URL: 'https://api-football-v1.p.rapidapi.com/v3/players',
-        PARAMS: {
-            teamID: '33',
-            season: '2020'
-        }
-    })
-  
-
     if (currentTab == 4) {
       setCurrentTab(0);
     }
