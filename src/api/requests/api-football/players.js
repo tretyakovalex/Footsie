@@ -1,17 +1,16 @@
-// The file is for information on players
+// Grab data on players
 
 // Public Imports
 import axios from 'axios';
 
-// Constants
+// Constants & Header Information
 const Header = {
     key: '060abebd44msheb1fbe6d87b8111p1c9872jsnd77b5a96aa2e',
     host: 'api-football-v1.p.rapidapi.com'
 }
 
-// Request Information
-// With Parameters
-const paramOptions = (URL, PARAMS) => ({
+// Options Template - Update URL and PARAMS based on API Requests
+const OptionsTemplate = (URL, PARAMS) => ({
     method: 'GET', 
     url: URL,
     params: PARAMS,
@@ -21,11 +20,13 @@ const paramOptions = (URL, PARAMS) => ({
     },
 })
 
-// Donny Van De Beek For Testing - npm test
+// NPM Test Result - Donny Van De Beej
 function GetDonnyData(Player) {
+    // Direct access to API Response JSON
     const playerDictionary = Player.player;
     const statisticDictionary = Player.statistics[0];
 
+    // Object to hold donny information
     const DonnyData = {
         player: {
             name: playerDictionary.name ,
@@ -44,11 +45,13 @@ function GetDonnyData(Player) {
         }
     }
 
+    // Return Donny basic info and stats
     return DonnyData;
 }
 
 // Collect the total stats on each player
 function TotalStats(Stats) {
+    // Empty object to store player stats
     const totalStats = {
         games: {
             appearences: 0,
@@ -77,32 +80,39 @@ function TotalStats(Stats) {
         }
     };
 
+    // Go through each compeititon and get a total results on stats
     for (const teamStats of Stats) {
+        // Total appearences & minutes
         totalStats.games.appearences += teamStats.stats.games.appearences;
         totalStats.games.minutes += teamStats.stats.games.minutes;
 
+        // Total attacking stats
         for (const category in teamStats.stats.attacking) {
             totalStats.attacking[category] += teamStats.stats.attacking[category];
         }
 
+        // Total defensive stats
         for (const category in teamStats.stats.defensive) {
             totalStats.defensive[category] += teamStats.stats.defensive[category];
         }
     }
 
+    // Return total stats
     return totalStats;
 }
 
 
 
-// Information for database - Loop through statistics
+// Summarise player statistics
 function CollectPlayerStats(Statistics) {
     const CollectiveStats = [];
 
     // Each Competition
     for (let i = 0; i < Statistics.length; i++) {
+        // Direct access to each team in JSON
         const Team = Statistics[i];
 
+        // Simplify data and add to Collection of stats
         CollectiveStats.push({
             "Competition": {
                 teamname: Team.team.name,
@@ -140,7 +150,7 @@ function CollectPlayerStats(Statistics) {
         )
     }
 
-    // LEFT OFF HERE
+    // Player plays for more than one team, then create a total stats object
     if (Statistics.length > 0) {
         const totalStats = TotalStats(CollectiveStats);
         CollectiveStats.push({"Total Stats": totalStats})
@@ -149,14 +159,16 @@ function CollectPlayerStats(Statistics) {
     return CollectiveStats;
 }
 
-// Information for database
+// DB Function: Basic info and Player statistics
 function DBPlayerInfo(Players) {
     const ClubPlayerDatabase = {};
 
     for (let i = 0; i < Players.length; i++) {
+        // Direct access to each player
         const PlayerObjPlayer = Players[i].player;
         const PlayerObjStats = Players[i].statistics;
 
+        // Template Object
         ClubPlayerDatabase[i] = {
             PlayerInfo: {
                 name: PlayerObjPlayer.name,
@@ -172,6 +184,7 @@ function DBPlayerInfo(Players) {
         }
     };
 
+    // Return Objects of each player
     return ClubPlayerDatabase;
 }
 
@@ -181,14 +194,15 @@ function DBPlayerInfo(Players) {
 export async function PlayerStatistics({URL, PARAMS}) {
 
     try {
-        const apiResponse = await axios(paramOptions(URL, {
+        const apiResponse = await axios(OptionsTemplate(URL, {
             team: PARAMS.teamID,
             season: PARAMS.season
         }));
     
+        // Response from API Football
         const response = apiResponse.data.response;
 
-        // Returning for Test
+        // NPM Test - Returning for Test
        return GetDonnyData(response[0])
 
        // console.log(JSON.stringify(DBPlayerInfo(response), null, 2));
