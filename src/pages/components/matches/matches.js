@@ -59,87 +59,78 @@ export const Leagues = [
   
 // Organise matches into the right leagues and order
 function SortMatches(API_Match) {
-  // Check Match Validity
-  if (!API_Match || !API_Match.league) {
-    return;
-  }
-
-  let matchFound = false;
-
-  console.log(API_Match.league.name + "\n")
-  console.log(API_Match.league.country + "\n\n\n")
-
-
-  for (let i = 0; i < Leagues.length; i++) {
-    if (
-      API_Match.league.country === Leagues[i].country &&
-      API_Match.league.name === Leagues[i].apiName
-    ) {
-      Leagues[i].matches.push(API_Match);
-      matchFound = true;
-      break;
+    // Check Match Validity
+    if (!API_Match || !API_Match.league) {
+      return;
     }
-  }
 
-  // If match is in unpopular list
-  // Add to Rest Of The World
-  if (!matchFound) {
-    Leagues.find((league) => league.league === "Rest Of The World").matches.push(API_Match);
-  }
+    let matchFound = false;
+
+    for (let i = 0; i < Leagues.length; i++) {
+      if (
+        API_Match.league.country === Leagues[i].country &&
+        API_Match.league.name === Leagues[i].apiName
+      ) {
+        Leagues[i].matches.push(API_Match);
+        matchFound = true;
+        break;
+      }
+    }
+
+    // If match is in unpopular list
+    // Add to Rest Of The World
+    if (!matchFound) {
+      Leagues.find((league) => league.league === "Rest Of The World").matches.push(API_Match);
+    }
 }
 
 // Display Match Time
 function ShowTime({ match }) {
-  const [currentTime, setCurrentTime] = useState(new Date());
-  const [fadeAnim] = useState(new Animated.Value(0));
-  const [prevElapsedMinutes, setPrevElapsedMinutes] = useState(0);
-
-  // Display the time in a match
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
-
-    return () => {
-      clearInterval(timer);
-    };
-  }, []);
-
-  // Change the display depending on Match->Fixture->Status->Long status
-  if (
-    match.fixture.status.long !== "Match Finished" &&
-    match.fixture.status.long !== "Not Started" &&
-    match.fixture.status.long !== "Match Postponed"
-  ) {
-    const elapsedMinutes = Math.floor(match.fixture.status.elapsed);
-
-    // Update fade animation whenever elapsed minutes change
+    const [currentTime, setCurrentTime] = useState(new Date());
+    const [fadeAnim] = useState(new Animated.Value(0));
+    const [prevElapsedMinutes, setPrevElapsedMinutes] = useState(0);    
+    // Display the time in a match
     useEffect(() => {
-      if (elapsedMinutes !== prevElapsedMinutes) {
-        Animated.sequence([
-          Animated.timing(fadeAnim, {
-            toValue: 0,
-            duration: 500,
-            useNativeDriver: false,
-          }),
-          Animated.timing(fadeAnim, {
-            toValue: 1,
-            duration: 500,
-            useNativeDriver: false,
-          }),
-        ]).start();
-      }
-      setPrevElapsedMinutes(elapsedMinutes);
-    }, [elapsedMinutes, prevElapsedMinutes, fadeAnim]);
-
-    return (
-      <Animated.Text style={[MatchFoundation.matchInformation.score, { opacity: fadeAnim }]}>
-        {elapsedMinutes < 10 ? "0" + elapsedMinutes : elapsedMinutes}'
-      </Animated.Text>
-    );
-  } else {
-    return null;
-  }
+      const timer = setInterval(() => {
+        setCurrentTime(new Date());
+      }, 1000);   
+      return () => {
+        clearInterval(timer);
+      };
+    }, []);   
+    // Change the display depending on Match->Fixture->Status->Long status
+    if (
+      match.fixture.status.long !== "Match Finished" &&
+      match.fixture.status.long !== "Not Started" &&
+      match.fixture.status.long !== "Match Postponed"
+    ) {
+      const elapsedMinutes = Math.floor(match.fixture.status.elapsed);    
+      // Update fade animation whenever elapsed minutes change
+      useEffect(() => {
+        if (elapsedMinutes !== prevElapsedMinutes) {
+          Animated.sequence([
+            Animated.timing(fadeAnim, {
+              toValue: 0,
+              duration: 500,
+              useNativeDriver: false,
+            }),
+            Animated.timing(fadeAnim, {
+              toValue: 1,
+              duration: 500,
+              useNativeDriver: false,
+            }),
+          ]).start();
+        }
+        setPrevElapsedMinutes(elapsedMinutes);
+      }, [elapsedMinutes, prevElapsedMinutes, fadeAnim]);   
+      return (
+        <Animated.Text style={[MatchFoundation.matchInformation.score, { opacity: fadeAnim }]}>
+          {elapsedMinutes < 10 ? "0" + elapsedMinutes : elapsedMinutes}'
+        </Animated.Text>
+      );
+    } else {
+      return null;
+    }
 }
 
 
@@ -147,178 +138,178 @@ function ShowTime({ match }) {
 // Not Started Matches
 // Display only the time of the match
 function MatchStart({match}) {
-  if (match.fixture.status.long === "Not Started") {
+    if (match.fixture.status.long === "Not Started") {
 
-    const MatchTime = new Date(match.fixture.date);
-    const formatTime = MatchTime.toLocaleTimeString("en-US", {
-      hour: "numeric",
-      minute: "2-digit"
-    });
+      const MatchTime = new Date(match.fixture.date);
+      const formatTime = MatchTime.toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit"
+      });
 
 
-    return <Text style={[MatchFoundation.matchInformation.startTime, {marginTop: 5}]}>{formatTime}</Text>
-  } else {
-    return null;
-  }
+      return <Text style={[MatchFoundation.matchInformation.startTime, {marginTop: 5}]}>{formatTime}</Text>
+    } else {
+      return null;
+    }
 }
   
 // Every Match Template
 export function MatchTemplate({ match, onPress }) {
-  const [backgroundColor, setBackgroundColor] = useState(new Animated.Value(0));
-  const [highlighted, setHighlighted] = useState(false);
-  
+    const [backgroundColor, setBackgroundColor] = useState(new Animated.Value(0));
+    const [highlighted, setHighlighted] = useState(false);
 
-  const handlePress = () => {
-    if (highlighted) {
-      // Match is already highlighted, do nothing
-      return;
-    }
 
-    // Highlight the match
-    Animated.timing(backgroundColor, {
-      toValue: 100,
-      duration: 500,
-      useNativeDriver: false,
-    }).start(() => {
-      setHighlighted(true);
-      onPress(match);
+    const handlePress = () => {
+      if (highlighted) {
+        // Match is already highlighted, do nothing
+        return;
+      }
 
-      // Reset the match to normal after 100ms
-      setTimeout(() => {
-        Animated.timing(backgroundColor, {
-          toValue: 0,
-          duration: 100,
-          useNativeDriver: false,
-        }).start(() => {
-          setHighlighted(false);
-        });
-      }, 1);
-    });
-  };
+      // Highlight the match
+      Animated.timing(backgroundColor, {
+        toValue: 100,
+        duration: 500,
+        useNativeDriver: false,
+      }).start(() => {
+        setHighlighted(true);
+        onPress(match);
 
-  // Colour when animation starts
-  const animatedStyle = {
-    backgroundColor: backgroundColor.interpolate({
-      inputRange: [0, 100],
-      outputRange: ['rgba(0, 0, 0, 0)', 'rgba(0, 255, 0, 0.5)'],
-    }),
-  };
+        // Reset the match to normal after 100ms
+        setTimeout(() => {
+          Animated.timing(backgroundColor, {
+            toValue: 0,
+            duration: 100,
+            useNativeDriver: false,
+          }).start(() => {
+            setHighlighted(false);
+          });
+        }, 1);
+      });
+    };
 
-  return (
-    <Animated.View style={[MatchFoundation.container, animatedStyle]}>
-      <Pressable style={MatchFoundation.secondContainer} onPress={handlePress}>
-      {/* Home Team */}
-        <View style={MatchFoundation.home}>
-          <Image source={{ uri: match.teams.home.logo }} style={MatchFoundation.home.logo} />
-          <Text
-            style={[
-              MatchFoundation.home.name,
-              {
-                color:
-                  match.goals.home > match.goals.away
-                    ? 'green'
-                    : match.goals.home < match.goals.away
-                    ? 'red'
-                    : match.goals.home >= 1
-                    ? 'white'
-                    : 'grey',
-              },
-            ]}
-          >
-            {match.teams.home.name}
-          </Text>
-          <Text style={MatchFoundation.home.score}>{match.goals.home}</Text>
-        </View>
+    // Colour when animation starts
+    const animatedStyle = {
+      backgroundColor: backgroundColor.interpolate({
+        inputRange: [0, 100],
+        outputRange: ['rgba(0, 0, 0, 0)', 'rgba(0, 255, 0, 0.5)'],
+      }),
+    };
 
-        {/* Middle Section */}
-        <View style={MatchFoundation.matchInformation.container}>
-          <Text style={MatchFoundation.matchInformation.time}>{match.fixture.status.long}</Text>
-          <ShowTime match={match} />
-          <MatchStart match={match} />
-        </View>
+    return (
+      <Animated.View style={[MatchFoundation.container, animatedStyle]}>
+        <Pressable style={MatchFoundation.secondContainer} onPress={handlePress}>
+        {/* Home Team */}
+          <View style={MatchFoundation.home}>
+            <Image source={{ uri: match.teams.home.logo }} style={MatchFoundation.home.logo} />
+            <Text
+              style={[
+                MatchFoundation.home.name,
+                {
+                  color:
+                    match.goals.home > match.goals.away
+                      ? 'green'
+                      : match.goals.home < match.goals.away
+                      ? 'red'
+                      : match.goals.home >= 1
+                      ? 'white'
+                      : 'grey',
+                },
+              ]}
+            >
+              {match.teams.home.name}
+            </Text>
+            <Text style={MatchFoundation.home.score}>{match.goals.home}</Text>
+          </View>
 
-        {/* Away Team */}
-        <View style={MatchFoundation.away}>
-          <Text style={MatchFoundation.away.score}>{match.goals.away}</Text>
+          {/* Middle Section */}
+          <View style={MatchFoundation.matchInformation.container}>
+            <Text style={MatchFoundation.matchInformation.time}>{match.fixture.status.long}</Text>
+            <ShowTime match={match} />
+            <MatchStart match={match} />
+          </View>
 
-          <Text
-            style={[
-              MatchFoundation.away.name,
-              {
-                color:
-                  match.goals.away > match.goals.home
-                    ? 'green'
-                    : match.goals.away < match.goals.home
-                    ? 'red'
-                    : match.goals.home >= 1
-                    ? 'white'
-                    : 'grey',
-              },
-            ]}
-          >
-            {match.teams.away.name}
-          </Text>
-          <Image source={{ uri: match.teams.away.logo }} style={MatchFoundation.away.logo} />
-        </View>
-      </Pressable>
-      {match.selected && <MatchDetail match={match} />}
-    </Animated.View>
-  );
+          {/* Away Team */}
+          <View style={MatchFoundation.away}>
+            <Text style={MatchFoundation.away.score}>{match.goals.away}</Text>
+
+            <Text
+              style={[
+                MatchFoundation.away.name,
+                {
+                  color:
+                    match.goals.away > match.goals.home
+                      ? 'green'
+                      : match.goals.away < match.goals.home
+                      ? 'red'
+                      : match.goals.home >= 1
+                      ? 'white'
+                      : 'grey',
+                },
+              ]}
+            >
+              {match.teams.away.name}
+            </Text>
+            <Image source={{ uri: match.teams.away.logo }} style={MatchFoundation.away.logo} />
+          </View>
+        </Pressable>
+        {match.selected && <MatchDetail match={match} />}
+      </Animated.View>
+    );
 }
 
 
 // Display matches in leagues
 export function LeagueTemplate({ Matches }) {
-  const [currentMatch, setCurrentMatch] = useState(null);
-  const [detailVisibility, setDetailVisibility] = useState(false);
-
-  // Match Pop Up
-  const OpenDetail = (match) => {
-    setCurrentMatch(match);
-    setDetailVisibility(true);
-  };
-
-  // Close Match Pop Up
-  const CloseDetail = () => {
-    setDetailVisibility(false);
-  };
-
-  // Create array for each league to hold matches
-  const sortedLeagues = [...Leagues];
-  sortedLeagues.forEach((league) => {
-    league.matches = [];
-  });
-
-  // Place each match into the correct league
-  Matches.forEach((match) => {
-    SortMatches(match);
-  });
-
+    const [currentMatch, setCurrentMatch] = useState(null);
+    const [detailVisibility, setDetailVisibility] = useState(false);
   
-
-  return (
-    <View>
-      {sortedLeagues.map((league, index) => {
-        if (league.matches.length > 0) {
-          return (
-            <View style={{ marginBottom: 20 }} key={index}>
-              <View style={[LeagueFoundation.container, LeagueFoundation.leagueContainer]}>
-                <Text style={LeagueFoundation.league}>{league.league}</Text>
+    // Match Pop Up
+    const OpenDetail = (match) => {
+      setCurrentMatch(match);
+      setDetailVisibility(true);
+    };
+  
+    // Close Match Pop Up
+    const CloseDetail = () => {
+      setDetailVisibility(false);
+    };
+  
+    // Create array for each league to hold matches
+    const sortedLeagues = [...Leagues];
+    sortedLeagues.forEach((league) => {
+      league.matches = [];
+    });
+  
+    // Place each match into the correct league
+    Matches.forEach((match) => {
+      SortMatches(match);
+    });
+  
+    
+  
+    return (
+      <View>
+        {sortedLeagues.map((league, index) => {
+          if (league.matches.length > 0) {
+            return (
+              <View style={{ marginBottom: 20 }} key={index}>
+                <View style={[LeagueFoundation.container, LeagueFoundation.leagueContainer]}>
+                  <Text style={LeagueFoundation.league}>{league.league}</Text>
+                </View>
+                {league.matches.map((match, matchIndex) => (
+                  <MatchTemplate key={matchIndex} match={match} onPress={OpenDetail} />
+                ))}
               </View>
-              {league.matches.map((match, matchIndex) => (
-                <MatchTemplate key={matchIndex} match={match} onPress={OpenDetail} />
-              ))}
-            </View>
-          );
-        } else {
-          return null;
-        }
-      })}
-
-      {/* Match Pop Up */}
-      <MatchDetail match={currentMatch} visibility={detailVisibility} closeTab={CloseDetail} />
-    </View>
-  );
+            );
+          } else {
+            return null;
+          }
+        })}
+      
+        {/* Match Pop Up */}
+        <MatchDetail match={currentMatch} visibility={detailVisibility} closeTab={CloseDetail} />
+      </View>
+    );
 }
   
   

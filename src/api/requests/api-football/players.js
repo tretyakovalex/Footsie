@@ -189,11 +189,9 @@ export async function PlayerStatistics({URL, PARAMS}) {
         const response = apiResponse.data.response;
 
         // Returning for Test
-       // return GetDonnyData(response[0])
+       return GetDonnyData(response[0])
 
-        console.log(JSON.stringify(DBPlayerInfo(response), null, 2));
-
-
+       // console.log(JSON.stringify(DBPlayerInfo(response), null, 2));
     } catch (error) {
         console.error(error)
     }

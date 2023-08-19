@@ -25,6 +25,7 @@ export async function CountryNameAndFlags() {
         // Accesses the response from request
         const countries = response.data.response[0].name;
 
+        // Return a list of country names
         return countries;
 
         
@@ -50,6 +51,7 @@ export async function CupNameAndCountry() {
         // To Access Specific Elements
         
         for (let i = 0; i < response.length; i++) {
+            // Return league name and country name
             return response[i].league.name + " " + response[i].country.name;
         }
     } catch (error) {

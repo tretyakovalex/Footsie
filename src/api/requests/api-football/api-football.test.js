@@ -1,8 +1,10 @@
+// Document Location: src -> api -> requests -> api-football
 import { CountryNameAndFlags, CupNameAndCountry } from './competitions';
 import { TeamNameAndID, TeamCoaches, TeamLeagueInfo, TeamSquad } from './clubs';
 import { PlayerStatistics } from './players';
 
-// Test Competition API's
+// API-Football: Get data on countries and competition names
+// Doesn't require any parameters to run
 describe("\nTESTING: API-Football\nInformation on countries and competititons", () => {
     // TODO: Add Logos for testing
     test('Country Names and Logos', async () => {
@@ -17,9 +19,9 @@ describe("\nTESTING: API-Football\nInformation on countries and competititons", 
     })
 })
 
-
-// TeamNameAndID Result
-const TeamInfo = {
+// API-Football: Parameters for API calls
+// TeamNameAndID: Grab basic information on teams
+const BasicTeamInfoCopy = {
     id: 33,
     name: 'Manchester United',
     tag: 'MUN',
@@ -27,7 +29,7 @@ const TeamInfo = {
     logo: 'https://media-3.api-sports.io/football/teams/33.png'
 };
 // Coach Info Results
-const coachInfoResults = {
+const CoachInfoCopy = {
     career: {
             name: "Manchester United",
             logo: "https://media-2.api-sports.io/football/teams/33.png",
@@ -37,7 +39,7 @@ const coachInfoResults = {
 }
 
 // Team League Info Results
-const LeagueResults = {
+const LeagueResultsCopy = {
     "league name": "UEFA Champions League",
     "rank": 3,
     "points": 9,
@@ -49,8 +51,8 @@ const LeagueResults = {
     "gd": 5
 }
 
-// Squad Line up
-const LineupHeaton = {
+// Squad Line Up Result: T. Heation Result
+const LineupCopy = {
     "Plays For": "Manchester United",
     "name": "T. Heaton",
     "age": 37,
@@ -60,49 +62,52 @@ const LineupHeaton = {
 }
 
 
-// Test Clubs API's
+// Club API's: Grab data on teams. Basic team info, Coach, Squad Line Up and League Standing
 describe("\nTESTING: API-Football\nInformation on clubs", () => {
 
-    // Basic Team Information
+    // Test Basic Team Information Function
     test('Basic information on team: ID, Name, Tag, Country, Logo', async () => {
-        const teamName = await TeamNameAndID({
+        const TeamInfo = await TeamNameAndID({
             URL:'https://api-football-v1.p.rapidapi.com/v3/teams' ,
             TeamID:  '33'
         });
-        expect(teamName).toEqual(TeamInfo)
+        expect(TeamInfo).toEqual(BasicTeamInfoCopy)
     });
 
-    // Team Coach Information
+    // Test Coach Information Function
     test("Coach information: Name, Nationality, Photo, Career", async () => {
-        const coachInfo = await TeamCoaches({
+        const CoachInfo = await TeamCoaches({
             URL: 'https://api-football-v1.p.rapidapi.com/v3/coachs',
             TeamID: '33'
         });
-        expect(coachInfo).toEqual(coachInfoResults.career);
+        expect(CoachInfo).toEqual(CoachInfoCopy.career);
     });
 
+    // Test League Standings Function
     test("League Standings and Results", async () => {
-        const standingHolding = await TeamLeagueInfo({
+        const Standings = await TeamLeagueInfo({
             URL: 'https://api-football-v1.p.rapidapi.com/v3/standings',
             Competition: 'cup' ,
             PARAMS: {'year': '2020', 'teamID': '33'}
         });
-        expect(standingHolding).toEqual(LeagueResults);
+        expect(Standings).toEqual(LeagueResultsCopy);
     });
 
+    // Test Squad Line Up Function
     test("Squad Line Up", async () => {
-        const lineupInfo = await TeamSquad({
+        const SquadLineup = await TeamSquad({
             URL: 'https://api-football-v1.p.rapidapi.com/v3/players/squads',
             TeamID: '33'
         });
 
-        expect(lineupInfo).toEqual(LineupHeaton);
+        expect(SquadLineup).toEqual(LineupCopy);
     });
 
 })
 
-// Squad Player Example
-const DonnyPlayer = {
+// API-Football
+// Grab data on players: D. Van De Beek Result
+const DonnyCopyResult = {
     player: {
         name: "D. van de Beek",
         "first name": "Donny",
@@ -121,12 +126,13 @@ const DonnyPlayer = {
 }
 
 
-
+// API-Football 
 // Test Player API's
 describe("\nTESTING: API-Football\nInformation on players", () => {
 
+    // Grab data on each player in a team
     test("Donny Van De Beek 2020 Season", async () => {
-        const squadPlayers = await PlayerStatistics({
+        const SquadPlayers = await PlayerStatistics({
             URL: 'https://api-football-v1.p.rapidapi.com/v3/players',
             PARAMS: {
                 teamID: '33',
@@ -134,16 +140,6 @@ describe("\nTESTING: API-Football\nInformation on players", () => {
             }
         });
     
-        expect(squadPlayers).toEqual(DonnyPlayer);
-    })
-})
-
-/*
-test("Squad Players - Donny Van De Beek Example", async () => {
-    const teamSquadPlayer = await TeamSquad({
-        URL: 'https://api-football-v1.p.rapidapi.com/v3/players', 
-        TeamID: "33"
+        expect(SquadPlayers).toEqual(DonnyCopyResult);
     });
-    expect(teamSquadPlayer).toEqual(DonnyPlayer);
 })
-*/
