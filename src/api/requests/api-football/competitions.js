@@ -1,23 +1,42 @@
 // Grab data on countries and competitions
 
 // Private Imports
-import { Options, ReturnResponse, ErrorMessage, competitionEndpoints, competitionParams } from './api-football-endpoints';
+import { Options, ReturnResponse, ErrorMessage,compEndpoints, OptionsNoParams } from './api-football-endpoints';
+
+import { KeyExistence } from './global-functions';
+
+function OrganiseCountries(response) {
+    const Countries = {};
+
+    for (let i = 0; i < response.length; i++) {
+        const {name: countryName, flag: countryLogo, tag: countryTag} = response[i];
+
+        // Ensure no duplicate countries
+        KeyExistence(
+            false,
+            Countries,
+            countryName, {
+            flag: countryLogo,
+            tag: countryTag
+        })
+    }
+}
 
 // V3 - Countries
-// Country Names, Flags and Tag
+// Get Country Names, Flags and Tag
 export async function CountryNameAndFlags() {
     try {
         // GET Country names, flag and tag
-        const response = await ReturnResponse(competitionEndpoints.countries, ErrorMessage("Country Name and Flags from 'API-Football V3 - Countries' Request", "Competition.js"))
+        const response = await ReturnResponse(Options(compEndpoints.countries), ErrorMessage("Country Name and Flags from 'API-Football V3 - Countries' Request", "Competition.js"))
 
-        // TODO:
         //  Create a database function to return information I am looking for
-        const countries = GetCountries(response);
+        const countries = OrganiseCountries(response);
 
         // Use this to test API Call for NPM Test - Euro Championship World
         // TODO:
         //   Add Logo to test result
-        const npmResult = response[0].name;
+        const npmAlbania = response[0];
+        const npmResult = {name: npmAlbania.name, logo: npmAlbania.flag, tag: npmAlbania.code};
 
         // Fill database or pass NPM Test
         return {
@@ -30,32 +49,34 @@ export async function CountryNameAndFlags() {
     }
 }
 
-// Organise API Response by country and leagues
+// Make a list of competitions based on country and name
 function GetCompetitions(response) {
     const competitions = {}
 
     // Push all competitions and countries to competitions array
     for (let i = 0; i < response.length; i++) {
 
-        const countryName = response[i].country.name;
-        const competitionName = response[i].league.name
+        // Store current country and competititon name
+        const {country: {name: countryName}, league: {name: competitionName}} = response[i];
 
-        if (!response[i].country.name) {
-            competitions[countryName] = [competitionName]; 
-        } else {
-            competitions[countryName].push(competitionName)
-        }
+        // If country doesn't exit create key or add to key
+        KeyExistence(
+            true,
+            competitions,
+            countryName,
+            competitionName)
     }
 
     return competitions;
 }
 
 
-// Organise Country and Competition into array
-function OrganiseCountries() {
-        const competitionObj = GetCompetitions(response);
+// Returns an organised array of objects 
+function OrganiseCompetitions(CountryObj) {
+        const competitionObj = GetCompetitions(CountryObj);
         const competitions = [];
 
+        // Create an array of objects for memory purposes
         for (const country in competitionObj) {
             competitions.push({
                 country: country,
@@ -75,12 +96,15 @@ function OrganiseCountries() {
 export async function CompetitionNameAndCountry() {
     try {
         // GET List of leagues / Cup and hosting country
-        const response = await ReturnResponse(Options(competitionEndpoints.leagues, competitionParams.default), ErrorMessage("List of leauges / cups from 'API-Football V3 - Leagues by type' Request"))
+        // TODO:
+        //    Look at doing parameters automatically
+        const response = await ReturnResponse(Options(compEndpoints.leagues, {type: 'cup'}), ErrorMessage("List of leauges / cups from 'API-Football V3 - Leagues by type' Request"));
 
+        // Return based on NPM Test or Database call
         return {
-            npmTest: response[i].league.name + " " + response[i].country.name,
-            databaseCompetitions: OrganiseCountries(GetCompetitions())
-        }
+            npmTest: `${response[0].league.name} ${response[0].country.name}`,
+            databaseCompetitions: OrganiseCompetitions(response)
+        } 
     } catch (error) {
         console.error(error)
     }

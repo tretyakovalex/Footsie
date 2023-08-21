@@ -10,12 +10,16 @@ describe("\nTESTING: API-Football\nInformation on countries and competititons", 
     // Testing whether country name and logos are fetched properly 
     test('Fetching Country Names and Logos', async () => {
         const country = await CountryNameAndFlags();
-        expect(country).toBe("Albania");
+        expect(country.npmTest).toEqual({
+            "logo": 'https://media-1.api-sports.io/flags/al.svg', 
+            "name": 'Albania', 
+            "tag": 'AL'
+        });
     });
 
     // TODO: Add Country for testing
     // Testing to see whether cup and countries are fetched properly
-    test('Fetching Cup Names and Countries', async () => {
+    test('Fetching Competition Names and Countries', async () => {
         const cups = await CompetitionNameAndCountry();
         expect(cups.npmTest).toBe("Euro Championship World")
     })

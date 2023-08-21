@@ -24,22 +24,20 @@ export async function TeamNameAndID({URL, TeamID}) {
         StringCheck(TeamID);
 
         // Send Request
-        const apiResponse = await axios(Options(URL, {id: TeamID}));
+        const apiResponse = await ReturnResponse(Options(URL, {id: TeamID}), ErrorMessage("Team name and ID from 'API-Football - V3 Team Information' ", "clubs.js"));
 
         // Error Handling - Check teams exist
         if (!apiResponse || apiResponse.data.response.length == 0) {
             throw new Error("ERROR Teams: No team information found");
         }
-        // Direct access to objecvt 
-        const response = apiResponse.data.response[0].team;
 
         // Team Basic Information
         const TeamInfo = {
-            id: response.id,
-            name: response.name,
-            tag: response.code,
-            country: response.country,
-            logo: response.logo
+            id: apiResponse.id,
+            name: apiResponse.name,
+            tag: apiResponse.code,
+            country: apiResponseresponse.country,
+            logo: apiResponse.logo
         };
 
         // NPM Test - Basic Man United Info
