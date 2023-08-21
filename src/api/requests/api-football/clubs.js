@@ -3,26 +3,11 @@
 // Public Imports
 import axios from 'axios';
 
+// Private Imports
+import { Options } from './api-football-endpoints';
+
 // TODO:
 //     Add error handling & No result cases
-
-// Constants & Header
-const Header = {
-    key: '060abebd44msheb1fbe6d87b8111p1c9872jsnd77b5a96aa2e',
-    host: 'api-football-v1.p.rapidapi.com'
-}
-
-// Request Information
-// With Parameters
-const OptionsTemplate = (URL, PARAMS) => ({
-    method: 'GET', 
-    url: URL,
-    params: PARAMS,
-    headers: {
-        'X-RapidAPI-Key': Header.key,
-        'X-RapidAPI-Host': Header.host
-    },
-})
 
 // Check parameter is a string 
 function StringCheck(StringInQuestion) {
@@ -39,7 +24,7 @@ export async function TeamNameAndID({URL, TeamID}) {
         StringCheck(TeamID);
 
         // Send Request
-        const apiResponse = await axios(OptionsTemplate(URL, {id: TeamID}));
+        const apiResponse = await axios(Options(URL, {id: TeamID}));
 
         // Error Handling - Check teams exist
         if (!apiResponse || apiResponse.data.response.length == 0) {
@@ -94,7 +79,7 @@ export async function TeamCoaches({URL, TeamID}) {
         // Checks TeamID is a string
         StringCheck(TeamID);
 
-        const apiResponse = await axios(OptionsTemplate(URL, {team: TeamID}))
+        const apiResponse = await axios(Options(URL, {team: TeamID}))
         // Direct access to coach information
         const response = apiResponse.data.response[1];
 
@@ -132,7 +117,7 @@ export async function TeamLeagueInfo(ObjParameter) {
         StringCheck(ObjParameter.PARAMS.year);
         StringCheck(ObjParameter.PARAMS.teamID)
 
-        const apiResponse = await axios(OptionsTemplate(ObjParameter.URL, {season: ObjParameter.PARAMS.year, team: ObjParameter.PARAMS.teamID}))
+        const apiResponse = await axios(Options(ObjParameter.URL, {season: ObjParameter.PARAMS.year, team: ObjParameter.PARAMS.teamID}))
         // Specific responses
         const response = apiResponse.data.response[numberRepresentation].league;
 
@@ -222,7 +207,7 @@ export async function TeamSquad({URL, TeamID}) {
         StringCheck(TeamID);
 
         // Receive a response from the API 
-        const apiResponse = await axios(OptionsTemplate(URL, {
+        const apiResponse = await axios(Options(URL, {
             team: TeamID,
         }));
         // Direct access to data

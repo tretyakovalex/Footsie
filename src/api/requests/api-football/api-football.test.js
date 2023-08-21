@@ -1,5 +1,5 @@
 // Document Location: src -> api -> requests -> api-football
-import { CountryNameAndFlags, CupNameAndCountry } from './competitions';
+import { CountryNameAndFlags, CompetitionNameAndCountry } from './competitions';
 import { TeamNameAndID, TeamCoaches, TeamLeagueInfo, TeamSquad } from './clubs';
 import { PlayerStatistics } from './players';
 
@@ -7,15 +7,17 @@ import { PlayerStatistics } from './players';
 // Doesn't require any parameters to run
 describe("\nTESTING: API-Football\nInformation on countries and competititons", () => {
     // TODO: Add Logos for testing
-    test('Country Names and Logos', async () => {
+    // Testing whether country name and logos are fetched properly 
+    test('Fetching Country Names and Logos', async () => {
         const country = await CountryNameAndFlags();
         expect(country).toBe("Albania");
     });
 
     // TODO: Add Country for testing
-    test('Cup Names and Countries', async () => {
-        const cups = await CupNameAndCountry();
-        expect(cups).toBe("Euro Championship World")
+    // Testing to see whether cup and countries are fetched properly
+    test('Fetching Cup Names and Countries', async () => {
+        const cups = await CompetitionNameAndCountry();
+        expect(cups.npmTest).toBe("Euro Championship World")
     })
 })
 

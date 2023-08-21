@@ -3,24 +3,10 @@
 // Public Imports
 import axios from 'axios';
 
-// Constants & Header Information
-const Header = {
-    key: '060abebd44msheb1fbe6d87b8111p1c9872jsnd77b5a96aa2e',
-    host: 'api-football-v1.p.rapidapi.com'
-}
+// Private Imports 
+import { Options } from './api-football-endpoints';
 
-// Options Template - Update URL and PARAMS based on API Requests
-const OptionsTemplate = (URL, PARAMS) => ({
-    method: 'GET', 
-    url: URL,
-    params: PARAMS,
-    headers: {
-        'X-RapidAPI-Key': Header.key,
-        'X-RapidAPI-Host': Header.host
-    },
-})
-
-// NPM Test Result - Donny Van De Beej
+// Get information on D.V.D.B for NPM Test
 function GetDonnyData(Player) {
     // Direct access to API Response JSON
     const playerDictionary = Player.player;
@@ -45,7 +31,7 @@ function GetDonnyData(Player) {
         }
     }
 
-    // Return Donny basic info and stats
+    // Return basic info and stats
     return DonnyData;
 }
 
@@ -114,7 +100,7 @@ function CollectPlayerStats(Statistics) {
 
         // Simplify data and add to Collection of stats
         CollectiveStats.push({
-            "Competition": {
+            Competition: {
                 teamname: Team.team.name,
                 competition: Team.league.name,
                 "competition logo": Team.league.logo
@@ -194,7 +180,7 @@ function DBPlayerInfo(Players) {
 export async function PlayerStatistics({URL, PARAMS}) {
 
     try {
-        const apiResponse = await axios(OptionsTemplate(URL, {
+        const apiResponse = await axios(Options(URL, {
             team: PARAMS.teamID,
             season: PARAMS.season
         }));
