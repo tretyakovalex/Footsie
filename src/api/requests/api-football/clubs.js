@@ -1,4 +1,4 @@
-// The file is for information on teams
+// Grab data on teams
 
 // Public Imports
 import axios from 'axios';
@@ -6,7 +6,7 @@ import axios from 'axios';
 // TODO:
 //     Add error handling & No result cases
 
-// Constants
+// Constants & Header
 const Header = {
     key: '060abebd44msheb1fbe6d87b8111p1c9872jsnd77b5a96aa2e',
     host: 'api-football-v1.p.rapidapi.com'
@@ -14,7 +14,7 @@ const Header = {
 
 // Request Information
 // With Parameters
-const paramOptions = (URL, PARAMS) => ({
+const OptionsTemplate = (URL, PARAMS) => ({
     method: 'GET', 
     url: URL,
     params: PARAMS,
@@ -24,7 +24,7 @@ const paramOptions = (URL, PARAMS) => ({
     },
 })
 
-// Check if the parameter is a string else show an error
+// Check parameter is a string 
 function StringCheck(StringInQuestion) {
     if (typeof StringInQuestion !== 'string') {
         throw new Error('ERROR Parameters: Must be a string.');
@@ -39,11 +39,13 @@ export async function TeamNameAndID({URL, TeamID}) {
         StringCheck(TeamID);
 
         // Send Request
-        const apiResponse = await axios(paramOptions(URL, {id: TeamID}));
+        const apiResponse = await axios(OptionsTemplate(URL, {id: TeamID}));
 
+        // Error Handling - Check teams exist
         if (!apiResponse || apiResponse.data.response.length == 0) {
             throw new Error("ERROR Teams: No team information found");
         }
+        // Direct access to objecvt 
         const response = apiResponse.data.response[0].team;
 
         // Team Basic Information
@@ -55,6 +57,7 @@ export async function TeamNameAndID({URL, TeamID}) {
             logo: response.logo
         };
 
+        // NPM Test - Basic Man United Info
         return TeamInfo;
         // console.log('TeamInfo:', JSON.stringify(TeamInfo, null, 2));
 
@@ -64,10 +67,11 @@ export async function TeamNameAndID({URL, TeamID}) {
 }
 
 // Organise the coach career
-// TODO: Test this
 function OrganiseCoachCareer(Career) {
-    const CareerHistory = {}; // Initialize an empty object
+    // Initialize an empty object
+    const CareerHistory = {}; 
 
+    // Go through coaches career
     for (let i = Career.length - 1;  i >= 0; i--) {
         const club = Career[i];
         CareerHistory[i] = {
@@ -78,19 +82,20 @@ function OrganiseCoachCareer(Career) {
         };
     }
 
+    // Return Coach History
     return CareerHistory;
 }
 
 
 // V3 - Coaches by Team ID
-// Team Coach - Need TeamID for this to work
-// TODO: ADD COACH CAREER
+// Need TeamID for this to work
 export async function TeamCoaches({URL, TeamID}) {
     try {
         // Checks TeamID is a string
         StringCheck(TeamID);
 
-        const apiResponse = await axios(paramOptions(URL, {team: TeamID}))
+        const apiResponse = await axios(OptionsTemplate(URL, {team: TeamID}))
+        // Direct access to coach information
         const response = apiResponse.data.response[1];
 
         // Put data into one object
@@ -101,6 +106,7 @@ export async function TeamCoaches({URL, TeamID}) {
             career: OrganiseCoachCareer(response.career)
         }
 
+        // NPM Test - Basic information on coach
         return CoachInfo.career[0]
         // console.log(JSON.stringify(CoachInfo.career[0], null, 2))
 
@@ -126,7 +132,7 @@ export async function TeamLeagueInfo(ObjParameter) {
         StringCheck(ObjParameter.PARAMS.year);
         StringCheck(ObjParameter.PARAMS.teamID)
 
-        const apiResponse = await axios(paramOptions(ObjParameter.URL, {season: ObjParameter.PARAMS.year, team: ObjParameter.PARAMS.teamID}))
+        const apiResponse = await axios(OptionsTemplate(ObjParameter.URL, {season: ObjParameter.PARAMS.year, team: ObjParameter.PARAMS.teamID}))
         // Specific responses
         const response = apiResponse.data.response[numberRepresentation].league;
 
@@ -157,12 +163,14 @@ export async function TeamLeagueInfo(ObjParameter) {
 
 // Collect Team Squad Basic Information
 function TeamSquadBasicInfo(TeamSquad) {
+    // Empty Object to hold squad players and basic information
     const Squad = {};
 
     const TeamName = TeamSquad[0].team.name
     const SquadLineUp = TeamSquad[0].players
 
     for (let i = 0; i < SquadLineUp.length; i++) {
+        // Add players to 'empty' squad
         const Players = SquadLineUp[i];
         Squad[i] = {
                 "Plays For":  TeamName,
@@ -174,16 +182,18 @@ function TeamSquadBasicInfo(TeamSquad) {
             }
     }
 
+    // Return a squad full of  players
     return Squad
 }
 
 function PlayersInPosition(Players) {
-    // attacker, defender, midfielder, goalkeeper
+    // General stats on the amount of players in a position
     let attacker = 0;
     let defender = 0;
     let midfielder = 0;
     let goalkeeper = 0;
 
+    // Assign each player to their position
     for (let i = 0; i < Object.keys(Players).length; i++) {
         const Footballer = Players[String(i)].position;
         
@@ -208,18 +218,23 @@ function PlayersInPosition(Players) {
 // Team Squad
 export async function TeamSquad({URL, TeamID}) {
     try {
+        // Check TeamID is a string
         StringCheck(TeamID);
 
-        const apiResponse = await axios(paramOptions(URL, {
+        // Receive a response from the API 
+        const apiResponse = await axios(OptionsTemplate(URL, {
             team: TeamID,
         }));
+        // Direct access to data
         const response = apiResponse.data.response;
 
         const Squad = TeamSquadBasicInfo(response);
-        const TestSquad = Squad["0"];
 
-        // Count / Check position count
-        // PlayersInPosition(Squad);
+        // Amount of players in a position | Att, Mid, Def, GK
+        const squadPositions = PlayersInPosition(Squad);
+
+        // NPM Test - Check squad players T. Heation as example
+        const TestSquad = Squad["0"];
         return TestSquad;
 
     } catch (error) {
