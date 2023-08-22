@@ -20,20 +20,12 @@ export const Options = (URL, PARAMS) => ({
     },
 })
 
-export const OptionsNoParams = (URL) => ({
-    method: 'GET', 
-    url: URL,
-    headers: {
-        'X-RapidAPI-Key': HEADER.key,
-        'X-RapidAPI-Host': HEADER.host
-    },
-})
-
-
 // Make API Call and return the response
 export async function ReturnResponse(API_CALL, ERROR_MSG) {
     try {
         const apiResponse = await axios(API_CALL);
+
+        console.log(JSON.stringify(apiResponse, null, 2))
 
         if (!apiResponse || apiResponse.data.response.length == 0) {
             console.error("Can't find cups and leagues");
@@ -57,18 +49,26 @@ export function ErrorMessage(Problem, FileLocation) {
 
 // Endpoints for competitions.js
 export const compEndpoints = {
-    leagues: 'https://api-football-v1.p.rapidapi.com/v3/leagues',
-    countries: 'https://api-football-v1.p.rapidapi.com/v3/countries'
+    leagues: 'https://api-football-v1.p.rapidapi.com/v3/leagues',  // V3  Leagues by type (League or Cup)
+    countries: 'https://api-football-v1.p.rapidapi.com/v3/countries'  //  V3 - Countries
 }
-
-export const competitionParams = {
-    default: 'cup',
-    league: 'league'
-}
-
 
 // Endpoints for clubs.js
+export const teamEndpoints = {
+    teamURL: 'https://api-football-v1.p.rapidapi.com/v3/teams', // V3 - Team Informations
+    coachURL: '', // V3 - Coaches by Team ID
+    leagueURL: '' // V3 - Standings by Team ID
+}
 
 
 
 // Endpoints for player.js
+export const playerEndpoints = {
+    playersURL: 'https://api-football-v1.p.rapidapi.com/v3/players' // V3 - Player Statistics by Team ID
+}
+
+
+export const PlayerDefaults = {
+    teamID: '33',
+    season: '2020'
+}

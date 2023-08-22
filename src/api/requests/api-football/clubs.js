@@ -4,7 +4,7 @@
 import axios from 'axios';
 
 // Private Imports
-import { Options } from './api-football-endpoints';
+import { Options, ReturnResponse , ErrorMessage , teamEndpoints } from './api-football-endpoints';
 
 // TODO:
 //     Add error handling & No result cases
@@ -18,13 +18,18 @@ function StringCheck(StringInQuestion) {
 
 // V3 - Team Informations
 // Team API Football ID - Team Name - Country - Image - Tag
-export async function TeamNameAndID({URL, TeamID}) {
+export async function TeamNameAndID({PARAMS}) {
     try {
-        // Checks TeamID is a string
-        StringCheck(TeamID);
+        const teamID = PARAMS !== undefined ? PARAMS.TeamID : '33';
 
         // Send Request
-        const apiResponse = await ReturnResponse(Options(URL, {id: TeamID}), ErrorMessage("Team name and ID from 'API-Football - V3 Team Information' ", "clubs.js"));
+        const apiResponse = await ReturnResponse(
+            Options(teamEndpoints.teamURL, {
+                id: teamID
+            }), ErrorMessage("Team name and ID from 'API-Football - V3 Team Information' ", "clubs.js"));
+
+
+        console.log(JSON.stringify(apiResponse[0], null, 2))
 
         // Error Handling - Check teams exist
         if (!apiResponse || apiResponse.data.response.length == 0) {
@@ -36,12 +41,15 @@ export async function TeamNameAndID({URL, TeamID}) {
             id: apiResponse.id,
             name: apiResponse.name,
             tag: apiResponse.code,
-            country: apiResponseresponse.country,
+            country: apiResponse.country,
             logo: apiResponse.logo
         };
 
         // NPM Test - Basic Man United Info
-        return TeamInfo;
+        return {
+            npmTest: TeamInfo,
+            dbResponse: "Empty" // TODO: Create database function 
+        };
         // console.log('TeamInfo:', JSON.stringify(TeamInfo, null, 2));
 
     } catch (error) {

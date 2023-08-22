@@ -1,7 +1,7 @@
 // Grab data on countries and competitions
 
 // Private Imports
-import { Options, ReturnResponse, ErrorMessage,compEndpoints, OptionsNoParams } from './api-football-endpoints';
+import { Options, ReturnResponse, ErrorMessage,compEndpoints } from './api-football-endpoints';
 
 import { KeyExistence } from './global-functions';
 
@@ -33,8 +33,6 @@ export async function CountryNameAndFlags() {
         const countries = OrganiseCountries(response);
 
         // Use this to test API Call for NPM Test - Euro Championship World
-        // TODO:
-        //   Add Logo to test result
         const npmAlbania = response[0];
         const npmResult = {name: npmAlbania.name, logo: npmAlbania.flag, tag: npmAlbania.code};
 

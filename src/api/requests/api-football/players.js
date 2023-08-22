@@ -1,13 +1,10 @@
 // Grab data on players
 
-// Public Imports
-import axios from 'axios';
-
 // Private Imports 
-import { Options } from './api-football-endpoints';
+import { Options, ReturnResponse, ErrorMessage ,PlayerDefaults, playerEndpoints } from './api-football-endpoints';
 
 // Get information on D.V.D.B for NPM Test
-function GetDonnyData(Player) {
+function GetNPMData(Player) {
     // Direct access to API Response JSON
     const playerDictionary = Player.player;
     const statisticDictionary = Player.statistics[0];
@@ -177,19 +174,24 @@ function DBPlayerInfo(Players) {
 
 // V3 - Player statistics by Team ID
 // Basic Player Information & Statistics
-export async function PlayerStatistics({URL, PARAMS}) {
+export async function PlayerStatistics({PARAMS}) {
 
     try {
-        const apiResponse = await axios(Options(URL, {
-            team: PARAMS.teamID,
-            season: PARAMS.season
-        }));
-    
-        // Response from API Football
-        const response = apiResponse.data.response;
+        const response = await ReturnResponse(
+            Options(playerEndpoints.playersURL, {
+            team: PARAMS != undefined ? PARAMS.teamID : PlayerDefaults.teamID,
+            season: PARAMS != undefined ? PARAMS.season : PlayerDefaults.season
+        }), ErrorMessage("Player statistics from 'V3 - Player Statistics' ", "players.js"));
 
         // NPM Test - Returning for Test
-       return GetDonnyData(response[0])
+        const Donny = GetNPMData(response[0]);
+        console.log(JSON.stringify(response[0].player.name, null, 2));
+
+
+       return {
+            npmTest: Donny,
+            dbResult: DBPlayerInfo(response)
+       }
 
        // console.log(JSON.stringify(DBPlayerInfo(response), null, 2));
     } catch (error) {

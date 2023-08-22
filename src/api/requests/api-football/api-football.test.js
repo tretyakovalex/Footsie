@@ -74,10 +74,9 @@ describe("\nTESTING: API-Football\nInformation on clubs", () => {
     // Test Basic Team Information Function
     test('Basic information on team: ID, Name, Tag, Country, Logo', async () => {
         const TeamInfo = await TeamNameAndID({
-            URL:'https://api-football-v1.p.rapidapi.com/v3/teams' ,
             TeamID:  '33'
         });
-        expect(TeamInfo).toEqual(BasicTeamInfoCopy)
+        expect(TeamInfo.npmTest).toEqual(BasicTeamInfoCopy)
     });
 
     // Test Coach Information Function
@@ -113,20 +112,20 @@ describe("\nTESTING: API-Football\nInformation on clubs", () => {
 
 // API-Football
 // Grab data on players: D. Van De Beek Result
-const DonnyCopyResult = {
+const NPMCopyResult = {
     player: {
-        name: "D. van de Beek",
-        "first name": "Donny",
-        "second name": "van de Beek",
-        age: 26,
-        nationality: "Netherlands",
+        name: "Alex Telles",
+        "first name": "Alex",
+        "second name": "Nicolao Telles",
+        age: 31,
+        nationality: "Brazil",
         injured: false,
-        photo: "https://media-3.api-sports.io/football/players/547.png"
+        photo: "https://media-3.api-sports.io/football/players/378.png"
     }, 
     statistic: {
         team: "Manchester United",
-        appearences: 19,
-        goals: 1,
+        appearences: 9,
+        goals: 0,
         season: 2020
     }
 }
@@ -137,15 +136,12 @@ const DonnyCopyResult = {
 describe("\nTESTING: API-Football\nInformation on players", () => {
 
     // Grab data on each player in a team
-    test("Donny Van De Beek 2020 Season", async () => {
+    test("020 Season - Get basic information player (Currently Alex Telles)", async () => {
         const SquadPlayers = await PlayerStatistics({
-            URL: 'https://api-football-v1.p.rapidapi.com/v3/players',
-            PARAMS: {
-                teamID: '33',
-                season: '2020'
-            }
+            teamID: '33',
+            season: '2020'
         });
     
-        expect(SquadPlayers).toEqual(DonnyCopyResult);
+        expect(SquadPlayers.npmTest).toEqual(NPMCopyResult);
     });
 })
