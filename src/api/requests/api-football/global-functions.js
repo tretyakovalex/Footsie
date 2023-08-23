@@ -24,3 +24,8 @@ export function printJSON(variable, maxCharacters) {
         console.error('Error:', error);
     }
 }
+
+// Check parameter is a string 
+export function StringCheck(StringInQuestion) {
+    return typeof(StringInQuestion) === 'string' ? StringInQuestion : JSON.stringify(StringInQuestion);
+}

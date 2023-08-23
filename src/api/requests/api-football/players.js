@@ -1,7 +1,7 @@
 // Grab data on players
 
 // Private Imports 
-import { Options, ReturnResponse, ErrorMessage ,PlayerDefaults, playerEndpoints } from './api-football-endpoints';
+import { Options, ReturnResponse, ErrorMessage , Defaults, playerEndpoints } from './api-football-endpoints';
 import { printJSON } from './global-functions';
 
 // Get information on D.V.D.B for NPM Test
@@ -177,8 +177,8 @@ function DBPlayerInfo(Players) {
 // Basic Player Information & Statistics
 export async function PlayerStatistics(PARAMS) {
     try {
-        const teamID = PARAMS != undefined ? PARAMS.TeamID : PlayerDefaults.teamID;
-        const season = PARAMS != undefined ? PARAMS.season : PlayerDefaults.season;
+        const teamID = PARAMS != undefined ? PARAMS.TeamID : Defaults.teamID;
+        const season = PARAMS != undefined ? PARAMS.season : Defaults.season;
 
         const response = await ReturnResponse(
             Options(playerEndpoints.playersURL, {
@@ -188,8 +188,6 @@ export async function PlayerStatistics(PARAMS) {
 
         // NPM Test - Returning for Test
         const npmResult = GetNPMData(response[0]);
-
-        printJSON(DBPlayerInfo(response))
 
        return {
             npmTest: npmResult,

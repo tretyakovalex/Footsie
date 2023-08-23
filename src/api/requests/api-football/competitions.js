@@ -1,15 +1,10 @@
 // Grab data on countries and competitions
 
 
-// TODO
-//   LEAGUE STANDINGS - V3 Standings By ID
-//    Organise Countries Return Statement
-//   Competition and ID, Type: Cup / League process
-
 // Private Imports
-import { Options, ReturnResponse, ErrorMessage,compEndpoints } from './api-football-endpoints';
+import { Options, ReturnResponse, ErrorMessage,compEndpoints, Defaults } from './api-football-endpoints';
 
-import { KeyExistence } from './global-functions';
+import { KeyExistence, StringCheck, printJSON } from './global-functions';
 
 function OrganiseCountries(response) {
     const Countries = {};
@@ -26,6 +21,8 @@ function OrganiseCountries(response) {
             tag: countryTag
         })
     }
+
+    return Countries;
 }
 
 // V3 - Countries
@@ -71,6 +68,7 @@ function GetCompetitions(response) {
             competitionName)
     }
 
+    // List of countries and their competitions
     return competitions;
 }
 
@@ -97,18 +95,102 @@ function OrganiseCompetitions(CountryObj) {
 
 // V3 - Leagues by type (League or Cup)
 // League and Cup Names W/ Hosting Country
-export async function CompetitionNameAndCountry() {
+export async function CompetitionNameAndCountry(competition) {
     try {
+
+        const comp = competition != undefined ? competition : 'cup';
+
         // GET List of leagues / Cup and hosting country
-        // TODO:
-        //    Look at doing parameters automatically
-        const response = await ReturnResponse(Options(compEndpoints.leagues, {type: 'cup'}), ErrorMessage("List of leauges / cups from 'API-Football V3 - Leagues by type' Request"));
+        const response = await ReturnResponse(Options(compEndpoints.leagues, {type: comp }), ErrorMessage("List of leauges / cups from 'API-Football V3 - Leagues by type' Request"));
 
         // Return based on NPM Test or Database call
         return {
             npmTest: `${response[0].league.name} ${response[0].country.name}`,
             databaseCompetitions: OrganiseCompetitions(response)
         } 
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+
+// League Standing Structure
+function StandingStructure(League) {
+
+    // Basic information on leagues
+    const leagueDetails = {
+        leagueName: League.name,
+        country: League.country,
+        leagueLogo: League.logo,
+        countryFlag: League.flag       
+    }
+
+    // Direct access to league standings
+    const standings = League.standings[0];
+    // Hold teams in correct position
+    const leagueStandings = []
+
+    // Standings for each time
+    for (let i = 0; i < standings.length; i++) {
+        const team = standings[i];
+
+        // Direct access to specific keys: Team & All
+        const {team: teamInfo, all: stats} = team;
+
+        // Information about each team
+        const teamStanding = {
+            position: team.rank,
+            name: teamInfo.name,
+            emblem: teamInfo.logo,
+            points: team.points,
+            played: stats.played,
+            win: stats.win,
+            draw: stats.draw,
+            lose: stats.lose,
+            gf: stats.goals.for,
+            ga: stats.goals.ga,
+            gd: team.goalsDiff,
+            form: team.form
+        };
+
+        // Add team to standings
+        leagueStandings.push(teamStanding);
+    }
+
+    // Holding league data
+    const leagueStructure = {
+        league: leagueDetails,
+        standings: leagueStandings
+    }
+
+    // Return league standings
+    return leagueStructure
+}
+
+// V3 - Standings by League
+// Find Full League Standings and Points
+// Use this function for all league standings
+export async function LeagueStandings(PARAMS) {
+    try {
+        // Check if parameters been inputted, else add defaults
+        const season = PARAMS != undefined ? StringCheck(PARAMS.season) : Defaults.season;  // '2020'
+        const leagueID = PARAMS != undefined ? StringCheck(PARAMS.TeamID) : Defaults.leagueID   // '33'
+
+        // Request Leagues based on response
+        const apiResponse = await ReturnResponse(Options(compEndpoints.standings, {
+            season: season,
+            league: leagueID
+        }), ErrorMessage("unable to GET 'V3 - Standings by League' via ","competitions.js"))
+
+        // Direct Access To Object
+        const response = apiResponse[0];
+
+        const League = StandingStructure(response.league);
+        // printJSON(League, 200000);
+
+        return League;
+
+
     } catch (error) {
         console.error(error)
     }

@@ -1,31 +1,8 @@
-// Document Location: src -> api -> requests -> api-football
-import { CountryNameAndFlags, CompetitionNameAndCountry } from './competitions';
 import { TeamNameAndID, TeamCoaches, TeamLeagueInfo, TeamSquad } from './clubs';
-import { PlayerStatistics } from './players';
 
-// API-Football: Get data on countries and competition names
-// Doesn't require any parameters to run
-describe("\nTESTING: API-Football\nInformation on countries and competititons", () => {
-    // TODO: Add Logos for testing
-    // Testing whether country name and logos are fetched properly 
-    test('Fetching Country Names and Logos', async () => {
-        const country = await CountryNameAndFlags();
-        expect(country.npmTest).toEqual({
-            "logo": 'https://media-2.api-sports.io/flags/al.svg', 
-            "name": 'Albania', 
-            "tag": 'AL'
-        });
-    });
+// API-Football: Get data on [Teams, Coaches, Specific Teams, Squad ]
 
-    // TODO: Add Country for testing
-    // Testing to see whether cup and countries are fetched properly
-    test('Fetching Competition Names and Countries', async () => {
-        const cups = await CompetitionNameAndCountry();
-        expect(cups.npmTest).toBe("Euro Championship World")
-    })
-})
 
-// API-Football: Parameters for API calls
 // TeamNameAndID: Grab basic information on teams
 const BasicTeamInfoCopy = {
     id: 33,
@@ -93,41 +70,7 @@ describe("\nTESTING: API-Football\nInformation on clubs", () => {
     // Test Squad Line Up Function
     test("Squad Line Up", async () => {
         const SquadLineup = await TeamSquad();
-
         expect(SquadLineup).toEqual(LineupCopy);
     });
 
-})
-
-// API-Football
-// Grab data on players: D. Van De Beek Result
-const NPMCopyResult = {
-    player: {
-        name: "D. van de Beek",
-        "first name": "Donny",
-        "second name": "van de Beek",
-        age: 26,
-        nationality: "Netherlands",
-        injured: false,
-        photo: "https://media-3.api-sports.io/football/players/547.png"
-    }, 
-    statistic: {
-        team: "Manchester United",
-        appearences: 19,
-        goals: 1,
-        season: 2020
-    }
-}
-
-
-// API-Football 
-// Test Player API's
-describe("\nTESTING: API-Football\nInformation on players", () => {
-
-    // Grab data on each player in a team
-    test("2020 Season - Get basic information player (Currently Alex Telles)", async () => {
-        const SquadPlayers = await PlayerStatistics();
-    
-        expect(SquadPlayers.npmTest).toEqual(NPMCopyResult);
-    });
 })

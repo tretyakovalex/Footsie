@@ -1,16 +1,8 @@
 // Grab data on teams
 
 // Private Imports
-import { Options, ReturnResponse , ErrorMessage , teamEndpoints, PlayerDefaults } from './api-football-endpoints';
-import { printJSON } from './global-functions';
-
-// TODO:
-//     Add error handling & No result cases
-
-// Check parameter is a string 
-function StringCheck(StringInQuestion) {
-    return typeof(StringInQuestion) === 'string' ? StringInQuestion : JSON.stringify(StringInQuestion);
-}
+import { Options, ReturnResponse , ErrorMessage , teamEndpoints, Defaults } from './api-football-endpoints';
+import { printJSON, StringCheck } from './global-functions';
 
 // V3 - Team Informations
 // Team API Football ID - Team Name - Country - Image - Tag
@@ -81,7 +73,7 @@ function OrganiseCoachCareer(Career) {
 export async function TeamCoaches(ID) {
     try {
         const apiResponse = await ReturnResponse(Options(teamEndpoints.coachURL, {
-            team: ID != undefined ? StringCheck(ID) : PlayerDefaults.teamID
+            team: ID != undefined ? StringCheck(ID) : Defaults.teamID
         }), ErrorMessage("unable to find 'V3 - Coaches by Team ID'", "clubs.js"))
 
         // Direct Access to objects
@@ -107,11 +99,12 @@ export async function TeamCoaches(ID) {
 
 // V3 - Standings by Team ID
 // League Information - PARAMS = {Year, TeamID}
+// Use this function for specific teams
 export async function TeamLeagueInfo(Club) {
     try {
 
-        const season = Club != undefined ? StringCheck(Club.season) : PlayerDefaults.season;
-        const TeamID = Club != undefined ? StringCheck(Club.TeamID) : PlayerDefaults.teamID;
+        const season = Club != undefined ? StringCheck(Club.season) : Defaults.season;
+        const TeamID = Club != undefined ? StringCheck(Club.TeamID) : Defaults.teamID;
 
         const apiResponse = await ReturnResponse(Options(teamEndpoints.leagueURL,{
             season: season,
@@ -211,7 +204,7 @@ function PlayersInPosition(Players) {
 export async function TeamSquad(ID) {
     try {
 
-        const TeamID = ID != undefined ? StringCheck(ID) : PlayerDefaults.teamID;
+        const TeamID = ID != undefined ? StringCheck(ID) : Defaults.teamID;
 
         // Receive a response from the API 
         const apiResponse = await ReturnResponse(Options(teamEndpoints.playerURL,{
@@ -225,11 +218,10 @@ export async function TeamSquad(ID) {
         // printJSON(Squad, 1000)
 
         // Amount of players in a position | Att, Mid, Def, GK
-        const squadPositions = PlayersInPosition(Squad);
+        // const squadPositions = PlayersInPosition(Squad);
 
         // NPM Test - Check squad players T. Heation as example
         const TestSquad = Squad["0"];
-        printJSON(TestSquad, 1000)
         return TestSquad;
 
     } catch (error) {

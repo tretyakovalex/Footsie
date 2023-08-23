@@ -9,7 +9,11 @@ import Footer from './footer';
 
 import { TabNames } from './tab-information';
 
-import { TeamSquad } from '../../api/requests/api-football/clubs';
+import { CountryNameAndFlags, CompetitionNameAndCountry, LeagueStandings } from '../../api/requests/api-football/competitions';
+
+import { TeamNameAndID, TeamSquad, TeamCoaches, TeamLeagueInfo } from '../../api/requests/api-football/clubs';
+
+import { PlayerStatistics } from '../../api/requests/api-football/players';
 
 
 // Display tabs based on current page
@@ -30,7 +34,25 @@ function DisplayActiveTab(currentPage) {
 
 async function TestAPICalls() {
     try { 
-        const test = await TeamSquad();
+        // Competitions
+        console.log("Country Name And Flags Function")
+        const test1 = await CountryNameAndFlags();
+        console.log("Country Name And Country Function")
+        const test2 = await CompetitionNameAndCountry();
+        console.log("League Standings Function")
+        const test3 = await LeagueStandings();
+        // Clubs
+        console.log("Team Name and ID Function")
+        const test4 = await TeamNameAndID();
+        console.log("Team Squad Function")
+        const test5 = await TeamSquad();
+        console.log("Team Coaches Function")
+        const test6 = await TeamCoaches();
+        console.log("Team League Function")
+        const test7 = await TeamLeagueInfo();
+        // Players
+        console.log("League Standings Function")
+        const test8 = await PlayerStatistics();
     } catch (error) {
         console.error("DFSFSDFA")
     }
@@ -47,6 +69,8 @@ export default function Footsie() {
     // Activate / Deactivate Search Bar
     // False = No active search (Nothing in the searchbar)
     const [searchStatus, setSearchStatus] = useState(false);
+
+    // TestAPICalls();
 
 
     useEffect( () => {

@@ -28,10 +28,9 @@ export async function ReturnResponse(API_CALL, ERROR_MSG) {
         const apiResponse = await axios(API_CALL);
 
         // Test API Response
-        // console.log(JSON.stringify(apiResponse.data.response, null, 2))
-
+        // printJSON(apiResponse, 5000);
         if (!apiResponse || apiResponse.data.response.length == 0) {
-            console.error("Can't find cups and leagues");
+            console.error("Not receiving response from API Requests");
         }
 
         return apiResponse.data.response;
@@ -54,7 +53,8 @@ export function ErrorMessage(Problem, FileLocation) {
 // Endpoints for competitions.js
 export const compEndpoints = {
     leagues: 'https://api-football-v1.p.rapidapi.com/v3/leagues',  // V3  Leagues by type (League or Cup)
-    countries: 'https://api-football-v1.p.rapidapi.com/v3/countries'  //  V3 - Countries
+    countries: 'https://api-football-v1.p.rapidapi.com/v3/countries',  //  V3 - Countries
+    standings: 'https://api-football-v1.p.rapidapi.com/v3/standings' // V3 - Standings by Leagues
 }
 
 // Endpoints for clubs.js
@@ -73,7 +73,8 @@ export const playerEndpoints = {
 }
 
 
-export const PlayerDefaults = {
+export const Defaults = {
+    leagueID: '39',
     teamID: '33',
     season: '2020'
 }
