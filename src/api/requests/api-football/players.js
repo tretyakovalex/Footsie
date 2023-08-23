@@ -1,11 +1,11 @@
 // Grab data on players
 
 // Private Imports 
-import { Options, ReturnResponse, ErrorMessage , Defaults, playerEndpoints } from './api-football-endpoints';
+import { options, returnApiResponse, errorMessage , DEFAULTS, PLAYER_EP } from './api-football-endpoints';
 import { printJSON } from './global-functions';
 
 // Get information on D.V.D.B for NPM Test
-function GetNPMData(Player) {
+function formatPlayerForNPM(Player) {
     // Direct access to API Response JSON
     const playerDictionary = Player.player;
     const statisticDictionary = Player.statistics[0];
@@ -33,9 +33,9 @@ function GetNPMData(Player) {
     return data;
 }
 
-// Collect the total stats on each player
-function TotalStats(Stats) {
-    // Empty object to store player stats
+// Calculate the accumualative stats of the player
+function totalPlayerStatistics(Stats) {
+    // Required information
     const totalStats = {
         games: {
             appearences: 0,
@@ -64,7 +64,7 @@ function TotalStats(Stats) {
         }
     };
 
-    // Go through each compeititon and get a total results on stats
+    // Loop through each competition and add up values to get total
     for (const teamStats of Stats) {
         // Total appearences & minutes
         totalStats.games.appearences += teamStats.stats.games.appearences;
@@ -85,119 +85,132 @@ function TotalStats(Stats) {
     return totalStats;
 }
 
-
-
-// Summarise player statistics
-function CollectPlayerStats(Statistics) {
+// Collecting statistics of each player
+function collectPlayerStats(Statistics) {
+    // Hold all information on a player
     const CollectiveStats = [];
 
-    // Each Competition
+    // Loop through each competition a player participates in
     for (let i = 0; i < Statistics.length; i++) {
         // Direct access to each team in JSON
         const Team = Statistics[i];
 
-        // Simplify data and add to Collection of stats
+        // Direct Access To Keys
+        const {team: club, league: league, games: games } = Team;
+        const {shots: shots, passes: passes, dribbles: dribbles, penalty: penalty} = Team;
+        const {tackles: tackles, duels: duels, fouls: fouls, cards: cards} = Team;
+
+        // TODO:
+        //   DOUBLE CHECK THIS UPDATE WORKS
+
+        // Statistics Collected and Added to 'CollectiveStats'
         CollectiveStats.push({
             Competition: {
-                teamname: Team.team.name,
-                competition: Team.league.name,
-                "competition logo": Team.league.logo
+                teamname: club.name,
+                competition: league.name,
+                "competition logo": league.logo
             },
             stats: {
                 games: {
-                    appearences: Team.games.appearences,
-                    minutes: Team.games.minutes,
+                    appearences: games.appearences,
+                    minutes: games.minutes,
                 },
                 attacking: {
-                    "total shots": Team.shots.total,
+                    "total shots": shots.total,
                     "shots on target": Team.shots.on,
-                    "total passes": Team.passes.total,
-                    "key passes": Team.passes.key,
-                    "pass accuracy": Team.passes.accuracy,
-                    "attempted dribbles": Team.dribbles.attempts,
-                    "successful dribbles": Team.dribbles.success,
-                    "penalties scored": Team.penalty.scored,
-                    "penalties missed": Team.penalty.missed,
+                    "total passes": passes.total,
+                    "key passes": passes.key,
+                    "pass accuracy": passes.accuracy,
+                    "attempted dribbles": dribbles.attempts,
+                    "successful dribbles": dribbles.success,
+                    "penalties scored": penalty.scored,
+                    "penalties missed": penalty.missed,
                 },
                 defensive: {
-                    "total tackles": Team.tackles.total,
-                    "total blocks": Team.tackles.blocks,
-                    "total interceptions":Team.tackles.interceptions,
-                    "total duels": Team.duels.total,
-                    "duels won": Team.duels.won,
-                    "fouls committed": Team.fouls.comitted,
-                    "yellow card": Team.cards.yellow,
-                    "red card": Team.cards.red
+                    "total tackles": tackles.total,
+                    "total blocks": tackles.blocks,
+                    "total interceptions":tackles.interceptions,
+                    "total duels": duels.total,
+                    "duels won": duels.won,
+                    "fouls committed": fouls.comitted,
+                    "yellow card": cards.yellow,
+                    "red card": cards.red
                 }
                 }   
             }
         )
     }
 
-    // Player plays for more than one team, then create a total stats object
+    // If player plays for more than one team
     if (Statistics.length > 0) {
-        const totalStats = TotalStats(CollectiveStats);
+        // Calculate total of all statistics
+        const totalStats = totalPlayerStatistics(CollectiveStats);
+        // Add statistics object to Collective Stats
         CollectiveStats.push({"Total Stats": totalStats})
     }
 
+    // Returnn all statistics on a player
     return CollectiveStats;
 }
 
 // DB Function: Basic info and Player statistics
-function DBPlayerInfo(Players) {
-    const ClubPlayerDatabase = {};
+function squadPlayerStatistics(players) {
+    // Hold information on all players
+    const clubPlayerDatabase = {};
 
-    for (let i = 0; i < Players.length; i++) {
+    // Loop through each player
+    for (let i = 0; i < players.length; i++) {
         // Direct access to each player
-        const PlayerObjPlayer = Players[i].player;
-        const PlayerObjStats = Players[i].statistics;
+        const playerObjPlayer = players[i].player;
+        const playerObjStats = players[i].statistics;
 
-        // Template Object
-        ClubPlayerDatabase[i] = {
-            PlayerInfo: {
-                name: PlayerObjPlayer.name,
-                "first name": PlayerObjPlayer.firstname,
-                "second name": PlayerObjPlayer.lastname,
-                age: PlayerObjPlayer.age,
-                nationality: PlayerObjPlayer.nationality,
-                height: PlayerObjPlayer.height,
-                injured: PlayerObjPlayer.injured ,
-                photo: PlayerObjPlayer.photo
+        // Gather information on each player
+        clubPlayerDatabase[i] = {
+            playerInfo: {
+                name: playerObjPlayer.name,
+                "first name": playerObjPlayer.firstname,
+                "second name": playerObjPlayer.lastname,
+                age: playerObjPlayer.age,
+                nationality: playerObjPlayer.nationality,
+                height: playerObjPlayer.height,
+                injured: playerObjPlayer.injured ,
+                photo: playerObjPlayer.photo
             },
-            Statistics: CollectPlayerStats(PlayerObjStats)
+            // Grabs statistics of each player
+            statistics: collectPlayerStats(playerObjStats)
         }
     };
 
-    // Return Objects of each player
-    return ClubPlayerDatabase;
+    // Return All Players and Statistics
+    return clubPlayerDatabase;
 }
 
 
 // V3 - Player statistics by Team ID
 // Basic Player Information & Statistics
-export async function PlayerStatistics(PARAMS) {
+export async function playerStatistics(params) {
     try {
-        const teamID = PARAMS != undefined ? PARAMS.TeamID : Defaults.teamID;
-        const season = PARAMS != undefined ? PARAMS.season : Defaults.season;
+        // Check if parameters have been added or use default
+        const teamID = params != undefined ? params.TeamID : DEFAULTS.teamID;
+        const season = params != undefined ? params.season : DEFAULTS.season;
 
-        const response = await ReturnResponse(
-            Options(playerEndpoints.playersURL, {
+        // Make API Request
+        const response = await returnApiResponse(
+            options(playerEndpoints.PLAYER_EP, {
             team: teamID,
             season: season
-        }), ErrorMessage("Player statistics from 'V3 - Player Statistics' ", "players.js"));
+        }), errorMessage("Player statistics from 'V3 - Player Statistics' ", "players.js"));
 
         // NPM Test - Returning for Test
-        const npmResult = GetNPMData(response[0]);
+        const npmResult = formatPlayerForNPM(response[0]);
 
-       return {
-            npmTest: npmResult,
-            dbResult: DBPlayerInfo(response)
-       }
+        return {
+             npmTest: npmResult,
+             dbResult: squadPlayerStatistics(response)
+        }
 
        // console.log(JSON.stringify(DBPlayerInfo(response), null, 2));
     } catch (error) {
         console.error(error)
     }
 }
-
-

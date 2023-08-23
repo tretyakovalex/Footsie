@@ -1,10 +1,10 @@
-import { PlayerStatistics } from './players';
+import { playerStatistics } from './players';
 
 // API-Football: Get data on [Players based on teams] names
 
 
 // Grab data on players: D. Van De Beek Result
-const NPMCopyResult = {
+const NPM_COPY_RESULT = {
     player: {
         name: "D. van de Beek",
         "first name": "Donny",
@@ -22,14 +22,12 @@ const NPMCopyResult = {
     }
 }
 
-
-// API-Football 
 // Test Player API's
 describe("\nTESTING: API-Football\nInformation on players", () => {
 
     // Grab data on each player in a team
-    test("2020 Season - Get basic information player (Currently Alex Telles)", async () => {
-        const SquadPlayers = await PlayerStatistics();
-        expect(SquadPlayers.npmTest).toEqual(NPMCopyResult);
+    test("Test fetching for player, D. van de Beek in the 2020 football season", async () => {
+        const squadPlayers = await playerStatistics();
+        expect(squadPlayers.npmTest).toEqual(NPM_COPY_RESULT);
     });
 })
