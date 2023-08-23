@@ -1,4 +1,4 @@
-import { TeamNameAndID, TeamCoaches, TeamLeagueInfo, TeamSquad } from './clubs';
+import { teamNameAndID, teamCoaches, teamLeagueInfo, squadList } from './clubs';
 
 // API-Football: Get data on [Teams, Coaches, Specific Teams, Squad ]
 
@@ -69,7 +69,7 @@ describe("\nTESTING: API-Football\nInformation on clubs", () => {
 
     // Test Squad Line Up Function
     test("Squad Line Up", async () => {
-        const SquadLineup = await TeamSquad();
+        const SquadLineup = await SquadList();
         expect(SquadLineup).toEqual(LineupCopy);
     });
 

@@ -201,7 +201,7 @@ function PlayersInPosition(Players) {
 
 // V3 - Player Squad
 // Team Squad
-export async function TeamSquad(ID) {
+export async function squadList(ID) {
     try {
 
         const TeamID = ID != undefined ? StringCheck(ID) : Defaults.teamID;

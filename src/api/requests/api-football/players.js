@@ -188,7 +188,7 @@ function squadPlayerStatistics(players) {
 
 // V3 - Player statistics by Team ID
 // Basic Player Information & Statistics
-export async function playerStatistics(params) {
+export async function getClubPlayerStatistics(params) {
     try {
         // Check if parameters have been added or use default
         const teamID = params != undefined ? params.TeamID : DEFAULTS.teamID;
@@ -196,7 +196,7 @@ export async function playerStatistics(params) {
 
         // Make API Request
         const response = await returnApiResponse(
-            options(playerEndpoints.PLAYER_EP, {
+            options(PLAYER_EP.playersURL, {
             team: teamID,
             season: season
         }), errorMessage("Player statistics from 'V3 - Player Statistics' ", "players.js"));
