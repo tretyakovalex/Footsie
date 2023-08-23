@@ -1,10 +1,9 @@
-import { teamNameAndID, teamCoaches, teamLeagueInfo, squadList } from './clubs';
+import { getBasicTeamDetails, getCoachHistory, getClubStanding, getSquadPlayers } from './clubs';
 
 // API-Football: Get data on [Teams, Coaches, Specific Teams, Squad ]
 
-
 // TeamNameAndID: Grab basic information on teams
-const BasicTeamInfoCopy = {
+const BASIC_TEAM_DETAILS = {
     id: 33,
     name: 'Manchester United',
     tag: 'MUN',
@@ -13,7 +12,7 @@ const BasicTeamInfoCopy = {
 };
 
 // Coach Info Results
-const CoachInfoCopy = {
+const COACH_HISTORY = {
     career: {
             name: "Manchester United",
             logo: "https://media-3.api-sports.io/football/teams/33.png",
@@ -23,7 +22,7 @@ const CoachInfoCopy = {
 }
 
 // Team League Info Results
-const LeagueResultsCopy = {
+const CLUB_LEAGUE_STANDING = {
     "league name": "UEFA Champions League",
     "rank": 3,
     "points": 9,
@@ -36,7 +35,7 @@ const LeagueResultsCopy = {
 }
 
 // Squad Line Up Result: T. Heation Result
-const LineupCopy = {
+const SQUAD_LINEUP = {
     "Plays For": "Manchester United",
     "name": "T. Heaton",
     "age": 37,
@@ -50,27 +49,27 @@ const LineupCopy = {
 describe("\nTESTING: API-Football\nInformation on clubs", () => {
 
     // Test Basic Team Information Function
-    test('Basic information on team: ID, Name, Tag, Country, Logo', async () => {
-        const TeamResult = await TeamNameAndID();
-        expect(TeamResult.npmTest).toEqual(BasicTeamInfoCopy)
+    test('Fetch basic information on team (33) during the (2020) season: ID, Name, Tag, Country, Logo', async () => {
+        const teamResult = await getBasicTeamDetails();
+        expect(teamResult.npmTest).toEqual(BASIC_TEAM_DETAILS)
     });
 
     // Test Coach Information Function
-    test("Coach information: Name, Nationality, Photo, Career", async () => {
-        const CoachInfo = await TeamCoaches(33);
-        expect(CoachInfo.npmTest).toEqual(CoachInfoCopy.career);
+    test("Fetch the coach history of a specific team (33) in the (2020) season, looking at 'Ole History': Name, Nationality, Photo, Career", async () => {
+        const coachInfo = await getCoachHistory(33);
+        expect(coachInfo.npmTest).toEqual(COACH_HISTORY.career);
     });
 
     // Test League Standings Function
-    test("League Standings and Results", async () => {
-        const Standings = await TeamLeagueInfo();
-        expect(Standings).toEqual(LeagueResultsCopy);
+    test("Fetch specific club (33) league standing in the (2020) season, looking at 'Man united standing'", async () => {
+        const standings = await getClubStanding();
+        expect(standings).toEqual(CLUB_LEAGUE_STANDING);
     });
 
     // Test Squad Line Up Function
-    test("Squad Line Up", async () => {
-        const SquadLineup = await SquadList();
-        expect(SquadLineup).toEqual(LineupCopy);
+    test("Fetch squad (33) line up in the season", async () => {
+        const squadLineup = await getSquadPlayers();
+        expect(squadLineup).toEqual(SQUAD_LINEUP);
     });
 
 })

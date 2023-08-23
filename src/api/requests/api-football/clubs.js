@@ -1,33 +1,27 @@
 // Grab data on teams
 
 // Private Imports
-import { Options, ReturnResponse , ErrorMessage , teamEndpoints, Defaults } from './api-football-endpoints';
+import { options, returnApiResponse , errorMessage , TEAM_EP, DEFAULTS} from './api-football-endpoints';
 import { printJSON, StringCheck } from './global-functions';
 
 // V3 - Team Informations
 // Team API Football ID - Team Name - Country - Image - Tag
-export async function TeamNameAndID(PARAMS) {
+export async function getBasicTeamDetails(params) {
     try {
-        const teamID = PARAMS !== undefined ? StringCheck(PARAMS) : '33';
-
+        // Check if parameter has been declared else use defaults
+        const teamID = params !== undefined ? StringCheck(params) : '33';
 
         // Send Request
-        const apiResponse = await ReturnResponse(
-            Options(teamEndpoints.teamURL, {
+        const apiResponse = await returnApiResponse(
+            options(teamEndpoints.teamURL, {
                 id: teamID
-            }), ErrorMessage("Team name and ID from 'API-Football - V3 Team Information' ", "clubs.js"));
-
-        // Error Handling - Check teams exist
-        if (!apiResponse || apiResponse.length == 0) {
-            throw new Error("Teams: No team information found");
-        }
+            }), errorMessage("Team name and ID from 'API-Football - V3 Team Information' ", "clubs.js"));
 
         // console.log(JSON.stringify(apiResponse[0], null, 2))
         const response = apiResponse[0];
 
-
         // Team Basic Information
-        const TeamInfo = {
+        const teamInfo = {
             id: response.team.id,
             name: response.team.name,
             tag: response.team.code,
@@ -37,7 +31,7 @@ export async function TeamNameAndID(PARAMS) {
 
         // NPM Test - Basic Man United Info
         return {
-            npmTest: TeamInfo,
+            npmTest: teamInfo,
             dbResponse: "Empty" // TODO: Create database function 
         };
         // console.log('TeamInfo:', JSON.stringify(TeamInfo, null, 2));
@@ -48,14 +42,14 @@ export async function TeamNameAndID(PARAMS) {
 }
 
 // Organise the coach career
-function OrganiseCoachCareer(Career) {
+function organiseCoachCareer(career) {
     // Initialize an empty object
-    const CareerHistory = {}; 
+    const careerHistory = {}; 
 
     // Go through coaches career
-    for (let i = Career.length - 1;  i >= 0; i--) {
-        const club = Career[i];
-        CareerHistory[i] = {
+    for (let i = career.length - 1;  i >= 0; i--) {
+        const club = career[i];
+        careerHistory[i] = {
             'name': club.team.name,
             'logo': club.team.logo,
             "start date": club.start,
@@ -64,32 +58,33 @@ function OrganiseCoachCareer(Career) {
     }
 
     // Return Coach History
-    return CareerHistory;
+    return careerHistory;
 }
 
 
 // V3 - Coaches by Team ID
 // Need TeamID for this to work
-export async function TeamCoaches(ID) {
+export async function getCoachHistory(id) {
     try {
-        const apiResponse = await ReturnResponse(Options(teamEndpoints.coachURL, {
-            team: ID != undefined ? StringCheck(ID) : Defaults.teamID
-        }), ErrorMessage("unable to find 'V3 - Coaches by Team ID'", "clubs.js"))
+        // Check if parameter has been declared else use defaults
+        const apiResponse = await returnApiResponse(options(teamEndpoints.coachURL, {
+            team: id != undefined ? StringCheck(id) : DEFAULTS.teamID
+        }), errorMessage("unable to find 'V3 - Coaches by Team ID'", "clubs.js"))
 
         // Direct Access to objects
         const response = apiResponse[0];
 
         // Put data into one object
-        const CoachInfo = {
+        const coachInfo = {
             name: response.name,
             nationality: response.nationality,
             image: response.photo,
-            career: OrganiseCoachCareer(response.career)
+            career: organiseCoachCareer(response.career)
         }
         // NPM Test - Basic information on coach
         return {
-            npmTest: CoachInfo.career[0],
-            dbResult: CoachInfo
+            npmTest: coachInfo.career[0],
+            dbResult: coachInfo
         }
 
     } catch (error) {
@@ -100,16 +95,16 @@ export async function TeamCoaches(ID) {
 // V3 - Standings by Team ID
 // League Information - PARAMS = {Year, TeamID}
 // Use this function for specific teams
-export async function TeamLeagueInfo(Club) {
+export async function getClubStanding(club) {
     try {
+        // Check if parameter has been declared else use defaults
+        const season = club != undefined ? StringCheck(club.season) : DEFAULTS.season;
+        const teamID = club != undefined ? StringCheck(club.TeamID) : DEFAULTS.teamID;
 
-        const season = Club != undefined ? StringCheck(Club.season) : Defaults.season;
-        const TeamID = Club != undefined ? StringCheck(Club.TeamID) : Defaults.teamID;
-
-        const apiResponse = await ReturnResponse(Options(teamEndpoints.leagueURL,{
+        const apiResponse = await returnApiResponse(options(teamEndpoints.leagueURL,{
             season: season,
-            team: TeamID
-        }), ErrorMessage("unable to get league information via 'V3 - Standings by Team ID' in ", "clubs.js"))
+            team: teamID
+        }), errorMessage("unable to get league information via 'V3 - Standings by Team ID' in ", "clubs.js"))
         // Specific responses
         const response = apiResponse;
 
@@ -118,7 +113,7 @@ export async function TeamLeagueInfo(Club) {
 
         // NPM Test
         // Get information about the team positions, form etc
-        const TeamLeagueInfo = {
+        const teamLeagueInfo = {
             "league name": cupStanding.name,
             rank: standingResponse.rank,
             points: standingResponse.points,
@@ -131,7 +126,7 @@ export async function TeamLeagueInfo(Club) {
             gd: standingResponse.all.goals.for -  standingResponse.all.goals.against
         }
 
-        return TeamLeagueInfo
+        return teamLeagueInfo
         // console.log(JSON.stringify(TeamLeagueInfo, null, 2))
     } catch (error) {
         console.error(error)
@@ -140,31 +135,33 @@ export async function TeamLeagueInfo(Club) {
 
 
 // Collect Team Squad Basic Information
-function TeamSquadBasicInfo(TeamSquad) {
-    // Empty Object to hold squad players and basic information
-    const Squad = {};
+function basicPlayerDetails(teamSquad) {
+    // Hold list of players 
+    const squad = {};
 
-    const TeamName = TeamSquad.team.name
-    const SquadLineUp = TeamSquad.players
+    // Direct access to team name and player information
+    const teamName = teamSquad.team.name
+    const squadLineUp = teamSquad.players
 
-    for (let i = 0; i < SquadLineUp.length; i++) {
+    for (let i = 0; i < squadLineUp.length; i++) {
         // Add players to 'empty' squad
-        const Players = SquadLineUp[i];
-        Squad[i] = {
-                "Plays For":  TeamName,
-                name: Players.name,
-                age: Players.age,
-                number: Players.number,
-                position: Players.position,
-                photo: Players.photo 
+        const players = squadLineUp[i];
+        squad[i] = {
+                "Plays For":  teamName,
+                name: players.name,
+                age: players.age,
+                number: players.number,
+                position: players.position,
+                photo: players.photo 
             }
     }
 
     // Return a squad full of  players
-    return Squad
+    return squad
 }
 
-function PlayersInPosition(Players) {
+// Calculate how many players there are in each position
+function playersInPositionCount(players) {
     // General stats on the amount of players in a position
     let attacker = 0;
     let defender = 0;
@@ -173,10 +170,10 @@ function PlayersInPosition(Players) {
     let squadAmount = 0;
 
     // Assign each player to their position
-    for (let i = 0; i < Object.keys(Players).length; i++) {
-        const Footballer = Players[String(i)].position;
+    for (let i = 0; i < Object.keys(players).length; i++) {
+        const footballer = players[String(i)].position;
         
-        switch (Footballer) {
+        switch (footballer) {
             case "Goalkeeper":
                 goalkeeper++;
                 squadAmount++;
@@ -201,28 +198,29 @@ function PlayersInPosition(Players) {
 
 // V3 - Player Squad
 // Team Squad
-export async function squadList(ID) {
+export async function getSquadPlayers(id) {
     try {
-
-        const TeamID = ID != undefined ? StringCheck(ID) : Defaults.teamID;
+        // Check if ID has been given a value or use Defaults
+        const teamID = id != undefined ? StringCheck(id) : DEFAULTS.teamID;
 
         // Receive a response from the API 
-        const apiResponse = await ReturnResponse(Options(teamEndpoints.playerURL,{
-            team: TeamID
-        }), ErrorMessage("can't find squad players 'V3 - Player Squad' via ",));
+        const apiResponse = await returnApiResponse(options(TEAM_EP.playerURL,{
+            team: teamID
+        }), errorMessage("can't find squad players 'V3 - Player Squad' via ",));
 
         // Direct access to data
         const response = apiResponse[0];
 
-        const Squad = TeamSquadBasicInfo(response);
-        // printJSON(Squad, 1000)
+        // List of squad players and basic infromation
+        const squad = basicPlayerDetails(response);
 
         // Amount of players in a position | Att, Mid, Def, GK
-        // const squadPositions = PlayersInPosition(Squad);
+        // const squadPositions = playersInPositionCount(Squad);
 
         // NPM Test - Check squad players T. Heation as example
-        const TestSquad = Squad["0"];
-        return TestSquad;
+        // TODO: CHECK THIS RESPONSE
+        const testSquad = squad["0"];
+        return testSquad;
 
     } catch (error) {
         console.error(error);
