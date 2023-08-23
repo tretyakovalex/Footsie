@@ -2,6 +2,7 @@
 
 // Private Imports 
 import { Options, ReturnResponse, ErrorMessage ,PlayerDefaults, playerEndpoints } from './api-football-endpoints';
+import { printJSON } from './global-functions';
 
 // Get information on D.V.D.B for NPM Test
 function GetNPMData(Player) {
@@ -10,7 +11,7 @@ function GetNPMData(Player) {
     const statisticDictionary = Player.statistics[0];
 
     // Object to hold donny information
-    const DonnyData = {
+    const data = {
         player: {
             name: playerDictionary.name ,
             "first name": playerDictionary.firstname,
@@ -29,7 +30,7 @@ function GetNPMData(Player) {
     }
 
     // Return basic info and stats
-    return DonnyData;
+    return data;
 }
 
 // Collect the total stats on each player
@@ -174,22 +175,24 @@ function DBPlayerInfo(Players) {
 
 // V3 - Player statistics by Team ID
 // Basic Player Information & Statistics
-export async function PlayerStatistics({PARAMS}) {
-
+export async function PlayerStatistics(PARAMS) {
     try {
+        const teamID = PARAMS != undefined ? PARAMS.TeamID : PlayerDefaults.teamID;
+        const season = PARAMS != undefined ? PARAMS.season : PlayerDefaults.season;
+
         const response = await ReturnResponse(
             Options(playerEndpoints.playersURL, {
-            team: PARAMS != undefined ? PARAMS.teamID : PlayerDefaults.teamID,
-            season: PARAMS != undefined ? PARAMS.season : PlayerDefaults.season
+            team: teamID,
+            season: season
         }), ErrorMessage("Player statistics from 'V3 - Player Statistics' ", "players.js"));
 
         // NPM Test - Returning for Test
-        const Donny = GetNPMData(response[0]);
-        console.log(JSON.stringify(response[0].player.name, null, 2));
+        const npmResult = GetNPMData(response[0]);
 
+        printJSON(DBPlayerInfo(response))
 
        return {
-            npmTest: Donny,
+            npmTest: npmResult,
             dbResult: DBPlayerInfo(response)
        }
 

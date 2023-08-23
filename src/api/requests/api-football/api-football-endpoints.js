@@ -1,6 +1,8 @@
 // Global API 
 import axios from 'axios';
 
+import { printJSON } from './global-functions';
+
 // Learn how to put this into Environment Variables
 const HEADER = {
     key: '060abebd44msheb1fbe6d87b8111p1c9872jsnd77b5a96aa2e',
@@ -25,13 +27,15 @@ export async function ReturnResponse(API_CALL, ERROR_MSG) {
     try {
         const apiResponse = await axios(API_CALL);
 
-        console.log(JSON.stringify(apiResponse, null, 2))
+        // Test API Response
+        // console.log(JSON.stringify(apiResponse.data.response, null, 2))
 
         if (!apiResponse || apiResponse.data.response.length == 0) {
             console.error("Can't find cups and leagues");
         }
 
         return apiResponse.data.response;
+
     } catch (error) {
         console.error(error);
         console.error(ERROR_MSG);
@@ -56,8 +60,9 @@ export const compEndpoints = {
 // Endpoints for clubs.js
 export const teamEndpoints = {
     teamURL: 'https://api-football-v1.p.rapidapi.com/v3/teams', // V3 - Team Informations
-    coachURL: '', // V3 - Coaches by Team ID
-    leagueURL: '' // V3 - Standings by Team ID
+    coachURL: 'https://api-football-v1.p.rapidapi.com/v3/coachs', // V3 - Coaches by Team ID
+    leagueURL: 'https://api-football-v1.p.rapidapi.com/v3/standings', // V3 - Standings by Team ID
+    playerURL: 'https://api-football-v1.p.rapidapi.com/v3/players/squads'  // V3 - Player Squads
 }
 
 

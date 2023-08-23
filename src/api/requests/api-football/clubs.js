@@ -1,26 +1,23 @@
 // Grab data on teams
 
-// Public Imports
-import axios from 'axios';
-
 // Private Imports
-import { Options, ReturnResponse , ErrorMessage , teamEndpoints } from './api-football-endpoints';
+import { Options, ReturnResponse , ErrorMessage , teamEndpoints, PlayerDefaults } from './api-football-endpoints';
+import { printJSON } from './global-functions';
 
 // TODO:
 //     Add error handling & No result cases
 
 // Check parameter is a string 
 function StringCheck(StringInQuestion) {
-    if (typeof StringInQuestion !== 'string') {
-        throw new Error('ERROR Parameters: Must be a string.');
-    }
+    return typeof(StringInQuestion) === 'string' ? StringInQuestion : JSON.stringify(StringInQuestion);
 }
 
 // V3 - Team Informations
 // Team API Football ID - Team Name - Country - Image - Tag
-export async function TeamNameAndID({PARAMS}) {
+export async function TeamNameAndID(PARAMS) {
     try {
-        const teamID = PARAMS !== undefined ? PARAMS.TeamID : '33';
+        const teamID = PARAMS !== undefined ? StringCheck(PARAMS) : '33';
+
 
         // Send Request
         const apiResponse = await ReturnResponse(
@@ -28,21 +25,22 @@ export async function TeamNameAndID({PARAMS}) {
                 id: teamID
             }), ErrorMessage("Team name and ID from 'API-Football - V3 Team Information' ", "clubs.js"));
 
-
-        console.log(JSON.stringify(apiResponse[0], null, 2))
-
         // Error Handling - Check teams exist
-        if (!apiResponse || apiResponse.data.response.length == 0) {
-            throw new Error("ERROR Teams: No team information found");
+        if (!apiResponse || apiResponse.length == 0) {
+            throw new Error("Teams: No team information found");
         }
+
+        // console.log(JSON.stringify(apiResponse[0], null, 2))
+        const response = apiResponse[0];
+
 
         // Team Basic Information
         const TeamInfo = {
-            id: apiResponse.id,
-            name: apiResponse.name,
-            tag: apiResponse.code,
-            country: apiResponse.country,
-            logo: apiResponse.logo
+            id: response.team.id,
+            name: response.team.name,
+            tag: response.team.code,
+            country: response.team.country,
+            logo: response.team.logo
         };
 
         // NPM Test - Basic Man United Info
@@ -80,14 +78,14 @@ function OrganiseCoachCareer(Career) {
 
 // V3 - Coaches by Team ID
 // Need TeamID for this to work
-export async function TeamCoaches({URL, TeamID}) {
+export async function TeamCoaches(ID) {
     try {
-        // Checks TeamID is a string
-        StringCheck(TeamID);
+        const apiResponse = await ReturnResponse(Options(teamEndpoints.coachURL, {
+            team: ID != undefined ? StringCheck(ID) : PlayerDefaults.teamID
+        }), ErrorMessage("unable to find 'V3 - Coaches by Team ID'", "clubs.js"))
 
-        const apiResponse = await axios(Options(URL, {team: TeamID}))
-        // Direct access to coach information
-        const response = apiResponse.data.response[1];
+        // Direct Access to objects
+        const response = apiResponse[0];
 
         // Put data into one object
         const CoachInfo = {
@@ -96,10 +94,11 @@ export async function TeamCoaches({URL, TeamID}) {
             image: response.photo,
             career: OrganiseCoachCareer(response.career)
         }
-
         // NPM Test - Basic information on coach
-        return CoachInfo.career[0]
-        // console.log(JSON.stringify(CoachInfo.career[0], null, 2))
+        return {
+            npmTest: CoachInfo.career[0],
+            dbResult: CoachInfo
+        }
 
     } catch (error) {
         console.error(error);
@@ -108,31 +107,26 @@ export async function TeamCoaches({URL, TeamID}) {
 
 // V3 - Standings by Team ID
 // League Information - PARAMS = {Year, TeamID}
-export async function TeamLeagueInfo(ObjParameter) {
-
+export async function TeamLeagueInfo(Club) {
     try {
-        // League
-        let numberRepresentation = 0;
 
-        if (ObjParameter.Competition == "cup") {
-            // Competition
-            numberRepresentation = 1;
-        }
+        const season = Club != undefined ? StringCheck(Club.season) : PlayerDefaults.season;
+        const TeamID = Club != undefined ? StringCheck(Club.TeamID) : PlayerDefaults.teamID;
 
-        // Params have to be a string
-        StringCheck(ObjParameter.PARAMS.year);
-        StringCheck(ObjParameter.PARAMS.teamID)
-
-        const apiResponse = await axios(Options(ObjParameter.URL, {season: ObjParameter.PARAMS.year, team: ObjParameter.PARAMS.teamID}))
+        const apiResponse = await ReturnResponse(Options(teamEndpoints.leagueURL,{
+            season: season,
+            team: TeamID
+        }), ErrorMessage("unable to get league information via 'V3 - Standings by Team ID' in ", "clubs.js"))
         // Specific responses
-        const response = apiResponse.data.response[numberRepresentation].league;
+        const response = apiResponse;
 
+        const cupStanding = response[1].league;
+        const standingResponse = cupStanding.standings[0][0];
 
-        const standingResponse = response.standings[0][0];
-
+        // NPM Test
         // Get information about the team positions, form etc
         const TeamLeagueInfo = {
-            "league name": response.name,
+            "league name": cupStanding.name,
             rank: standingResponse.rank,
             points: standingResponse.points,
             form: standingResponse.form,
@@ -157,8 +151,8 @@ function TeamSquadBasicInfo(TeamSquad) {
     // Empty Object to hold squad players and basic information
     const Squad = {};
 
-    const TeamName = TeamSquad[0].team.name
-    const SquadLineUp = TeamSquad[0].players
+    const TeamName = TeamSquad.team.name
+    const SquadLineUp = TeamSquad.players
 
     for (let i = 0; i < SquadLineUp.length; i++) {
         // Add players to 'empty' squad
@@ -183,6 +177,7 @@ function PlayersInPosition(Players) {
     let defender = 0;
     let midfielder = 0;
     let goalkeeper = 0;
+    let squadAmount = 0;
 
     // Assign each player to their position
     for (let i = 0; i < Object.keys(Players).length; i++) {
@@ -191,41 +186,50 @@ function PlayersInPosition(Players) {
         switch (Footballer) {
             case "Goalkeeper":
                 goalkeeper++;
+                squadAmount++;
                 break
             case "Defender":
                 defender++;
+                squadAmount++;
                 break
             case "Midfielder":
                 midfielder++;
+                squadAmount++;
                 break
-            case "Defender":
+            case "Attacker":
                 attacker++;
+                squadAmount++;
                 break
         }
     }
+
+    return `\nSquad Amount: ${squadAmount}\nAttacker: ${attacker}\nMidfielder: ${midfielder}\nDefender: ${defender}\nGoalkeeper: ${goalkeeper}\n`
 }
 
 // V3 - Player Squad
 // Team Squad
-export async function TeamSquad({URL, TeamID}) {
+export async function TeamSquad(ID) {
     try {
-        // Check TeamID is a string
-        StringCheck(TeamID);
+
+        const TeamID = ID != undefined ? StringCheck(ID) : PlayerDefaults.teamID;
 
         // Receive a response from the API 
-        const apiResponse = await axios(Options(URL, {
-            team: TeamID,
-        }));
+        const apiResponse = await ReturnResponse(Options(teamEndpoints.playerURL,{
+            team: TeamID
+        }), ErrorMessage("can't find squad players 'V3 - Player Squad' via ",));
+
         // Direct access to data
-        const response = apiResponse.data.response;
+        const response = apiResponse[0];
 
         const Squad = TeamSquadBasicInfo(response);
+        // printJSON(Squad, 1000)
 
         // Amount of players in a position | Att, Mid, Def, GK
         const squadPositions = PlayersInPosition(Squad);
 
         // NPM Test - Check squad players T. Heation as example
         const TestSquad = Squad["0"];
+        printJSON(TestSquad, 1000)
         return TestSquad;
 
     } catch (error) {

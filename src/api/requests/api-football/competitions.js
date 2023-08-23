@@ -1,5 +1,11 @@
 // Grab data on countries and competitions
 
+
+// TODO
+//   LEAGUE STANDINGS - V3 Standings By ID
+//    Organise Countries Return Statement
+//   Competition and ID, Type: Cup / League process
+
 // Private Imports
 import { Options, ReturnResponse, ErrorMessage,compEndpoints } from './api-football-endpoints';
 

@@ -11,7 +11,7 @@ describe("\nTESTING: API-Football\nInformation on countries and competititons", 
     test('Fetching Country Names and Logos', async () => {
         const country = await CountryNameAndFlags();
         expect(country.npmTest).toEqual({
-            "logo": 'https://media-1.api-sports.io/flags/al.svg', 
+            "logo": 'https://media-2.api-sports.io/flags/al.svg', 
             "name": 'Albania', 
             "tag": 'AL'
         });
@@ -32,15 +32,16 @@ const BasicTeamInfoCopy = {
     name: 'Manchester United',
     tag: 'MUN',
     country: 'England',
-    logo: 'https://media-3.api-sports.io/football/teams/33.png'
+    logo: 'https://media-2.api-sports.io/football/teams/33.png'
 };
+
 // Coach Info Results
 const CoachInfoCopy = {
     career: {
             name: "Manchester United",
-            logo: "https://media-2.api-sports.io/football/teams/33.png",
-            "start date": "2022-06-01",
-            "end date": null
+            logo: "https://media-3.api-sports.io/football/teams/33.png",
+            "start date": "2018-12-01",
+            "end date": "2021-11-01"
     }
 }
 
@@ -73,37 +74,25 @@ describe("\nTESTING: API-Football\nInformation on clubs", () => {
 
     // Test Basic Team Information Function
     test('Basic information on team: ID, Name, Tag, Country, Logo', async () => {
-        const TeamInfo = await TeamNameAndID({
-            TeamID:  '33'
-        });
-        expect(TeamInfo.npmTest).toEqual(BasicTeamInfoCopy)
+        const TeamResult = await TeamNameAndID();
+        expect(TeamResult.npmTest).toEqual(BasicTeamInfoCopy)
     });
 
     // Test Coach Information Function
     test("Coach information: Name, Nationality, Photo, Career", async () => {
-        const CoachInfo = await TeamCoaches({
-            URL: 'https://api-football-v1.p.rapidapi.com/v3/coachs',
-            TeamID: '33'
-        });
-        expect(CoachInfo).toEqual(CoachInfoCopy.career);
+        const CoachInfo = await TeamCoaches(33);
+        expect(CoachInfo.npmTest).toEqual(CoachInfoCopy.career);
     });
 
     // Test League Standings Function
     test("League Standings and Results", async () => {
-        const Standings = await TeamLeagueInfo({
-            URL: 'https://api-football-v1.p.rapidapi.com/v3/standings',
-            Competition: 'cup' ,
-            PARAMS: {'year': '2020', 'teamID': '33'}
-        });
+        const Standings = await TeamLeagueInfo();
         expect(Standings).toEqual(LeagueResultsCopy);
     });
 
     // Test Squad Line Up Function
     test("Squad Line Up", async () => {
-        const SquadLineup = await TeamSquad({
-            URL: 'https://api-football-v1.p.rapidapi.com/v3/players/squads',
-            TeamID: '33'
-        });
+        const SquadLineup = await TeamSquad();
 
         expect(SquadLineup).toEqual(LineupCopy);
     });
@@ -114,18 +103,18 @@ describe("\nTESTING: API-Football\nInformation on clubs", () => {
 // Grab data on players: D. Van De Beek Result
 const NPMCopyResult = {
     player: {
-        name: "Alex Telles",
-        "first name": "Alex",
-        "second name": "Nicolao Telles",
-        age: 31,
-        nationality: "Brazil",
+        name: "D. van de Beek",
+        "first name": "Donny",
+        "second name": "van de Beek",
+        age: 26,
+        nationality: "Netherlands",
         injured: false,
-        photo: "https://media-3.api-sports.io/football/players/378.png"
+        photo: "https://media-3.api-sports.io/football/players/547.png"
     }, 
     statistic: {
         team: "Manchester United",
-        appearences: 9,
-        goals: 0,
+        appearences: 19,
+        goals: 1,
         season: 2020
     }
 }
@@ -136,11 +125,8 @@ const NPMCopyResult = {
 describe("\nTESTING: API-Football\nInformation on players", () => {
 
     // Grab data on each player in a team
-    test("020 Season - Get basic information player (Currently Alex Telles)", async () => {
-        const SquadPlayers = await PlayerStatistics({
-            teamID: '33',
-            season: '2020'
-        });
+    test("2020 Season - Get basic information player (Currently Alex Telles)", async () => {
+        const SquadPlayers = await PlayerStatistics();
     
         expect(SquadPlayers.npmTest).toEqual(NPMCopyResult);
     });
