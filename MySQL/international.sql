@@ -1,3 +1,4 @@
+-- Done in workbench
 USE continents;
 
 CREATE TABLE continents (
