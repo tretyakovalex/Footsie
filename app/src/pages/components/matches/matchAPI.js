@@ -1,5 +1,5 @@
 // Global Imports
-import axios from 'axios'; 
+import axios from 'axios';
 
 // Global Variables
 export const API_KEY = process.env.API_FOOTBALL_KEY;
@@ -9,29 +9,29 @@ const HOST = 'api-football-v1.p.rapidapi.com';
 const URL = 'https://api-football-v1.p.rapidapi.com/v3/fixtures';
 
 // Parameters for API depending on ActiveTab
-const PARAMS = (ActiveTab) => { 
+const PARAMS = (ActiveTab) => {
   switch (ActiveTab) {
     // V3 - Fixture by Team ID
     case 0:
       const currentYear = new Date().getFullYear();
       return {
         season: String(currentYear),
-        team: '33'
-      }
+        team: '33',
+      };
     // V3 - Fixture in progress
     case 1: {
       const currentYear = new Date().getFullYear();
       return {
         live: 'all',
         season: String(currentYear),
-        timezone: 'Europe/London'
-      }
+        timezone: 'Europe/London',
+      };
     }
     // V3 - Fixtures to come
     case 2: {
       return {
-        next: '50'
-      }
+        next: '50',
+      };
     }
     // V3 - Fixture by date
     case 3: {
@@ -41,7 +41,7 @@ const PARAMS = (ActiveTab) => {
       };
     }
   }
-}
+};
 
 // - - - API - - -
 
@@ -50,61 +50,60 @@ const options = (Tab) => {
     method: 'GET',
     url: URL,
     params: {
-      ...PARAMS(Tab)
+      ...PARAMS(Tab),
     },
     headers: {
       'X-RapidAPI-Key': API_KEY,
-      'X-RapidAPI-Host': HOST
-    }
+      'X-RapidAPI-Host': HOST,
+    },
   };
-}
-
+};
 
 // - - - Fetch Matches - - -
 
 // Fetch Favourite Matches
 async function FetchFavMatchResults(TabIndex) {
-    let matches = [];
+  let matches = [];
 
-    try {
-        const response = await axios(options(TabIndex));
-        matches = response.data.response;
-        return matches;
-    } catch (error) {
-        console.log("Error: Can't connect to API servers...\n");
-        console.error(error);
-        throw error;
-    }
+  try {
+    const response = await axios(options(TabIndex));
+    matches = response.data.response;
+    return matches;
+  } catch (error) {
+    console.log("Error: Can't connect to API servers...\n");
+    console.error(error);
+    throw error;
+  }
 }
 
 // Fetch Live Matches
 async function FetchLiveResults(TabIndex) {
-    let matches = [];
+  let matches = [];
 
-    try {
-        const response = await axios(options(TabIndex));
-        matches = response.data.response;
-        return matches;
-    } catch (error) {
-        console.log("Error: Can't connect to API servers...\n");
-        console.error(error);
-        throw error;
-    }
+  try {
+    const response = await axios(options(TabIndex));
+    matches = response.data.response;
+    return matches;
+  } catch (error) {
+    console.log("Error: Can't connect to API servers...\n");
+    console.error(error);
+    throw error;
+  }
 }
 
 // Fetch Upcoming Matches
 async function FetchUpcomingResults(TabIndex) {
   let matches = [];
 
-    try {
-        const response = await axios(options(TabIndex));
-        matches = response.data.response;
-        return matches;
-    } catch (error) {
-        console.log("Error: Can't connect to API servers...\n");
-        console.error(error);
-        throw error;
-    }
+  try {
+    const response = await axios(options(TabIndex));
+    matches = response.data.response;
+    return matches;
+  } catch (error) {
+    console.log("Error: Can't connect to API servers...\n");
+    console.error(error);
+    throw error;
+  }
 }
 
 // Global Variables

@@ -5,20 +5,18 @@ import { StyleSheet } from 'react-native';
 
 // App Colours
 export const Colours = {
-    // Main Colours 
-    mainGreen: '#104603',
-    bgColour: '#131614',
+  // Main Colours
+  mainGreen: '#104603',
+  bgColour: '#131614',
 
-    // Text Colours
-    mainText: '#DDE1DC',
-    inactiveText: '#7F7F7F',
-    winners: '#DFF7D9',
-}
-
+  // Text Colours
+  mainText: '#DDE1DC',
+  inactiveText: '#7F7F7F',
+  winners: '#DFF7D9',
+};
 
 export const Global = StyleSheet.create({
-    fillSection: {
-        flex: 1,
-    }
-})
-
+  fillSection: {
+    flex: 1,
+  },
+});
