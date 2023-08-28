@@ -13,7 +13,7 @@ export async function getBasicTeamDetails(params) {
 
         // Send Request
         const apiResponse = await returnApiResponse(
-            options(teamEndpoints.teamURL, {
+            options(TEAM_EP.teamURL, {
                 id: teamID
             }), errorMessage("Team name and ID from 'API-Football - V3 Team Information' ", "clubs.js"));
 
@@ -67,7 +67,7 @@ function organiseCoachCareer(career) {
 export async function getCoachHistory(id) {
     try {
         // Check if parameter has been declared else use defaults
-        const apiResponse = await returnApiResponse(options(teamEndpoints.coachURL, {
+        const apiResponse = await returnApiResponse(options(TEAM_EP.coachURL, {
             team: id != undefined ? StringCheck(id) : DEFAULTS.teamID
         }), errorMessage("unable to find 'V3 - Coaches by Team ID'", "clubs.js"))
 
@@ -101,7 +101,7 @@ export async function getClubStanding(club) {
         const season = club != undefined ? StringCheck(club.season) : DEFAULTS.season;
         const teamID = club != undefined ? StringCheck(club.TeamID) : DEFAULTS.teamID;
 
-        const apiResponse = await returnApiResponse(options(teamEndpoints.leagueURL,{
+        const apiResponse = await returnApiResponse(options(TEAM_EP.leagueURL,{
             season: season,
             team: teamID
         }), errorMessage("unable to get league information via 'V3 - Standings by Team ID' in ", "clubs.js"))
@@ -146,6 +146,7 @@ function basicPlayerDetails(teamSquad) {
     for (let i = 0; i < squadLineUp.length; i++) {
         // Add players to 'empty' squad
         const players = squadLineUp[i];
+
         squad[i] = {
                 "Plays For":  teamName,
                 name: players.name,
@@ -211,16 +212,24 @@ export async function getSquadPlayers(id) {
         // Direct access to data
         const response = apiResponse[0];
 
+        // printJSON(response, 5000);
+
         // List of squad players and basic infromation
         const squad = basicPlayerDetails(response);
+
+        // printJSON(squad, 1000)
 
         // Amount of players in a position | Att, Mid, Def, GK
         // const squadPositions = playersInPositionCount(Squad);
 
         // NPM Test - Check squad players T. Heation as example
         // TODO: CHECK THIS RESPONSE
-        const testSquad = squad["0"];
-        return testSquad;
+        const playerToTestNPM = squad["0"];
+
+        return {
+            npmTest: playerToTestNPM,
+            dbEntry: squad
+        };
 
     } catch (error) {
         console.error(error);

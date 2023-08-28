@@ -69,7 +69,7 @@ describe("\nTESTING: API-Football\nInformation on clubs", () => {
     // Test Squad Line Up Function
     test("Fetch squad (33) line up in the season", async () => {
         const squadLineup = await getSquadPlayers();
-        expect(squadLineup).toEqual(SQUAD_LINEUP);
+        expect(squadLineup.npmTest).toEqual(SQUAD_LINEUP);
     });
 
 })

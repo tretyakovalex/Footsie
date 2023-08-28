@@ -1,3 +1,11 @@
+/*
+SoccerFootballInfo: https://rapidapi.com/soccerfootball-info-soccerfootball-info-default/api/soccer-football-info/
+LiveScore: https://rapidapi.com/apidojo/api/livescore6/
+FootAPI: https://rapidapi.com/fluis.lacasse/api/footapi7/
+FootballPro: https://rapidapi.com/sportmonks-data/api/football-pro/
+
+*/
+
 // Check if key exist, else create key
 export function KeyExistence(isArray, Obj, Key, Value) {
     // Object Key Doesn't Exist
@@ -8,6 +16,8 @@ export function KeyExistence(isArray, Obj, Key, Value) {
         Obj[Key].push(Value);
     }
 }
+
+
 
 // Print out a JSON File in a readable way
 export function printJSON(variable, maxCharacters) {

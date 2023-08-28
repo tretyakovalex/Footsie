@@ -1,15 +1,15 @@
 // Grab data on countries and competitions
 
 // Private Imports
-import { options, returnApiResponse, errorMessage, COMP_EP, DEFAULTS } from './api-football-endpoints';
+import { options, returnApiResponse, errorMessage, COMP_EP, DEFAULTS } from './api-football-endpoints.js';
 
-import { KeyExistence, StringCheck, printJSON } from './global-functions';
+import { KeyExistence, StringCheck, printJSON } from './global-functions.js';
 
 function organiseCountries(response) {
     const countries = {};
 
     for (let i = 0; i < response.length; i++) {
-        const {name: countryName, flag: countryLogo, tag: countryTag} = response[i];
+        const {name: countryName, flag: countryLogo, code: countryTag} = response[i];
 
         // Ensure no duplicate countries
         KeyExistence(
@@ -96,7 +96,7 @@ function OrganiseCompetitions(countryObj) {
 // V3 - Leagues by type (League or Cup)
 // Get all the countries and the football competitions they hold
 // League and Cup Names W/ Hosting Country
-export async function getCompetitionNamesandCountries(competition) {
+export async function getCompetitionNameandCountries(competition) {
     try {
         // Check if parameters been inputted, else add defaults
         const comp = competition != undefined ? competition : 'cup';

@@ -2,7 +2,7 @@
 import axios from 'axios'; 
 
 // Global Variables
-export const API_KEY = '060abebd44msheb1fbe6d87b8111p1c9872jsnd77b5a96aa2e';
+export const API_KEY = process.env.API_FOOTBALL_KEY;
 const HOST = 'api-football-v1.p.rapidapi.com';
 
 // V3 - Fixtures

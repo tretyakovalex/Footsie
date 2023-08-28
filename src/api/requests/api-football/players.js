@@ -2,13 +2,16 @@
 
 // Private Imports 
 import { options, returnApiResponse, errorMessage , DEFAULTS, PLAYER_EP } from './api-football-endpoints';
-import { printJSON } from './global-functions';
 
-// Get information on D.V.D.B for NPM Test
-function formatPlayerForNPM(Player) {
+import { printJSON, StringCheck} from './global-functions';
+
+// NPM TEST
+
+// NPM TEST - Get information on D.V.D.B for NPM Test
+function formatPlayerForNPM(player) {
     // Direct access to API Response JSON
-    const playerDictionary = Player.player;
-    const statisticDictionary = Player.statistics[0];
+    const playerDictionary = player.player;
+    const statisticDictionary = player.statistics[0];
 
     // Object to hold donny information
     const data = {
@@ -33,8 +36,19 @@ function formatPlayerForNPM(Player) {
     return data;
 }
 
+// NPM TEST - Find Donny within the list of players
+function findDonnyForNPM(squad) {
+    for (let i = 0; i < squad.length; i++) {
+        const eachPlayer = squad[i];
+
+        if (eachPlayer.player.name == "D. van de Beek") {
+            return i;
+        }
+    }
+}
+
 // Calculate the accumualative stats of the player
-function totalPlayerStatistics(Stats) {
+function totalPlayerStatistics(stats) {
     // Required information
     const totalStats = {
         games: {
@@ -65,7 +79,7 @@ function totalPlayerStatistics(Stats) {
     };
 
     // Loop through each competition and add up values to get total
-    for (const teamStats of Stats) {
+    for (const teamStats of stats) {
         // Total appearences & minutes
         totalStats.games.appearences += teamStats.stats.games.appearences;
         totalStats.games.minutes += teamStats.stats.games.minutes;
@@ -86,14 +100,14 @@ function totalPlayerStatistics(Stats) {
 }
 
 // Collecting statistics of each player
-function collectPlayerStats(Statistics) {
+function collectPlayerStats(statistics) {
     // Hold all information on a player
     const CollectiveStats = [];
 
     // Loop through each competition a player participates in
-    for (let i = 0; i < Statistics.length; i++) {
+    for (let i = 0; i < statistics.length; i++) {
         // Direct access to each team in JSON
-        const Team = Statistics[i];
+        const Team = statistics[i];
 
         // Direct Access To Keys
         const {team: club, league: league, games: games } = Team;
@@ -142,7 +156,7 @@ function collectPlayerStats(Statistics) {
     }
 
     // If player plays for more than one team
-    if (Statistics.length > 0) {
+    if (statistics.length > 0) {
         // Calculate total of all statistics
         const totalStats = totalPlayerStatistics(CollectiveStats);
         // Add statistics object to Collective Stats
@@ -190,9 +204,13 @@ function squadPlayerStatistics(players) {
 // Basic Player Information & Statistics
 export async function getClubPlayerStatistics(params) {
     try {
+        console.log(params)
+
         // Check if parameters have been added or use default
-        const teamID = params != undefined ? params.TeamID : DEFAULTS.teamID;
-        const season = params != undefined ? params.season : DEFAULTS.season;
+        const teamID = params != undefined ? StringCheck(params.teamID) : DEFAULTS.teamID;
+        const season = params != undefined ? StringCheck(params.season) : DEFAULTS.season;
+
+        console.log(season)
 
         // Make API Request
         const response = await returnApiResponse(
@@ -201,8 +219,18 @@ export async function getClubPlayerStatistics(params) {
             season: season
         }), errorMessage("Player statistics from 'V3 - Player Statistics' ", "players.js"));
 
+        // Get information on Donny for the NPM Test
+        const donnyIndex = findDonnyForNPM(response);
         // NPM Test - Returning for Test
-        const npmResult = formatPlayerForNPM(response[0]);
+        const npmResult = undefined;
+        try {
+            npmResult = formatPlayerForNPM(response[donnyIndex]);
+        } catch (error) {
+            console.error(error);
+            console.error("The API response isn't what is expected")
+        }
+
+        // printJSON(npmResult, 1000);
 
         return {
              npmTest: npmResult,

@@ -8,7 +8,7 @@ import { printJSON } from './global-functions';
 
 // Learn how to put this into Environment Variables
 const HEADER = {
-    key: '060abebd44msheb1fbe6d87b8111p1c9872jsnd77b5a96aa2e',
+    key: process.env.API_FOOTBALL_KEY,
     host: 'api-football-v1.p.rapidapi.com'
 }
 
@@ -35,6 +35,9 @@ export async function returnApiResponse(API_CALL, ERROR_MSG) {
         if (!apiResponse || apiResponse.data.response.length == 0) {
             console.error("Not receiving response from API Requests");
         }
+
+        // printJSON(apiResponse.data.response, 5000);
+
 
         return apiResponse.data.response;
 
