@@ -9,8 +9,6 @@ import Footer from './footer';
 
 import { TabNames } from './tab-information';
 
-import { getClubPlayerStatistics } from '../../api/requests/api-football/players';
-
 // Display tabs based on current page
 function DisplayActiveTab(currentPage) {
   switch (currentPage) {
@@ -24,14 +22,6 @@ function DisplayActiveTab(currentPage) {
       return TabNames.tournaments;
     default:
       return [];
-  }
-}
-
-async function TestAPICalls() {
-  try {
-    const test7 = await getClubPlayerStatistics();
-  } catch (error) {
-    console.error('DFSFSDFA');
   }
 }
 
