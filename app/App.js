@@ -6,12 +6,7 @@ import Footsie from './pages/foundation/footsie';
 
 export default function App() {
   return (
-    <View
-      style={[
-        application.container,
-        { justifyContent: 'center', alignItems: 'center' },
-      ]}
-    >
+    <View style={application.container}>
       <Footsie />
     </View>
   );

@@ -6,24 +6,6 @@ import axios from 'axios';
 // Print out JSON files
 import { printJSON } from './global-functions';
 
-// Learn how to put this into Environment Variables
-const HEADER = {
-  key: process.env.API_FOOTBALL_KEY,
-  host: 'api-football-v1.p.rapidapi.com',
-};
-
-// API RELATED FUNCTIONS
-
-// Options Template - Update URL and PARAMS based on API Requests
-export const options = (URL, PARAMS) => ({
-  method: 'GET',
-  url: URL,
-  params: PARAMS,
-  headers: {
-    'X-RapidAPI-Key': HEADER.key,
-    'X-RapidAPI-Host': HEADER.host,
-  },
-});
 
 // Make API Call and return the response
 export async function returnApiResponse(API_CALL, ERROR_MSG) {
@@ -46,10 +28,6 @@ export async function returnApiResponse(API_CALL, ERROR_MSG) {
   }
 }
 
-// Failed to get API Request
-export function errorMessage(Problem, FileLocation) {
-  return 'Unable to GET: ' + Problem + ' (' + FileLocation + ')\n';
-}
 
 // API ENDPOINTS
 

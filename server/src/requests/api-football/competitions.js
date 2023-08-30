@@ -2,14 +2,15 @@
 
 // Private Imports
 import {
-  options,
   returnApiResponse,
-  errorMessage,
   COMP_EP,
   DEFAULTS,
 } from './api-football-endpoints.js';
 
+import { options, errorMessage } from '../general-api.js';
 import { KeyExistence, StringCheck, printJSON } from './global-functions.js';
+
+const API_HOST = process.env.AF_HOST;
 
 function organiseCountries(response) {
   const countries = {};
@@ -23,8 +24,8 @@ function organiseCountries(response) {
 
     // Ensure no duplicate countries
     KeyExistence(false, countries, countryName, {
-      flag: countryLogo,
-      tag: countryTag,
+      countryFlag: countryLogo,
+      countryTag: countryTag,
     });
   }
 
@@ -37,7 +38,7 @@ export async function getCountryNameAndFlags() {
   try {
     // GET Country names, flag and tag
     const response = await returnApiResponse(
-      options(COMP_EP.countries),
+      options(COMP_EP.countries, API_HOST),
       errorMessage(
         "Country Name and Flags from 'API-Football V3 - Countries' Request",
         'Competition.js',
@@ -46,6 +47,9 @@ export async function getCountryNameAndFlags() {
 
     //  Create a database function to return information I am looking for
     const countries = organiseCountries(response);
+
+    // EDITED THIS LINE
+    // printJSON(countries);
 
     // Use this to test API Call for NPM Test - Euro Championship World
     const npmAlbania = response[0];
@@ -116,7 +120,7 @@ export async function getCompetitionNameandCountries(competition) {
 
     // GET List of leagues / Cup and hosting country
     const response = await returnApiResponse(
-      options(COMP_EP.leagues, { type: comp }),
+      options(COMP_EP.leagues, API_HOST, { type: comp }),
       errorMessage(
         "List of leauges / cups from 'API-Football V3 - Leagues by type' Request",
       ),
@@ -197,7 +201,7 @@ export async function getLeagueStandings(params) {
 
     // Request Leagues based on response
     const apiResponse = await returnApiResponse(
-      options(COMP_EP.standings, {
+      options(COMP_EP.standings, API_HOST, {
         season: season,
         league: leagueID,
       }),

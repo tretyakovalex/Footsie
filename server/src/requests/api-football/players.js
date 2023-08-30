@@ -2,12 +2,12 @@
 
 // Private Imports
 import {
-  options,
   returnApiResponse,
-  errorMessage,
   DEFAULTS,
   PLAYER_EP,
 } from './api-football-endpoints';
+
+import { options, errorMessage } from '../general-api';
 
 import { printJSON, StringCheck } from './global-functions';
 
@@ -209,6 +209,8 @@ function squadPlayerStatistics(players) {
   return clubPlayerDatabase;
 }
 
+const API_HOST = process.env.AF_HOST;
+
 // V3 - Player statistics by Team ID
 // Basic Player Information & Statistics
 export async function getClubPlayerStatistics(params) {
@@ -225,7 +227,7 @@ export async function getClubPlayerStatistics(params) {
 
     // Make API Request
     const response = await returnApiResponse(
-      options(PLAYER_EP.playersURL, {
+      options(PLAYER_EP.playersURL, API_HOST, {
         team: teamID,
         season: season,
       }),

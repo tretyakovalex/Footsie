@@ -9,6 +9,7 @@ import Footer from './footer';
 
 import { TabNames } from './tab-information';
 
+
 // Display tabs based on current page
 function DisplayActiveTab(currentPage) {
   switch (currentPage) {

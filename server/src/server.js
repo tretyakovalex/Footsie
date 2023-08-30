@@ -2,39 +2,58 @@ require('dotenv').config();
 
 import express from 'express';
 import mysql from 'mysql';
-import * as player from './requests/api-football/competitions';
+import * as comp from './requests/api-football/competitions';
+import * as players from './requests/api-football/players';
+
+// TESTING SOCCERFOOTBALL CALL
+import * as testing from './requests/soccerfootball-info/countries';
 
 const app = express();
 
 // TODO: endpoints will be initialized here
 const test = async () => {
   try {
-    const response = await player.getCountryNameAndFlags();
-    const countries = response.countries;
+    // Test country name, flags and tag
+    // const response = await comp.getCountryNameAndFlags();
+    // const countries = response.countries;
+    // let errorInserting = false;
 
-    // Iterate through each key-value pair in the object
+    // Testing API call with other API
+    testing.test();
+
+    // Test a squad of players
+    // const response = await players.getClubPlayerStatistics();
+    // const squad = response.dbResult
+
+    /* Get country name, flag,tag and add to database
     for (const countryName in countries) {
       if (countries.hasOwnProperty(countryName)) {
         const countryInfo = countries[countryName];
-        const { countryURL, countryTag } = countryInfo;
+        const { countryFlag: countryFlag, countryTag: countryTag } = countryInfo;
 
         // Insert the data into the database
-        const query = `INSERT INTO countries (countryName, countryURL, countryTag) VALUES (?, ?, ?)`;
-        database.query(query, [countryName, countryURL, countryTag], (err, result) => {
-          if (err) {
-            console.error(`Error inserting data into database: ${err}`);
-          } else {
-            console.log(`Inserted data into database: ${result.insertId}`);
-          }
-        });
+        if (!errorInserting) {
+          const query = `INSERT INTO test_countries (country_name, country_flag, country_tag) VALUES (?, ?, ?)`;
+          database.query(query, [countryName, countryFlag, countryTag], (err, result) => {
+            if (err) {
+              console.error(`Error inserting data into database: ${err}`);
+              errorInserting = true; // Abort further insertions
+            } else {
+              console.log(`Inserted data into database: ${result.insertId}`);
+            }
+          });
+        }
       }
-    }
+    } */
 
     return countries;
   } catch (err) {
-    console.error("Error with API call");
+    console.error("Error with API call", err);
   }
 };
+
+
+test();
 
 app.get('/', (req, res) => {
   res.send('Hello World!');

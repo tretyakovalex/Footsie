@@ -2,13 +2,15 @@
 
 // Private Imports
 import {
-  options,
   returnApiResponse,
   errorMessage,
   TEAM_EP,
   DEFAULTS,
 } from './api-football-endpoints';
+import { options, errorMessage } from '../general-api';
 import { printJSON, StringCheck } from './global-functions';
+
+const API_HOST = process.env.AF_HOST;
 
 // V3 - Team Informations
 // Team API Football ID - Team Name - Country - Image - Tag
@@ -19,7 +21,7 @@ export async function getBasicTeamDetails(params) {
 
     // Send Request
     const apiResponse = await returnApiResponse(
-      options(TEAM_EP.teamURL, {
+      options(TEAM_EP.teamURL, API_HOST, {
         id: teamID,
       }),
       errorMessage(
@@ -77,7 +79,7 @@ export async function getCoachHistory(id) {
   try {
     // Check if parameter has been declared else use defaults
     const apiResponse = await returnApiResponse(
-      options(TEAM_EP.coachURL, {
+      options(TEAM_EP.coachURL, API_HOST, {
         team: id != undefined ? StringCheck(id) : DEFAULTS.teamID,
       }),
       errorMessage("unable to find 'V3 - Coaches by Team ID'", 'clubs.js'),
@@ -115,7 +117,7 @@ export async function getClubStanding(club) {
       club != undefined ? StringCheck(club.TeamID) : DEFAULTS.teamID;
 
     const apiResponse = await returnApiResponse(
-      options(TEAM_EP.leagueURL, {
+      options(TEAM_EP.leagueURL, API_HOST, {
         season: season,
         team: teamID,
       }),
@@ -226,7 +228,7 @@ export async function getSquadPlayers(id) {
     const apiResponse = await returnApiResponse(
       options(TEAM_EP.playerURL, {
         team: teamID,
-      }),
+      }, API_HOST),
       errorMessage("can't find squad players 'V3 - Player Squad' via "),
     );
 
