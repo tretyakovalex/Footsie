@@ -9,9 +9,13 @@ export async function getApiResponse(options, errorMessage) {
     try {
         const response = await axios(options);
 
-        printJSON(response, 100000);
+        // Check results came through
+        if (!response || response.data.result <=0) {
+            console.error("Error Loading API\n");
+            return undefined;
+        }
 
-        return response;
+        return response.data.result;
     } catch (error) {
         console.error(error);
         console.error(errorMessage)
@@ -21,5 +25,7 @@ export async function getApiResponse(options, errorMessage) {
 
 
 export const DEFAULT = {
-    leagueList: 'https://livescore6.p.rapidapi.com/leagues/v2/list', // League List
+    countryList: 'https://soccer-football-info.p.rapidapi.com/countries/list/', // List of countries
+    languageCodes: 'https://soccer-football-info.p.rapidapi.com/languages/list/',// List of languages
+    clubList: 'https://soccer-football-info.p.rapidapi.com/teams/list/', // List of clubs
 }

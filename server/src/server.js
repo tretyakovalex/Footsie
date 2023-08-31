@@ -6,7 +6,7 @@ import * as comp from './requests/api-football/competitions';
 import * as players from './requests/api-football/players';
 
 // TESTING SOCCERFOOTBALL CALL
-import * as testing from './requests/soccerfootball-info/countries';
+import * as testing from './requests/soccerfootball-info/clubs';
 
 const app = express();
 
@@ -19,7 +19,7 @@ const test = async () => {
     // let errorInserting = false;
 
     // Testing API call with other API
-    testing.test();
+    const experiment = testing.getAllClubs();
 
     // Test a squad of players
     // const response = await players.getClubPlayerStatistics();
@@ -46,14 +46,14 @@ const test = async () => {
       }
     } */
 
-    return countries;
+    // return countries;
   } catch (err) {
     console.error("Error with API call", err);
   }
 };
 
 
-test();
+// test();
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
