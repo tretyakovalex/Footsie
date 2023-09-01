@@ -13,40 +13,17 @@ function organiseCountries(countries) {
 
     for (let i = 0; i < countries.length; i++) {
         const {
-            code: [countryTag], 
-            name: [countryName],
+            code: countryTag, 
+            name: countryName,
         } = countries[i];
 
         organisedCountries.push(
-            {[countryName]: {
-                tag: [countryTag],
-            }}
+            {[countryName]: countryTag}
         );
     };
 
     return organisedCountries;
 };
-
-
-// Collect only the country codes
-// Needed for getting countries with clubs API request
-// getAllClubs() in Clubs.js
-function collectCountryCodes(countries) {
-    try {
-        const tags = [];
-
-        for (let i = 0; i < countries.length; i++) {
-            const {code: [countryTag]} = countries[i];
-
-            tags.push(countryTag);
-        }
-
-        return tags;
-    } catch (error) {
-        console.error("Problem getting the country codes. (countries.js)");
-    }
-}
-
 
 // Gets result for the NPM test. Only takes the first response
 function getResultForNPM(countries) {
@@ -55,14 +32,19 @@ function getResultForNPM(countries) {
             const {code: [countryTag], name: [countryName]} = countries[i];
     
             return {
-                [countryName]: {
-                    tag: [countryTag]
-                }
+                [countryName]: countryTag
             }
         }
 
     } catch (error) {
         console.error("Problem getting result for NPM. (Countries.js)")
+    }
+}
+
+// Print Results
+function printCountries(countries) {
+    for (let i = 0; i < countries.length; i++) {
+        printJSON(countries[i], 100);
     }
 }
 
@@ -77,17 +59,15 @@ export async function getCountryData(purpose) {
     switch (purpose) {
         case "database":
             // Returns an array of objects - Country Name and Tag
-            countryList = organiseCountries(countryList)
+            const countries = organiseCountries(countryList)
 
-            return countryList;
-        case "npm": { 
-            return collectCountryCodes(countryList);
-        }
-        case "teams": {
+            printCountries(countries);            
+
+            return countries;
+        case "npm":
             return getResultForNPM(countryList);
-        }
         default:
-            return "ERROR: Check the purpose parameter\n Make sure it's either: database - npm - teams";
+            return "ERROR: Check the purpose parameter\n Make sure it's either: database - npm";
     }
 
     // printJSON(a, 10000);

@@ -6,7 +6,7 @@ import * as comp from './requests/api-football/competitions';
 import * as players from './requests/api-football/players';
 
 // TESTING SOCCERFOOTBALL CALL
-import * as testing from './requests/soccerfootball-info/clubs';
+import * as testing from './requests/soccerfootball-info/countries';
 
 const app = express();
 
@@ -19,11 +19,7 @@ const test = async () => {
     // let errorInserting = false;
 
     // Testing API call with other API
-    const experiment = testing.getAllClubs();
-
-    // Test a squad of players
-    // const response = await players.getClubPlayerStatistics();
-    // const squad = response.dbResult
+    const experiment = testing.getCountryData("database");
 
     /* Get country name, flag,tag and add to database
     for (const countryName in countries) {

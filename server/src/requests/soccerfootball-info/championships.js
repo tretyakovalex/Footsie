@@ -1,1 +1,0 @@
-// Collect results on competitions
