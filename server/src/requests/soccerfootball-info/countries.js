@@ -41,13 +41,6 @@ function getResultForNPM(countries) {
     }
 }
 
-// Print Results
-function printCountries(countries) {
-    for (let i = 0; i < countries.length; i++) {
-        printJSON(countries[i], 100);
-    }
-}
-
 // Get information on countries
 // Purpose = database - npm - teams
 export async function getCountryData(purpose) {
@@ -59,9 +52,7 @@ export async function getCountryData(purpose) {
     switch (purpose) {
         case "database":
             // Returns an array of objects - Country Name and Tag
-            const countries = organiseCountries(countryList)
-
-            printCountries(countries);            
+            const countries = organiseCountries(countryList)           
 
             return countries;
         case "npm":
