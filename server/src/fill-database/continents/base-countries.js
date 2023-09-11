@@ -1,9 +1,11 @@
-import * as validation from '../requests/organisation/organise';
+import * as validation from '../../requests/organisation/continent/validate-countries';
 
 // TODO
 //   Reset this
 //   Call this on app start
 
+// getCountryNameAndFlags
+// Fill MySQL DB with countries, IDs and flags
 export const countryFill = async (dbConnection) => {
   try {
     const result = await validation.validateCountries();
@@ -32,6 +34,6 @@ export const countryFill = async (dbConnection) => {
       }
     }
   } catch (err) {
-    console.error("Error with API call", err);
+    console.error("Error with API call - MySQL: (base-countries.js)", err);
   }
 };

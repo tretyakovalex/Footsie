@@ -3,7 +3,6 @@
 // Private Imports
 import {
   returnApiResponse,
-  errorMessage,
   TEAM_EP,
   DEFAULTS,
 } from './api-football-endpoints';
@@ -45,7 +44,7 @@ export async function getBasicTeamDetails(params) {
     // NPM Test - Basic Man United Info
     return {
       npmTest: teamInfo,
-      dbResponse: 'Empty', // TODO: Create database function
+      dbResponse: response, // TODO: Create database function
     };
     // console.log('TeamInfo:', JSON.stringify(TeamInfo, null, 2));
   } catch (error) {
@@ -226,9 +225,9 @@ export async function getSquadPlayers(id) {
 
     // Receive a response from the API
     const apiResponse = await returnApiResponse(
-      options(TEAM_EP.playerURL, {
+      options(TEAM_EP.playerURL, API_HOST, {
         team: teamID,
-      }, API_HOST),
+      }),
       errorMessage("can't find squad players 'V3 - Player Squad' via "),
     );
 

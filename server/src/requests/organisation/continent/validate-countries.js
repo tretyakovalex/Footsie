@@ -1,35 +1,11 @@
 // Public Imports
-import readline from 'readline';
 
 // Private Imports
-import { getCountryData } from '../soccerfootball-info/countries';
-import { getCountryNameAndFlags } from '../api-football/competitions';
-import { printJSON } from '../api-football/global-functions';
+import { getCountryData } from '../../soccerfootball-info/countries';
+import { getCountryNameAndFlags } from '../../api-football/competitions';
+import { printJSON } from '../../api-football/global-functions';
 
-
-// getCountryData
 /*
- - - - Soccer Info - - - 
-[
-    {"Andorra": "AD"},
-    {"United Arab Emirates": "AE"}
-]
-*/
-// getCountryNameAndFlags
-/*
- - - - API FOOTBALL - - - 
-{
-  "Albania": {
-    "countryFlag": "https://media-2.api-sports.io/flags/al.svg",
-    "countryTag": "AL"
-  },
-  "Algeria": {
-    "countryFlag": "https://media-3.api-sports.io/flags/dz.svg",
-    "countryTag": "DZ"
-  },
-}
-
-
 SoccerInfo Countries: 250
 API Football Countries: 167
 */
@@ -40,10 +16,7 @@ function lowerCompare(tagSI, tagAF) {
   return tagSI == tagAF;
 }  
 
-// TODO:
-//    Can this be simplified
-//    Remove double-checks (Match found, don't check that again)
-// Compare SoccerInfo data vs apiFootball Data
+// Compare list of countries between SoccerInfo and API Football Response
 function compareData(soccerInfo, apiFootball) {
   const validData = [];
   const questionableData = [];
@@ -86,8 +59,7 @@ function compareData(soccerInfo, apiFootball) {
   };
 }
 
-
-
+// Only show valid countries - Both in SoccerInfo and API Football
 export async function validateCountries() {
     const countryDataSF = await getCountryData("database"); // Soccer Info
     const countryDataAF = await getCountryNameAndFlags(); // API Football 
@@ -95,4 +67,3 @@ export async function validateCountries() {
     return compareData(countryDataSF, countryDataAF.countries);
 
 }
-
