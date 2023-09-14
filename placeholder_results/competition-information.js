@@ -15,16 +15,31 @@ const b = [
     {
       "country": "Albania",
       "leagues": [
-        "Cup",
-        "Super Cup"
+        {
+          "competition": "Cup",
+          "emblem": "https://media-4.api-sports.io/football/leagues/707.png"
+        },
+        {
+          "competition": "Super Cup",
+          "emblem": "https://media-4.api-sports.io/football/leagues/708.png"
+        }
       ]
     },
     {
       "country": "Algeria",
       "leagues": [
-        "Coupe Nationale",
-        "Super Cup",
-        "Coupe de la Ligue"
+        {
+          "competition": "Coupe Nationale",
+          "emblem": "https://media-4.api-sports.io/football/leagues/514.png"
+        },
+        {
+          "competition": "Super Cup",
+          "emblem": "https://media-4.api-sports.io/football/leagues/516.png"
+        },
+        {
+          "competition": "Coupe de la Ligue",
+          "emblem": "https://media-4.api-sports.io/football/leagues/832.png"
+        }
       ]
     }
 ]

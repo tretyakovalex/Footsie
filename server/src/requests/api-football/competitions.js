@@ -78,11 +78,14 @@ function getCompetitions(response) {
     // Store current country and competititon name
     const {
       country: { name: countryName },
-      league: { name: competitionName },
+      league: { name: competitionName, logo: compEmblem }
     } = response[i];
 
     // If country doesn't exit create key or add to key
-    KeyExistence(true, competitions, countryName, competitionName);
+    KeyExistence(true, competitions, countryName, {
+      competition: competitionName,
+      emblem: compEmblem
+    });
   }
 
   // List of countries and their competitions

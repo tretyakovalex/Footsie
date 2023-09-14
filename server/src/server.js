@@ -22,12 +22,24 @@ import * as comp from './requests/api-football/competitions';
 import * as countries from './requests/organisation/continent/countries-continent';
 import { countriesContinentFill } from './requests/organisation/continent/countries';
 
-/*
 async function test() {
-  const a = await club.getSquadPlayers();
-  printJSON(a.dbEntry, 5000);
+  const a = await comp.getCompetitionNameandCountries();
+  printJSON(a.databaseCompetitions, 2000);
 } 
-*/
+
+function testa() {
+  let a = 0;
+  for (let i = 0; i < 30; i++) {
+    a++;
+    console.log(a);
+    i += 3;
+    if (i > 30)
+      break;
+    i - 2;
+  }
+}
+
+testa();
 
 const app = express();
 

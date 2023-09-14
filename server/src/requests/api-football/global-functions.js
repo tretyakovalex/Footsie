@@ -12,7 +12,7 @@ export function KeyExistence(isArray, Obj, Key, Value) {
   if (!Obj[Key]) {
     Obj[Key] = isArray ? [Value] : Value;
   } else if (isArray) {
-    // Doesn't exist but is an object
+    // Doesn't exist but isn't an object
     Obj[Key].push(Value);
   }
 }
