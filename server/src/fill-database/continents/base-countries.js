@@ -1,9 +1,5 @@
 import * as validation from '../../requests/organisation/continent/validate-countries';
 
-// TODO
-//   Reset this
-//   Call this on app start
-
 // getCountryNameAndFlags
 // Fill MySQL DB with countries, IDs and flags
 export const countryFill = async (dbConnection) => {

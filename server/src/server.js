@@ -21,25 +21,13 @@ import * as club from './requests/api-football/clubs';
 import * as comp from './requests/api-football/competitions';
 import * as countries from './requests/organisation/continent/countries-continent';
 import { countriesContinentFill } from './requests/organisation/continent/countries';
+import { competitionLocation } from './requests/organisation/continent/continent-leagues';
+import { competitionFill } from './fill-database/continents/fillCompetitions';
 
 async function test() {
   const a = await comp.getCompetitionNameandCountries();
-  printJSON(a.databaseCompetitions, 2000);
+  // printJSON(a.databaseCompetitions, 2000);
 } 
-
-function testa() {
-  let a = 0;
-  for (let i = 0; i < 30; i++) {
-    a++;
-    console.log(a);
-    i += 3;
-    if (i > 30)
-      break;
-    i - 2;
-  }
-}
-
-testa();
 
 const app = express();
 
@@ -74,8 +62,12 @@ database.getConnection((err, connection) => {
 
   // Fill basic country information
   // countryFill(connection);
+  
   // Fill countries with ID and names. Connection continent and countries
   // countriesContinentFill(connection);
+
+  // Fill competitions with cups and leagues
+  // competitionFill(connection)
 
   connection.release();
 
