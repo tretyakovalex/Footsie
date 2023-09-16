@@ -5,24 +5,12 @@ import express from 'express';
 import mysql from 'mysql';
 
 // Private Imports
+// Continent Fill Section
 import { countryFill } from './fill-database/continents/base-countries';
-import { continent_countries } from './requests/organisation/continent/countries-continent';
-import { printJSON } from './requests/api-football/global-functions';
-
-// Temporary Imports
-/*
-Player Information: getCulbPlayerStatistics
-Competition Information: getCountryNameAndFlags, getCompetitionNameandCountries, getLeagueStandings
-Clubs: getBasicTeamDetails, getCoachHistory, getClubStanding, getSquadPlayers
-*/
-
-import * as player from './requests/api-football/players';
-import * as club from './requests/api-football/clubs';
-import * as comp from './requests/api-football/competitions';
-import * as countries from './requests/organisation/continent/countries-continent';
-import { countriesContinentFill } from './requests/organisation/continent/countries';
-import { competitionLocation } from './requests/organisation/continent/continent-leagues';
+import { countriesContinentFill } from './fill-database/continents/countries';
 import { competitionFill } from './fill-database/continents/fillCompetitions';
+
+import { printJSON } from './requests/api-football/global-functions';
 
 async function test() {
   const a = await comp.getCompetitionNameandCountries();
@@ -40,38 +28,69 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
-const { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_DATABASE } = process.env;
-const database = mysql.createPool({
-  connectionLimit: 10,
-  host: DB_HOST,
-  port: DB_PORT,
-  user: DB_USER,
-  password: DB_PASSWORD,
-  database: DB_DATABASE,
-});
+// Continents Databse Configuartions
+const { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD } = process.env;
+// Return a connection pool based on database name
+const databaseConnection = databaseName => {
+  return mysql.createPool({
+    connectionLimit: 10,
+    host: DB_HOST,
+    port: DB_PORT,
+    user: DB_USER,
+    password: DB_PASSWORD,
+    database: databaseName,
+  })
+}
+
+// Connect to continents database
+const continentsDatabase = databaseConnection('continents');
+// Connect to leagues database
+const leagueDatbase = databaseConnection('leagues');
+
 
 const PORT = process.env.PORT;
-database.getConnection((err, connection) => {
-  if (err) {
-    console.error(`Error connecting to database: ${err.code}`);
-    process.exit(1);
-  }
-  console.log('Connected to database');
 
-  // API and Data integration
+// Connect to the database and execute nessercary queries
+async function executeConnection(database, dbName, executeQueries) {
+  return new Promise((resolve, reject) => {
+    database.getConnection((err, connection) => {
+      if (err) {
+        // Error with conencting to the database
+        console.error(`Error: Problem with connecting to the ${dbName} database.`);
+        return reject(err);
+      }
 
-  // Fill basic country information
-  // countryFill(connection);
+      // Going to use a function to execute my queries
+      executeQueries(connection)
+
+      // Release connection
+      connection.release();
+
+      // For future use
+      app.listen(PORT, () => {
+        console.log(`LISTENING ON http://localhost:${PORT}`);
+      });
+
+      // Display completion of database calls
+      resolve(`${dbName} has served it's purpose`);
+    });
+  });
+};
+
+// Execute all queries relating to the continents database
+async function continentQueries(dbConnection) {
+   // Fill basic country information
+  await countryFill(dbConnection);
   
   // Fill countries with ID and names. Connection continent and countries
-  // countriesContinentFill(connection);
+  await countriesContinentFill(dbConnection);
 
   // Fill competitions with cups and leagues
-  // competitionFill(connection)
+  await competitionFill(dbConnection)
+}
 
-  connection.release();
+// TODO:
+//     Change data over x period for time - Accuracy and Up to date
 
-  app.listen(PORT, () => {
-    console.log(`Listening on http://localhost:${PORT}`);
-  });
-});
+// Execute continent database queries
+// executeConnection(continentsDatabase, "continents", continentQueries);

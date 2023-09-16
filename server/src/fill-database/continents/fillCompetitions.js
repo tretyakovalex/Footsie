@@ -47,8 +47,6 @@ async function fillDatabase(competitions, compName, dbConnection) {
             console.error(`Problem with adding ${competitions[i].competition} to the database\n${err}`);
         }
     }
-
-    console.log(`Inserted ${compName}`);
 }
 
 function prepareCompetitiionForDatabase(countryList, tempArray) {
@@ -74,8 +72,10 @@ export const competitionFill = async (dbConnection) => {
 
         // Fill database
         await fillDatabase(cupArray, "cup", dbConnection);
+        console.log("Continents Database: International Torunaments Filled.")
         setTimeout(async () => {
             await fillDatabase(leagueArray, "league", dbConnection);
+            console.log("Continents Database: League Filled.")
         }, 2000);
     } catch (err) {
         console.error(`Problem with API calls. Via (fillCompetitions.js)\n${err}`);

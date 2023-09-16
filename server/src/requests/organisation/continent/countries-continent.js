@@ -120,8 +120,6 @@ async function connectContinentAndCountries(dataSummary) {
 
 // Exported function to server.js
 // Handle processing
-// Exported function to server.js
-// Handle processing
 export async function continentsAndCountriesDB(dbConnection) {
     try {
         // Gets data from MySql database

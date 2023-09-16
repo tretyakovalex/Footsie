@@ -105,7 +105,6 @@ function checkAndOrganizeCompetitions(apiResult, dbCountries) {
 
 // Get country location for cups and leagues
 export async function competitionLocation(dbConnection) {
-    // .databaseCompetitions
     // Country Cup Competitions
     const cups = await getCompetitionNameandCountries();
     // Country League Competitions

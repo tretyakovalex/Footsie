@@ -1,4 +1,4 @@
-import { continentsAndCountriesDB } from "./countries-continent";
+import { continentsAndCountriesDB } from "../../requests/organisation/continent/countries-continent";
 
 // Fills the country database (MySQL)
 // Country Name, Id and Continent Name, ID
@@ -21,11 +21,12 @@ export const countriesContinentFill = async (dbConnection) => {
                     country.continentID,
                     country.flag
                 ]);
-                console.log(`${i}: Inserted ${country.countryName}`);
             } catch (err) {
                 console.error('Problem with inserting into the table. (countries.js)');
             }
         }
+
+        console.log("Continents Database: Countries Filled.");
         
 
     } catch (err) {

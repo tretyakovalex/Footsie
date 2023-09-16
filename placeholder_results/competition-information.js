@@ -45,6 +45,7 @@ const b = [
 ]
 
 // LEAGUE STANDINGS
+// getLeagueStandings
 const c = {
     "league": {
       "leagueName": "Premier League",
