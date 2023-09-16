@@ -200,7 +200,7 @@ export async function getLeagueStandings(params) {
     const season =
       params != undefined ? StringCheck(params.season) : DEFAULTS.season; // '2020'
     const leagueID =
-      params != undefined ? StringCheck(params.TeamID) : DEFAULTS.leagueID; // '39'
+      params != undefined ? StringCheck(params.leagueId) : DEFAULTS.leagueID; // '39'
 
     // Request Leagues based on response
     const apiResponse = await returnApiResponse(
