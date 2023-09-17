@@ -1,4 +1,73 @@
+// API Request
+import {
+    returnApiResponse,
+    COMP_EP,
+    DEFAULTS,
+} from '../../api-football/api-football-endpoints';
+import { options, errorMessage } from '../../general-api';
+
+
 import { getLeagueStandings } from '../../api-football/competitions';
+
+
+// TODO:
+//    Look to potentially globalise this function
+
+// League Endpoints
+const LEAGUE_EP = 'https://api-football-v1.p.rapidapi.com/v3/leagues';
+// League API Host
+const API_HOST = process.env.AF_HOST;
+
+// Direct Access To League IDs
+function selectLeagueIDs(leagues) {
+    // Hold all league ID and Type
+    const leagueIDs = [];
+
+    // Go through each league to get ID and Type
+    for (const apiLeague of leagues) {
+        leagueIDs.push({
+            id: apiLeague.league.id,
+            competition: apiLeague.league.type
+        })
+    }
+
+    // Return IDs and Type from all leagues
+    return leagueIDs;
+}
+
+// Get all league ID for the API Calls
+async function getLeagueIDs() {
+    const response = await returnApiResponse(
+        options(LEAGUE_EP, API_HOST), 
+        errorMessage("Unable to get 'V3 - Leagues' via", "teams.js"));
+
+    
+
+    // Get all league IDs and Type
+    const organisedLeague = selectLeagueIDs(response);
+
+    const leagueCompetition = [];
+    const cupCompetition = [];
+
+    // Seperate leagues based on type
+    for (const league of organisedLeague) {
+        if (league.competition == 'League') {
+            leagueCompetition.push(league);
+        } else {
+            cupCompetition.push(league);
+        }
+    }
+
+    // Print out the amount of API calls that will be made
+    console.log(`API CALLS: ${leagueCompetition.length + cupCompetition.length}\nLeague Calls: ${leagueCompetition.length}\nCup Calls: ${cupCompetition.length}\n\n`);
+
+    // Return based on usage
+    // Filling league database vs cup database
+    return {
+        league: leagueCompetition,
+        cup: cupCompetition
+    }
+}
 
 // Organise Results
 function organiseLeagueStandings(currentLeague) {
@@ -23,62 +92,47 @@ function organiseLeagueStandings(currentLeague) {
     return dataForDatabase;
 }
 
+// Organise league standing for the Teams Database
+async function organiseLeague(id) {
+    // Get the current season
+    const date = new Date();
+    const currentYear = date.getFullYear();
+
+    // Make API Request
+    const currentLeague = await getLeagueStandings({
+        season: currentYear,
+        leagueId: id
+    });
+
+    // Return data the way the database will read it
+    return organiseLeagueStandings(currentLeague);
+}
+
 // Collect
 // team_name, team_emblem and ranking
+
+// TODO:
+//    Need to test this, but got to be cautious of the API call limit
 export async function getAllTeamInformation() {
-    // Get Results
+    // Return a array of leagues (Dictionaries)
     const leagues = [];
-    // Check for end of leagues
-    let failedCallCounter = 0;
-    // Temporary
-    const validLeagues = [];
-    const invalidLeagues = [];
 
-    // Find each team in the API Database
-    for (let i = 0; i < 1; i++) {
-        // Get Season Parameter
-        const date = new Date();
-        const currentYear = date.getFullYear();
+    // API Response + Organised into just league ID and Types
+    const IDs = await getLeagueIDs();
+    
+    // Specifically for League and Cup
+    const leagueIDs = IDs.league;
 
-        // Make API Call
-        try {
-            const league = await getLeagueStandings({
-                season: currentYear,
-                leagueId: 39 
-            });
-
-            // Organise Results
-            leagues.push(organiseLeagueStandings(league));
-
-            // Tempoary Section
-            // Valid League - Store league (i) so that I can cut down on API calls later
-            validLeagues.push(39);
-            // Reset counter - League was found
-            failedCallCounter = 0;
-
-            setTimeout(console.log(`39 Processed`), 2000);
-
-
-        } catch (err) {
-            // Temporary Section
-            // Invalid League - Store league (i), so that I can cut down on API calls later
-            invalidLeagues.push(i);
-            // Increment Fail Counter;
-            failedCallCounter += 1;
-            if (failedCallCounter > 10) {
-                console.log(`Potential end of league calls.\nStarts from ${i - 10}`);
-                break;
-            }
-        }
+    // Get all league data
+    for (const eachLeague of leagueIDs) {
+        const currentLeague = await organiseLeague(eachLeague.id);
+        leagues.push(currentLeague);
     }
 
-    // Get the information required
-    console.log(validLeagues);
-    console.log(invalidLeagues);
-
-    // Return Results Suitable For Database
+    // Return the collected data
     return leagues;
-}
+  }
+  
 
 
 // Collect country_id and continent_id from continents.countries

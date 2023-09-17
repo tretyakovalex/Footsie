@@ -222,6 +222,6 @@ export async function getLeagueStandings(params) {
 
     return league;
   } catch (error) {
-    console.error(error);
+    // console.error(error);
   }
 }
