@@ -7,6 +7,7 @@ import {
 import { options, errorMessage } from '../../general-api';
 // API Request for each standing
 import { getLeagueStandings } from '../../api-football/competitions';
+import { printJSON } from '../../api-football/global-functions';
 
 
 // TODO:
@@ -70,6 +71,7 @@ async function getLeagueIDs() {
 
 // Organise Results
 function organiseLeagueStandings(currentLeague) {
+
     // Hold results that will go into database
     // League Information
     const dataForDatabase = {
@@ -97,39 +99,48 @@ async function organiseLeague(id) {
     const date = new Date();
     const currentYear = date.getFullYear();
 
-    // Make API Request
-    const currentLeague = await getLeagueStandings({
-        season: currentYear,
-        leagueId: id
-    });
+    try {
+        // Make API Request
+        const currentLeague = await getLeagueStandings({
+            season: currentYear,
+            leagueId: id
+        });
 
-    // Return data the way the database will read it
-    return organiseLeagueStandings(currentLeague);
+        if (!currentLeague.league || !currentLeague.league.leagueName) {
+            console.warn("Warning: leagueName is missing for the current league with ID:", id);
+            return null;
+        }
+
+        // Return data the way the database will read it
+        return organiseLeagueStandings(currentLeague);
+    } catch (error) {
+        console.error("Error while fetching league data for ID:", id);
+        console.error(error);
+        return null;
+    }
 }
+
 
 // Collect
 // team_name, team_emblem and ranking
 
 // Track API Calls
-function updateProgress(maxCalls, startTime, callsCompleted, delayBetweenCalls) {
+function updateProgress(maxCalls, startTime, callsCompleted) {
     const currentTime = Date.now(); // Track Timing
     const elapsedTime = currentTime - startTime; // How much time has gone by
     const percentageComplete = (callsCompleted / maxCalls) * 100;  // Progress
     // Remaining Time Left
-    const remainingTime = ((maxCalls - callsCompleted) * delayBetweenCalls) / 1000;// Remaining  time left in seconds
-    const remainingMinutes = remainingTime / 60; // Convert remainingTime to minutes
 
     // Console Display Loading Bar
 
     console.clear(); // Clear the console to update progress
     console.log('API Call Progress:');
     console.log(`Progress: ${callsCompleted}/${maxCalls} (${percentageComplete.toFixed(2)}% complete)`);
-    console.log(`Estimated time remaining: ${remainingMinutes.toFixed(2)} seconds`);
 
     // Bar to be displayed
     const bar = '='.repeat(Math.floor(percentageComplete / 2)) + ' '.repeat(Math.floor((100 - percentageComplete) / 2));
 
-    process.stdout.write(`[${bar}]`);
+    process.stdout.write(`[${bar}]\n`);
 
     // Check if all calls are completed
     if (callsCompleted === maxCalls) {
@@ -150,7 +161,10 @@ export async function getAllTeamInformation() {
     // To fit database structure
     const fetchAndOrganizeLeague = async (leagueId) => {
       const currentLeague = await organiseLeague(leagueId);
-      leagues.push(currentLeague);
+
+      if (currentLeague != null) {
+        leagues.push(currentLeague);
+      } 
     };
 
     // Define the rate limit parameters
@@ -171,7 +185,7 @@ export async function getAllTeamInformation() {
 
         // Display the loading bar
         callsCompleted++ 
-        updateProgress(totalCalls, startTime, callsCompleted, delayBetweenCalls);
+        updateProgress(totalCalls, startTime, callsCompleted);
     }
 
     console.log(`After Insertion:\nLeague Count: ${leagues.length}`)

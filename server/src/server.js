@@ -105,4 +105,4 @@ async function leaguesQueries(dbConnection) {
 
 
 // Execute leagues database queries
-executeConnection(leagueDatabase, 'leagues', leaguesQueries);
+// executeConnection(leagueDatabase, 'leagues', leaguesQueries);
