@@ -10,11 +10,13 @@ import { countryFill } from './fill-database/continents/base-countries';
 import { countriesContinentFill } from './fill-database/continents/countries';
 import { competitionFill } from './fill-database/continents/fillCompetitions';
 
+// League Fill Section
+import { fillTeamsDatabase } from './fill-database/league/fill-teams';
+
 import { printJSON } from './requests/api-football/global-functions';
 import { getAllTeamInformation } from './requests/organisation/league/teams';
 
 
-import { getCountryAndContinentID } from './requests/organisation/league/teams';
 
 const app = express();
 
@@ -98,10 +100,9 @@ async function continentQueries(dbConnection) {
 // Execute all queries relating to the league database
 async function leaguesQueries(dbConnection) {
   // Test
-  //  Can we get all the league required for this section of the code.
-  await getAllTeamInformation();
+  fillTeamsDatabase(dbConnection, continentsDatabase);
 }
 
 
 // Execute leagues database queries
-// executeConnection(leagueDatabase, 'leagues', leaguesQueries);
+executeConnection(leagueDatabase, 'leagues', leaguesQueries);

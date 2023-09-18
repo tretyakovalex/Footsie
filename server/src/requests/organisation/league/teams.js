@@ -5,8 +5,7 @@ import {
     DEFAULTS,
 } from '../../api-football/api-football-endpoints';
 import { options, errorMessage } from '../../general-api';
-
-
+// API Request for each standing
 import { getLeagueStandings } from '../../api-football/competitions';
 
 
@@ -113,14 +112,11 @@ async function organiseLeague(id) {
 
 // Track API Calls
 function updateProgress(maxCalls, startTime, callsCompleted, delayBetweenCalls) {
-    // Track Timing
-    const currentTime = Date.now();
-    // How much time has gone by
-    const elapsedTime = currentTime - startTime;
-    // How far a long the calls are
-    const percentageComplete = (callsCompleted / maxCalls) * 100;
+    const currentTime = Date.now(); // Track Timing
+    const elapsedTime = currentTime - startTime; // How much time has gone by
+    const percentageComplete = (callsCompleted / maxCalls) * 100;  // Progress
     // Remaining Time Left
-    const remainingTime = ((maxCalls - callsCompleted) * delayBetweenCalls) / 1000; // in seconds
+    const remainingTime = ((maxCalls - callsCompleted) * delayBetweenCalls) / 1000;// Remaining  time left in seconds
     const remainingMinutes = remainingTime / 60; // Convert remainingTime to minutes
 
     // Console Display Loading Bar
@@ -130,6 +126,7 @@ function updateProgress(maxCalls, startTime, callsCompleted, delayBetweenCalls) 
     console.log(`Progress: ${callsCompleted}/${maxCalls} (${percentageComplete.toFixed(2)}% complete)`);
     console.log(`Estimated time remaining: ${remainingMinutes.toFixed(2)} seconds`);
 
+    // Bar to be displayed
     const bar = '='.repeat(Math.floor(percentageComplete / 2)) + ' '.repeat(Math.floor((100 - percentageComplete) / 2));
 
     process.stdout.write(`[${bar}]`);
@@ -157,15 +154,11 @@ export async function getAllTeamInformation() {
     };
 
     // Define the rate limit parameters
-    // Maximum number of API calls per minute
-    const rateLimit = 30;
-    // Calculate the delay between calls
-    const delayBetweenCalls = 60 * 1000 / rateLimit; 
+    const rateLimit = 30;  // Maximum number of API calls per minute
+    const delayBetweenCalls = 60 * 1000 / rateLimit; // Calculate the delay between calls
 
-    // Specifically for League and Cup
-    const leagueIDs = IDs.league;
-    // Track API Call Times
-    const totalCalls = leagueIDs.length;
+    const leagueIDs = IDs.league;         // Specifically for League and Cup
+    const totalCalls = leagueIDs.length;  // Track API Call Times
 
     // Start Time - Loading Bar
     const startTime = Date.now();
@@ -176,6 +169,7 @@ export async function getAllTeamInformation() {
         fetchAndOrganizeLeague(eachLeague.id);
         await new Promise(resolve => setTimeout(resolve, delayBetweenCalls)); 
 
+        // Display the loading bar
         callsCompleted++ 
         updateProgress(totalCalls, startTime, callsCompleted, delayBetweenCalls);
     }
@@ -187,10 +181,11 @@ export async function getAllTeamInformation() {
 }
 
 // Collect country_id and continent_id from continents.countries
+// Right connection needs to be made for this to work
 export async function getCountryAndContinentID(dbConnection) {
     return new Promise((resolve, reject) => {
         // The right connection needs to be set for this to work
-        const query = 'SELECT country_id, continent_id from countries';
+        const query = 'SELECT country_id, continent_id, country_name from countries';
 
         // Attempt to make a connection to the database
         dbConnection.query(query, (err, result) => {
@@ -203,6 +198,7 @@ export async function getCountryAndContinentID(dbConnection) {
                     return {
                         country_id: row.country_id,
                         continent_id: row.continent_id,
+                        country_name: row.country_name,
                     }
                 });
 
