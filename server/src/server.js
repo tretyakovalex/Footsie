@@ -99,7 +99,7 @@ async function continentQueries(dbConnection) {
 async function leaguesQueries(dbConnection) {
   // Test
   //  Can we get all the league required for this section of the code.
-  // await getAllTeamInformation();
+  await getAllTeamInformation();
 }
 
 

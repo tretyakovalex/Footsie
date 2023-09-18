@@ -111,6 +111,36 @@ async function organiseLeague(id) {
 // Collect
 // team_name, team_emblem and ranking
 
+// Track API Calls
+function updateProgress(maxCalls, startTime, callsCompleted, delayBetweenCalls) {
+    // Track Timing
+    const currentTime = Date.now();
+    // How much time has gone by
+    const elapsedTime = currentTime - startTime;
+    // How far a long the calls are
+    const percentageComplete = (callsCompleted / maxCalls) * 100;
+    // Remaining Time Left
+    const remainingTime = ((maxCalls - callsCompleted) * delayBetweenCalls) / 1000; // in seconds
+    const remainingMinutes = remainingTime / 60; // Convert remainingTime to minutes
+
+    // Console Display Loading Bar
+
+    console.clear(); // Clear the console to update progress
+    console.log('API Call Progress:');
+    console.log(`Progress: ${callsCompleted}/${maxCalls} (${percentageComplete.toFixed(2)}% complete)`);
+    console.log(`Estimated time remaining: ${remainingMinutes.toFixed(2)} seconds`);
+
+    const bar = '='.repeat(Math.floor(percentageComplete / 2)) + ' '.repeat(Math.floor((100 - percentageComplete) / 2));
+
+    process.stdout.write(`[${bar}]`);
+
+    // Check if all calls are completed
+    if (callsCompleted === maxCalls) {
+      console.log('All API calls completed.');
+      console.log(`Completed in ${elapsedTime}ms`)
+    }
+}
+
 // Gets every league standing, organise it into Name, Emblem and Ranking
 export async function getAllTeamInformation() {
     // Return a array of leagues (Dictionaries)
@@ -118,9 +148,6 @@ export async function getAllTeamInformation() {
 
     // API Response + Organised into just league ID and Types
     const IDs = await getLeagueIDs();
-    
-    // Specifically for League and Cup
-    const leagueIDs = IDs.league;
 
     // Function to fetch league info and to organise response
     // To fit database structure
@@ -135,19 +162,29 @@ export async function getAllTeamInformation() {
     // Calculate the delay between calls
     const delayBetweenCalls = 60 * 1000 / rateLimit; 
 
+    // Specifically for League and Cup
+    const leagueIDs = IDs.league;
+    // Track API Call Times
+    const totalCalls = leagueIDs.length;
+
+    // Start Time - Loading Bar
+    const startTime = Date.now();
+    let callsCompleted = 1;
+
     // Get all league data
     for (const eachLeague of leagueIDs) {
         fetchAndOrganizeLeague(eachLeague.id);
-        await new Promise(resolve => setTimeout(resolve, delayBetweenCalls));
+        await new Promise(resolve => setTimeout(resolve, delayBetweenCalls)); 
+
+        callsCompleted++ 
+        updateProgress(totalCalls, startTime, callsCompleted, delayBetweenCalls);
     }
 
     console.log(`After Insertion:\nLeague Count: ${leagues.length}`)
 
     // Return the collected data
     return leagues;
-  }
-  
-
+}
 
 // Collect country_id and continent_id from continents.countries
 export async function getCountryAndContinentID(dbConnection) {
