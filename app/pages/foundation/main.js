@@ -18,14 +18,7 @@ import SearchPage from '../components/search/search-homepage';
 // Display Player Stats
 import PageHolder from '../components/search/temporary-page';
 
-export default function Main({
-  LiveTab,
-  LiveNav,
-  SearchInput,
-  setSearchInput,
-  setSearchStatus,
-  searchStatus,
-}) {
+export default function Main({ LiveTab, LiveNav, SearchInput, setSearchInput, setSearchStatus, searchStatus }) {
   const [refreshing, setRefreshing] = useState(false);
   const [displayMatches, setDisplayMatches] = useState([]);
   const [isLoading, setLoading] = useState(true);
@@ -99,7 +92,7 @@ export default function Main({
     [
       'Fetching National Tournments',
       'Fetching International Tournaments',
-      'Fetching International Tournaments',
+      'Fetching Intercontinental Tournaments',
     ],
     // Statistics
     ['Statistics Coming Soon'],
@@ -123,7 +116,7 @@ export default function Main({
         // Show the actual content based on searchStatus
         <>
           {searchStatus ? (
-            <PageHolder setSearchStatus={setSearchStatus} />
+            <PageHolder setSearchStatus={setSearchStatus} searchOption={SearchInput} />
           ) : (
             <View style={{ flex: 1 }}>
               <ScrollView
@@ -134,7 +127,7 @@ export default function Main({
                     refreshing={refreshing}
                     onRefresh={onRefresh}
                     tintColor={'green'}
-                    title={RefreshingTitles[LiveNav][LiveTab]}
+                    title={LiveTab == 3 && LiveNav == 4 ? "Refreshing Search" : RefreshingTitles[LiveNav][LiveTab]}
                     titleColor={'white'}
                     vertical={true}
                   />
@@ -158,13 +151,7 @@ export default function Main({
 }
 
 // What to be shown
-function Content({
-  Page,
-  Tab,
-  Matches,
-  UserInput,
-  setSearchInput,
-  setSearchStatus,
+function Content({Page,Tab, Matches, UserInput, setSearchInput, setSearchStatus,
 }) {
   const pageConversion = [
     'news',

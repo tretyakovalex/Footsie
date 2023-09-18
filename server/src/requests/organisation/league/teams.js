@@ -111,8 +111,7 @@ async function organiseLeague(id) {
 // Collect
 // team_name, team_emblem and ranking
 
-// TODO:
-//    Need to test this, but got to be cautious of the API call limit
+// Gets every league standing, organise it into Name, Emblem and Ranking
 export async function getAllTeamInformation() {
     // Return a array of leagues (Dictionaries)
     const leagues = [];
@@ -123,11 +122,26 @@ export async function getAllTeamInformation() {
     // Specifically for League and Cup
     const leagueIDs = IDs.league;
 
+    // Function to fetch league info and to organise response
+    // To fit database structure
+    const fetchAndOrganizeLeague = async (leagueId) => {
+      const currentLeague = await organiseLeague(leagueId);
+      leagues.push(currentLeague);
+    };
+
+    // Define the rate limit parameters
+    // Maximum number of API calls per minute
+    const rateLimit = 30;
+    // Calculate the delay between calls
+    const delayBetweenCalls = 60 * 1000 / rateLimit; 
+
     // Get all league data
     for (const eachLeague of leagueIDs) {
-        const currentLeague = await organiseLeague(eachLeague.id);
-        leagues.push(currentLeague);
+        fetchAndOrganizeLeague(eachLeague.id);
+        await new Promise(resolve => setTimeout(resolve, delayBetweenCalls));
     }
+
+    console.log(`After Insertion:\nLeague Count: ${leagues.length}`)
 
     // Return the collected data
     return leagues;
@@ -136,6 +150,28 @@ export async function getAllTeamInformation() {
 
 
 // Collect country_id and continent_id from continents.countries
-async function getCountryAndContinentID(dbConnection) {
-    
+export async function getCountryAndContinentID(dbConnection) {
+    return new Promise((resolve, reject) => {
+        // The right connection needs to be set for this to work
+        const query = 'SELECT country_id, continent_id from countries';
+
+        // Attempt to make a connection to the database
+        dbConnection.query(query, (err, result) => {
+            if (err) {
+                console.error("Error connecting to the countries database. (teams.js)");
+                reject(err);
+            } else {
+                // Managed to connect to database
+                const formatResponse = result.map((row) => {
+                    return {
+                        country_id: row.country_id,
+                        continent_id: row.continent_id,
+                    }
+                });
+
+                // Return objects - Country ID and Continent ID
+                resolve(formatResponse);
+            }
+        })
+    })
 }

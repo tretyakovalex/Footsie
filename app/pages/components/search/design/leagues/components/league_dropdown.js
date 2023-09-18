@@ -19,7 +19,7 @@ function DropdownOptions({
     <Pressable
       key={index}
       onPress={() => handlePress(options)}
-      style={{ flex: 1 }}
+      style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}
     >
       <Text style={{ fontSize: 18, color: 'white' }}>{options}</Text>
     </Pressable>
@@ -44,12 +44,12 @@ export function DropdownButton({
     <View>
       <Pressable
         onPress={() => handlePress(dropdown)}
-        style={{ height: 50, width: 100, backgroundColor: 'red' }}
+        style={{ height: 50, width: 300, backgroundColor: 'red', justifyContent: 'center', alignItems: 'center'}}
       >
         <Text>{Title}</Text>
       </Pressable>
 
-      <View style={{ height: 150, width: 80 }}>
+      <ScrollView style={{ height: 150, width: 'auto'}}>
         {dropdown ? (
           <DropdownOptions
             Placeholder={Placeholder}
@@ -58,11 +58,11 @@ export function DropdownButton({
             dislpayDropdownOptions={setDropdown}
           />
         ) : (
-          <Text style={{ fontSize: 18, color: 'white' }}>
+          <Text style={{marginLeft: 'auto', marginRight: 'auto', fontSize: 18, color: 'white' }}>
             No Dropdown Option
           </Text>
         )}
-      </View>
+      </ScrollView>
     </View>
   );
 }

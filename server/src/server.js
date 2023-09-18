@@ -13,10 +13,8 @@ import { competitionFill } from './fill-database/continents/fillCompetitions';
 import { printJSON } from './requests/api-football/global-functions';
 import { getAllTeamInformation } from './requests/organisation/league/teams';
 
-async function test() {
-  const a = await comp.getCompetitionNameandCountries();
-  // printJSON(a.databaseCompetitions, 2000);
-} 
+
+import { getCountryAndContinentID } from './requests/organisation/league/teams';
 
 const app = express();
 
@@ -101,11 +99,9 @@ async function continentQueries(dbConnection) {
 async function leaguesQueries(dbConnection) {
   // Test
   //  Can we get all the league required for this section of the code.
-  await getAllTeamInformation();
+  // await getAllTeamInformation();
 }
 
-// TODO
-//    FIX API CALLS FOR STANDINGS
 
 // Execute leagues database queries
-executeConnection(leagueDatabase, 'leagues', leaguesQueries);
+// executeConnection(leagueDatabase, 'leagues', leaguesQueries);

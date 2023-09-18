@@ -11,12 +11,12 @@ import {
 
 // Initial Search Bar
 // TODO: Create loading page
-function SearchBar({ searchInput, setSearchInput, setSearchStatus }) {
+function SearchBar({ searchInput, setSearchInput, setSearchStatus}) {
+
   // - - - TEMPORARY FUNCTION - - -
   const hardSearch = () => {
     setSearchInput(searchInput);
     setSearchStatus(true);
-    console.log(searchInput);
   };
 
   // TO DO:
@@ -43,7 +43,7 @@ function SearchBar({ searchInput, setSearchInput, setSearchStatus }) {
 }
 
 // Search Option Template
-function IndividualOptions({ option, setSearchInput }) {
+function IndividualOptions({ option, setSearchInput, setSearchStatus}) {
   const pressAnimation = useRef(new Animated.Value(0)).current;
 
   const handlePress = (name) => {
@@ -57,7 +57,7 @@ function IndividualOptions({ option, setSearchInput }) {
     });
 
     setSearchInput(name);
-    console.log(name);
+    setSearchStatus(true);
   };
 
   const pressAnimationStyle = {
@@ -100,15 +100,26 @@ function IndividualOptions({ option, setSearchInput }) {
   );
 }
 
+// Unpressable Explanier
+function UnpressableDescriptor() {
+  return (
+    <View style={{height: 30, backgroundColor: 'grey', justifyContent: 'center', alignItems: 'center'}}>
+      <Text style={{color: 'black'}}>Most Popular Choices</Text>
+    </View>
+  )
+}
+
 // Search Options
-function SearchOptions({ userOptions, setSearchInput }) {
+function SearchOptions({ userOptions, setSearchInput, setSearchStatus }) {
   return (
     <View style={SearchOptionStyle.container}>
+      <UnpressableDescriptor />
       {userOptions.map((option, index) => (
         <IndividualOptions
           key={index}
           option={option}
           setSearchInput={setSearchInput}
+          setSearchStatus={setSearchStatus}
         />
       ))}
     </View>
@@ -120,11 +131,10 @@ function SearchOptions({ userOptions, setSearchInput }) {
 //        Base on popularity: User Popularity / General Popularity
 // - Rename parameters
 
-export default function SearchPage({
-  searchInput,
-  setSearch,
-  setSearchStatus,
-}) {
+export default function SearchPage({ searchInput, setSearch, setSearchStatus }) {
+
+  // TODO:
+  //     Have the options shown be based on most popular searches
   // - - - TEMPORARY OPTIONS - - -
   const TEMPORARY_OPTIONS = [
     { playerName: 'Erling Halaand', ranking: 1 },
@@ -133,16 +143,6 @@ export default function SearchPage({
     { playerName: 'Manchester City', ranking: 2 },
     { playerName: 'Erling Halaand', ranking: 1 },
     { playerName: 'Kylian Mbappe', ranking: 1 },
-    { playerName: 'Manchester United', ranking: 3 },
-    { playerName: 'Manchester City', ranking: 2 },
-    { playerName: 'Erling Halaand', ranking: 1 },
-    { playerName: 'Kylian Mbappe', ranking: 1 },
-    { playerName: 'Manchester United', ranking: 3 },
-    { playerName: 'Manchester City', ranking: 2 },
-    { playerName: 'Erling Halaand', ranking: 1 },
-    { playerName: 'Kylian Mbappe', ranking: 1 },
-    { playerName: 'Manchester United', ranking: 3 },
-    { playerName: 'Manchester City', ranking: 2 },
   ];
   return (
     <View style={SearchPageStyle.container}>
@@ -155,6 +155,7 @@ export default function SearchPage({
       <SearchOptions
         userOptions={TEMPORARY_OPTIONS}
         setSearchInput={setSearch}
+        setSearchStatus={setSearchStatus}
       />
     </View>
   );

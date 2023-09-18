@@ -15,7 +15,7 @@ export default function Footer({ currentPage, setCurrentPage }) {
       { name: 'Matches' },
       { name: 'Favourites' },
       { name: 'Tournaments' },
-      { name: 'Statistics' },
+      { name: 'Search' },
     ],
     [],
   );

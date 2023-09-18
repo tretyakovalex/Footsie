@@ -25,20 +25,21 @@ function ReturnButton({ setSearchStatus }) {
 // TEMPORARY STATISTIC HOLDER
 const Temp_Stats = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
 
-export default function PageHolder({ setSearchStatus }) {
+export default function PageHolder({ setSearchStatus, searchOption }) {
+  console.log(`Search Option: ${searchOption}`);
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
       <View style={{ position: 'absolute', top: -40, right: 40 }}>
         <ReturnButton setSearchStatus={setSearchStatus} />
       </View>
 
-      <Text style={{ fontSize: 24, color: 'white', textAlign: 'center' }}>
+      <Text style={{ fontSize: 24, color: 'white', textAlign: 'center', marginTop: 200}}>
         Under Construction
       </Text>
 
       <DropdownButton
         Placeholder={Temp_Stats}
-        Title={'Statistic Placeholder'}
+        Title={`You searched for ${searchOption}`}
       />
     </View>
   );
