@@ -12,6 +12,8 @@ import { printJSON } from '../../api-football/global-functions';
 
 // TODO:
 //    Look to potentially globalise this function
+//    ERROR HANDLE AND CLEAN UP CODE
+//    ERROR WITH MAX CALL
 
 // League Endpoints
 const LEAGUE_EP = 'https://api-football-v1.p.rapidapi.com/v3/leagues';
@@ -100,7 +102,7 @@ async function organiseLeague(id) {
     const currentYear = date.getFullYear();
 
     try {
-        // Make API Request
+        // Make API Request for league standings
         const currentLeague = await getLeagueStandings({
             season: currentYear,
             leagueId: id
@@ -120,34 +122,33 @@ async function organiseLeague(id) {
     }
 }
 
-
-// Collect
-// team_name, team_emblem and ranking
-
 // Track API Calls
 function updateProgress(maxCalls, startTime, callsCompleted) {
     const currentTime = Date.now(); // Track Timing
     const elapsedTime = currentTime - startTime; // How much time has gone by
     const percentageComplete = (callsCompleted / maxCalls) * 100;  // Progress
-    // Remaining Time Left
+    const estimatedTimeRemaining = ((elapsedTime / callsCompleted) * (maxCalls - callsCompleted)) / (60 * 1000); // Estimated time remaining in minutes
 
     // Console Display Loading Bar
 
     console.clear(); // Clear the console to update progress
     console.log('API Call Progress:');
     console.log(`Progress: ${callsCompleted}/${maxCalls} (${percentageComplete.toFixed(2)}% complete)`);
+    console.log(`Estimated Time Remaining: ${estimatedTimeRemaining.toFixed(2)} minutes`);
 
     // Bar to be displayed
     const bar = '='.repeat(Math.floor(percentageComplete / 2)) + ' '.repeat(Math.floor((100 - percentageComplete) / 2));
 
+    // Print out the loading bar
     process.stdout.write(`[${bar}]\n`);
 
     // Check if all calls are completed
     if (callsCompleted === maxCalls) {
-      console.log('All API calls completed.');
-      console.log(`Completed in ${elapsedTime}ms`)
+        console.log('All API calls completed.');
+        console.log(`Completed in ${elapsedTime}ms`);
     }
 }
+
 
 // Gets every league standing, organise it into Name, Emblem and Ranking
 export async function getAllTeamInformation() {
@@ -157,18 +158,24 @@ export async function getAllTeamInformation() {
     // API Response + Organised into just league ID and Types
     const IDs = await getLeagueIDs();
 
-    // Function to fetch league info and to organise response
-    // To fit database structure
+    // Function to fetch league info and to organize response
+    // To fit the database structure
     const fetchAndOrganizeLeague = async (leagueId) => {
-      const currentLeague = await organiseLeague(leagueId);
-
-      if (currentLeague != null) {
-        leagues.push(currentLeague);
-      } 
-    };
+        const currentLeague = await organiseLeague(leagueId);
+    
+        if (currentLeague != null) {
+          leagues.push(currentLeague);
+        
+          // Log the added teams for the current league
+          console.log(`Added teams for league: ${currentLeague.league}`);
+          for (const team of currentLeague.teams) {
+            console.log(`  - ${team.team_name}`);
+          }
+        }
+      };
 
     // Define the rate limit parameters
-    const rateLimit = 30;  // Maximum number of API calls per minute
+    const rateLimit = 29;  // Maximum number of API calls per minute
     const delayBetweenCalls = 60 * 1000 / rateLimit; // Calculate the delay between calls
 
     const leagueIDs = IDs.league;         // Specifically for League and Cup
@@ -180,11 +187,16 @@ export async function getAllTeamInformation() {
 
     // Get all league data
     for (const eachLeague of leagueIDs) {
+        // Display the loading bar
+        callsCompleted++ 
+
+        if (callsCompleted > totalCalls - 5) {
+            // Don't need to make anymore league calls after this number
+            break;
+        }
         fetchAndOrganizeLeague(eachLeague.id);
         await new Promise(resolve => setTimeout(resolve, delayBetweenCalls)); 
 
-        // Display the loading bar
-        callsCompleted++ 
         updateProgress(totalCalls, startTime, callsCompleted);
     }
 

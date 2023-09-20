@@ -21,7 +21,7 @@ function combineResponseWithCountry(dbResponse, leagues) {
     // Find Valid Countries & Leagues
     for (const currentLeague of leagues) {
         for (const currentCountry of dbResponse) {
-            if (currentLeague.country == currentCountry.countryName)
+            if (currentLeague.country == currentCountry.country_name)
             {
                 organiseResultForDatabase(currentLeague, currentCountry, organisedLeagueResults);
             }
