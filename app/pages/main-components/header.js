@@ -1,9 +1,8 @@
-// Public Imports
 import { View, Pressable, Text } from 'react-native';
 import { useEffect } from 'react';
 
-// Private Imports
-import { tabStyle } from '../main-components/styles/header-style';
+// Style Imports
+import { tabStyle } from '../styles/main-components/header-style';
 import { Colours } from '../styles/global-style';
 
 // Tabs on the top of the page.

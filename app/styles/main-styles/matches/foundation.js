@@ -122,15 +122,6 @@ export const MatchFoundation = StyleSheet.create({
       fontSize: 18,
     },
   },
-
-  noMatch: {
-    color: Colours.inactiveText,
-    fontSize: 24,
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    textAlign: 'center',
-  },
 });
 
 export const MatchPopUp = StyleSheet.create({

@@ -1,26 +1,24 @@
-// Public Imports
 import { View } from 'react-native';
 import { useState, useEffect } from 'react';
 
-// Private Imports
+// Component Imports
 import Header from './header';
-import Main from './main';
+import Content from './content';
 import Footer from './footer';
-
-import { TabNames } from './tab-information';
+import { tabNames } from './main-storage';
 
 
 // Display tabs based on current page
 function displayActiveTab(currentPage) {
   switch (currentPage) {
     case 0:
-      return TabNames.news;
+      return tabNames.news;
     case 1:
-      return TabNames.matches;
+      return tabNames.matches;
     case 2:
-      return TabNames.favourites;
+      return tabNames.favourites;
     case 3:
-      return TabNames.tournaments;
+      return tabNames.tournaments;
     default:
       return [];
   }
@@ -62,7 +60,7 @@ export default function Footsie() {
       />
 
       {/* Display the main content. Dependent on Tab and Page Values*/}
-      <Main
+      <Content
         liveNav={currentPage}
         liveTab={currentTab}
         searchInput={searchInput}

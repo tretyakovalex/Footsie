@@ -1,12 +1,11 @@
-// Public Imports
 import { Pressable, View, Text } from 'react-native';
 import { useEffect, useMemo } from 'react';
 
-// Private Imports
-import { FooterStructure } from '../../styles/global-styles/app-structure';
-import { Colours } from '../../styles/global-styles/global';
-import { NavigationStructure } from '../../styles/navigation-styles/navigation';
+// Styles
+import { footerStyle } from '../styles/main-components/footer-style';
+import { Colours } from '../styles/global-style';
 
+// Displays the bottom section of the page (Navigation)
 export default function Footer({ currentPage, setCurrentPage }) {
   // Each Page Name
   const NAVIGATION = useMemo(
@@ -27,15 +26,9 @@ export default function Footer({ currentPage, setCurrentPage }) {
 
   return (
     <View
-      style={[
-        FooterStructure.colours,
-        FooterStructure.size,
-        FooterStructure.borders,
-        NavigationStructure.mainContainer,
-      ]}
-    >
+      style={[ footerStyle.colours, footerStyle.size, footerStyle.borders, footerStyle.navContainer ]}>
       {NAVIGATION.map((page, index) => (
-        <NavigationBar
+        <PageOptions
           key={page.name}
           pageIndex={index}
           pageName={page.name}
@@ -43,37 +36,26 @@ export default function Footer({ currentPage, setCurrentPage }) {
           setActivePage={setCurrentPage}
         >
           {page.name}
-        </NavigationBar>
+        </PageOptions>
       ))}
     </View>
   );
 }
 
-// Structure for each button in the navigation
-function NavigationBar({ pageIndex, pageName, currentPage, setActivePage }) {
+// Each option that goes into the navigation
+// NAVIGATION
+function PageOptions({ pageIndex, pageName, currentPage, setActivePage }) {
   return (
-    <View style={NavigationStructure.container}>
-      <Pressable
-        style={NavigationStructure.button}
-        onPress={() => setActivePage(pageIndex)}
+    <Pressable style={footerStyle.buttonContainer}
+      onPress={() => setActivePage(pageIndex)}
+    >
+      <Text
+        style={[ footerStyle.pageText,
+          {color: currentPage === pageIndex ? Colours.mainText : Colours.inactiveText }
+        ]}
       >
-        <Text
-          style={[
-            {
-              color:
-                currentPage === pageIndex
-                  ? Colours.mainText
-                  : Colours.inactiveText,
-            },
-            { fontSize: 14 },
-            { textAlign: 'center' },
-            { marginTop: 'auto' },
-            { marginBottom: 25 },
-          ]}
-        >
-          {pageName}
-        </Text>
-      </Pressable>
-    </View>
+        {pageName}
+      </Text>
+    </Pressable>
   );
 }
