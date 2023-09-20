@@ -2,7 +2,7 @@
 import { StyleSheet, View } from 'react-native';
 
 // Private Imports
-import Footsie from './pages/foundation/footsie';
+import Footsie from './pages/main-components/footsie';
 
 export default function App() {
   return (
