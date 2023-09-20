@@ -41,12 +41,7 @@ function TabDisplay({ sectionName, sectionIndex, setCurrentTab, activeTab }) {
 }
 
 // Tabs holder - Holds all the current tabs on a page
-export default function Header({
-  TabNames,
-  activeTab,
-  setCurrentTab,
-  activePage,
-}) {
+export default function Header({ tabNames, activeTab, setCurrentTab, activePage }) {
   // Keep track of active tab
   useEffect(() => {
     setCurrentTab(activeTab);
@@ -64,7 +59,7 @@ export default function Header({
         TabStructure.mainContainer,
       ]}
     >
-      {TabNames.map((tabName, index) => (
+      {tabNames.map((tabName, index) => (
         <TabDisplay
           key={tabName.name}
           sectionName={tabName.name}

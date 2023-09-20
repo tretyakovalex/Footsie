@@ -11,7 +11,7 @@ import { TabNames } from './tab-information';
 
 
 // Display tabs based on current page
-function DisplayActiveTab(currentPage) {
+function displayActiveTab(currentPage) {
   switch (currentPage) {
     case 0:
       return TabNames.news;
@@ -28,22 +28,22 @@ function DisplayActiveTab(currentPage) {
 
 export default function Footsie() {
   // Track what's shown
-  const [currentPage, setCurrentPage] = useState(1);
-  const [currentTab, setCurrentTab] = useState(1);
-  // User search holder
+  const [currentPage, setCurrentPage] = useState(1);    // Nav
+  const [currentTab, setCurrentTab] = useState(1);      // Tab
+  // Value that go into the search bar
   const [searchInput, setSearchInput] = useState('');
   // Activate / Deactivate Search Bar
-  // False = No active search (Nothing in the searchbar)
+  // False = No active search (Nothing in the search bar)
   const [searchStatus, setSearchStatus] = useState(false);
 
-  // TestAPICalls();
-
+  // Re-render the application when tab is changed.
   useEffect(() => {
     if (currentTab == 4) {
       setCurrentTab(0);
     }
   }, [currentTab]);
 
+  // Re-render the application when page is changed.
   useEffect(() => {
     if (currentPage != 4) {
       setSearchInput('');
@@ -53,22 +53,25 @@ export default function Footsie() {
 
   return (
     <View style={{ flex: 1 }}>
+    {/* Display the tabs required for each page */}
       <Header
-        TabNames={DisplayActiveTab(currentPage)}
+        tabNames={displayActiveTab(currentPage)}
         activeTab={currentTab}
         setCurrentTab={setCurrentTab}
         activePage={currentPage}
       />
 
+      {/* Display the main content. Dependent on Tab and Page Values*/}
       <Main
-        LiveNav={currentPage}
-        LiveTab={currentTab}
-        SearchInput={searchInput}
+        liveNav={currentPage}
+        liveTab={currentTab}
+        searchInput={searchInput}
         setSearchInput={setSearchInput}
         searchStatus={searchStatus}
         setSearchStatus={setSearchStatus}
       />
 
+      {/* Display the navigation (Pages) */}
       <Footer currentPage={currentPage} setCurrentPage={setCurrentPage} />
     </View>
   );
