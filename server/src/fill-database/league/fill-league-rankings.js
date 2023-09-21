@@ -27,14 +27,18 @@ function linkTeamWithId(dbResponseLeagues, apiResponseLeagues) {
         }
     };
 
+    // Return an array of objects
+    // Returning each team: League ID, Team Name and Ranking
     return linkedResult;
 }
 
 
 
-// Connect API and DB Response
 function organiseResultForDatabase(dbResponse, teamWithLeagueID) {
+    // Create a Map to associate team names with continent ID, country ID, and team ID
     const teamMap = new Map();
+    
+    // Populate the teamMap using data from the database response
     dbResponse.forEach((dbTeam) => {
       teamMap.set(dbTeam.team_name, {
         continent_id: dbTeam.continent_id,
@@ -42,25 +46,55 @@ function organiseResultForDatabase(dbResponse, teamWithLeagueID) {
         team_id: dbTeam.team_id,
       });
     });
-  
+
+    // Map teams from API response to include additional data
     const formattedResult = teamWithLeagueID.map((team) => ({
-      ...team,
-      ...teamMap.get(team.team_name),
-    }));
+        continent_id: teamMap.get(team.team_name).continent_id,
+        country_id: teamMap.get(team.team_name).country_id,
+        league_id: team.league_id,
+        ranking: team.ranking,
+        team_id: teamMap.get(team.team_name).team_id
+      }));
+      
   
-    return formattedResult;
-  }
-  
+    // The result now includes league_id, team_id, ranking, continent_id, country_id
+    return formattedResult;  
+} 
 
-
-export async function fiilLeagueRankingsDatabase(teamsConnection, leagueConnection) {
+// Fill league ranking table with all the league teams, with their rankings
+export async function fillLeagueRankingsDatabase(continentsConnection, leagueConnection) {
     // Get organised data from the database (MySQL)
-    const dbResponse = await getTeamLocationDetails(teamsConnection, leagueConnection);
+    const dbResponse = await getTeamLocationDetails(continentsConnection, leagueConnection);
     // Get formatted result from API Request
     const apiResponse = await getTeamRankings();
 
     // Match each time with their respective league
     const teamsWithLeagueID = linkTeamWithId(dbResponse, apiResponse.leagueResponse);
 
+    // Organised the results, to insert into the database
     const organisedResult = organiseResultForDatabase(dbResponse.teamsResponse, teamsWithLeagueID)
+
+    // Query - Put results into database
+    const query = 'INSERT INTO league_rankings (continent_id, country_id, league_id, ranking, team_id) VALUES (?,?,?,?,?)';
+
+    // Go through organisedResult and insert each team
+    for (const eachTeam of organisedResult) {
+        // Insert this data into the database.
+        const teamData = [
+            eachTeam.continent_id,
+            eachTeam.country_id, 
+            eachTeam.league_id, 
+            eachTeam.ranking,
+            eachTeam.team_id,
+        ]
+        try {
+            await leagueConnection.query(query, teamData);
+        } catch (err) {
+            console.error(`Problem inserting into the league ranking database. (fill-league-rankings.js)`);
+            console.error(err);
+        }
+    };
+
+    // Successfully Added To Database
+    console.log("League Database: League Ranking Filled");
 }

@@ -1,6 +1,7 @@
 import { getAllTeamInformation } from './teams';
 
-// Identify which team has what rankings
+// Match API and DB Countries.
+// Return League Name, Team Name and Ranking
 function gatherTeamAndRanking(leagues) {
     // Hold all the leauges, team and rankings
     const teamAndRanking = {}
@@ -42,7 +43,7 @@ export async function getTeamRankings() {
 export async function getTeamLocationDetails(teamsConnection, leagueConnection) {
     return new Promise((resolve, reject) => {
         const teamsQuery = 'SELECT continent_id, country_id, team_id, team_name from teams';
-        const leagueQuery = 'SELECT league_id, league_name, continent_id, country_id from league';
+        const leagueQuery = 'SELECT league_id, league_name from league';
 
         // Try connect to the league database (Teams Table)
         teamsConnection.query(teamsQuery, (teamsError, teamsResult) => {
@@ -51,6 +52,7 @@ export async function getTeamLocationDetails(teamsConnection, leagueConnection) 
                 console.error(`Error connecting to the league database. (league_rankings.js)`)
                 reject(teamsError);
             } else {
+                console.log(`Successfully connected to [League - Teams Table]. (league_rankings.js)`)
                 // Try connect to the continents database (League Table)
                 leagueConnection.query(leagueQuery, (leagueError, leagueResult) => {
                     if (leagueError) {
@@ -58,6 +60,7 @@ export async function getTeamLocationDetails(teamsConnection, leagueConnection) 
                         console.error(`Error connecting to the continents database. (league_rankings.js)`);
                         reject(leagueError);
                     } else {
+                        console.log(`Successfully connected to [Continents - League Table]. (league_rankings.js)`)
                         // Organise League - Teams Table response
                         const formatTeamsResponse = teamsResult.map((row) => {
                             return {
@@ -73,8 +76,6 @@ export async function getTeamLocationDetails(teamsConnection, leagueConnection) 
                             return {
                                 league_id: row.league_id,
                                 league_name: row.league_name,
-                                continent_id: row.continent_id,
-                                continent_name: row.country_id,
                             }
                         });
 
