@@ -99,7 +99,8 @@ async function continentQueries(dbConnection) {
 
 // Execute all queries relating to the league database
 async function leaguesQueries(dbConnection) {
-  // Test
+  // Add all teams available to the teams Table
+  // Takes 22 Mins To Complete
   fillTeamsDatabase(dbConnection, continentsDatabase);
 }
 

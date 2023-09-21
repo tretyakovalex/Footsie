@@ -56,6 +56,8 @@ export async function fillTeamsDatabase(leagueConnection, continentsConnection) 
             team.continent_id,
         ]
 
+        console.log(`Adding ${team.team_name} to Teams - fill-teams.js`);
+
         try {
             // Insert results into the database
             await leagueConnection.query(query, data);

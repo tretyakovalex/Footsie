@@ -175,7 +175,7 @@ export async function getAllTeamInformation() {
       };
 
     // Define the rate limit parameters
-    const rateLimit = 29;  // Maximum number of API calls per minute
+    const rateLimit = 28;  // Maximum number of API calls per minute
     const delayBetweenCalls = 60 * 1000 / rateLimit; // Calculate the delay between calls
 
     const leagueIDs = IDs.league;         // Specifically for League and Cup
