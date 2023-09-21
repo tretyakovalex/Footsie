@@ -123,6 +123,9 @@ async function organiseLeague(id) {
 }
 
 // Track API Calls
+// TODO:
+//     Look to potentially globalise this function
+//     Might be reused for other long API Calls
 function updateProgress(maxCalls, startTime, callsCompleted) {
     const currentTime = Date.now(); // Track Timing
     const elapsedTime = currentTime - startTime; // How much time has gone by

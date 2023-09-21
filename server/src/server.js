@@ -18,6 +18,12 @@ import { getAllTeamInformation } from './requests/organisation/league/teams';
 
 
 
+// TODO:
+//    Look to globalise the SELECT .... from Database
+//    Only the [query, connection, error_message, formatResponse] changes
+
+
+
 const app = express();
 
 // ChatGPT TODO:
