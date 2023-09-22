@@ -1,4 +1,5 @@
 import { getAllTeamInformation } from './teams';
+import { printJSON } from '../../api-football/global-functions';
 
 // Match API and DB Countries.
 // Return League Name, Team Name and Ranking
@@ -35,18 +36,20 @@ export async function getTeamRankings() {
     // Organise response to gather the team name and ranking
     const teamNameAndRankings = gatherTeamAndRanking(apiResponse);
 
+    // printJSON(teamNameAndRankings, 10000);
+
     return teamNameAndRankings;
 }
 
 
 // Access the database to get [continent_id, country_id, league_id, team_id]
-export async function getTeamLocationDetails(teamsConnection, leagueConnection) {
+export async function getTeamLocationDetails(leaguesConnection, continentsConnection) {
     return new Promise((resolve, reject) => {
         const teamsQuery = 'SELECT continent_id, country_id, team_id, team_name from teams';
         const leagueQuery = 'SELECT league_id, league_name from league';
 
         // Try connect to the league database (Teams Table)
-        teamsConnection.query(teamsQuery, (teamsError, teamsResult) => {
+        leaguesConnection.query(teamsQuery, (teamsError, teamsResult) => {
             if (teamsError) {
                 // Fail to connect
                 console.error(`Error connecting to the league database. (league_rankings.js)`)
@@ -54,7 +57,7 @@ export async function getTeamLocationDetails(teamsConnection, leagueConnection) 
             } else {
                 console.log(`Successfully connected to [League - Teams Table]. (league_rankings.js)`)
                 // Try connect to the continents database (League Table)
-                leagueConnection.query(leagueQuery, (leagueError, leagueResult) => {
+                continentsConnection.query(leagueQuery, (leagueError, leagueResult) => {
                     if (leagueError) {
                         // Fail to connect
                         console.error(`Error connecting to the continents database. (league_rankings.js)`);

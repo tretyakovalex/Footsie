@@ -12,6 +12,7 @@ import { competitionFill } from './fill-database/continents/fillCompetitions';
 
 // League Fill Section
 import { fillTeamsDatabase } from './fill-database/league/fill-teams';
+import { fillLeagueRankingsDatabase } from './fill-database/league/fill-league-rankings';
 
 import { printJSON } from './requests/api-football/global-functions';
 import { getAllTeamInformation } from './requests/organisation/league/teams';
@@ -95,10 +96,6 @@ async function continentQueries(dbConnection) {
   // Fill competitions with cups and leagues
   await competitionFill(dbConnection)
 }
-
-// TODO:
-//     Change data over x period for time - Accuracy and Up to date
-
 // Execute continent database queries
 // executeConnection(continentsDatabase, "continents", continentQueries);
 
@@ -107,9 +104,24 @@ async function continentQueries(dbConnection) {
 async function leaguesQueries(dbConnection) {
   // Add all teams available to the teams Table
   // Takes 22 Mins To Complete
-  fillTeamsDatabase(dbConnection, continentsDatabase);
+  //fillTeamsDatabase(dbConnection, continentsDatabase);
+
+  // Connect League and Teams. + Get each team ranking.
+  fillLeagueRankingsDatabase(dbConnection, continentsDatabase)
+}
+// Execute leagues database queries
+// executeConnection(leagueDatabase, 'leagues', leaguesQueries);
+
+async function playerQueries(dbConnection) {
+
+}
+
+async function teamsQueries(dbConnection) {
+  
 }
 
 
-// Execute leagues database queries
-// executeConnection(leagueDatabase, 'leagues', leaguesQueries);
+// TODO:
+//    Create a big bunch of data
+//    Organise it for the database
+//    Set Into Database

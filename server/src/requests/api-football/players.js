@@ -215,8 +215,6 @@ const API_HOST = process.env.AF_HOST;
 // Basic Player Information & Statistics
 export async function getClubPlayerStatistics(params) {
   try {
-    console.log(params);
-
     // Check if parameters have been added or use default
     const teamID =
       params != undefined ? StringCheck(params.teamID) : DEFAULTS.teamID;

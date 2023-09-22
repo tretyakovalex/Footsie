@@ -193,7 +193,7 @@ export async function getAllTeamInformation() {
         // Display the loading bar
         callsCompleted++ 
 
-        if (callsCompleted > totalCalls - 5) {
+        if (callsCompleted > 4) {
             // Don't need to make anymore league calls after this number
             break;
         }

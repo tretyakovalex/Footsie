@@ -1,4 +1,5 @@
 import { getTeamRankings, getTeamLocationDetails } from "../../requests/organisation/league/league_rankings";
+import { printJSON } from "../../requests/api-football/global-functions";
 
 // Find out what league each team is apart of
 function linkTeamWithId(dbResponseLeagues, apiResponseLeagues) {
@@ -15,14 +16,17 @@ function linkTeamWithId(dbResponseLeagues, apiResponseLeagues) {
             if (leagueName === eachLeagueDB.league_name) {
                 // Access the teams within the league
                 const teamsInLeague = apiResponseLeagues[leagueName];
+
                 // Go through each team in the league
                 for (const team of teamsInLeague) {
+                    
                     linkedResult.push({
                         league_id: eachLeagueDB.league_id,
                         team_name: team.team_name,
                         ranking: team.ranking
                     });
                 }
+                break;
             }
         }
     };
@@ -62,18 +66,20 @@ function organiseResultForDatabase(dbResponse, teamWithLeagueID) {
 } 
 
 // Fill league ranking table with all the league teams, with their rankings
-export async function fillLeagueRankingsDatabase(continentsConnection, leagueConnection) {
+export async function fillLeagueRankingsDatabase(leaguesConnection, continentsConnection) {
     // Get organised data from the database (MySQL)
-    const dbResponse = await getTeamLocationDetails(continentsConnection, leagueConnection);
+    const dbResponse = await getTeamLocationDetails(leaguesConnection, continentsConnection);
     // Get formatted result from API Request
     const apiResponse = await getTeamRankings();
 
+
     // Match each time with their respective league
-    const teamsWithLeagueID = linkTeamWithId(dbResponse, apiResponse.leagueResponse);
+    const teamsWithLeagueID = linkTeamWithId(dbResponse.leagueResponse, apiResponse);
 
     // Organised the results, to insert into the database
     const organisedResult = organiseResultForDatabase(dbResponse.teamsResponse, teamsWithLeagueID)
 
+    
     // Query - Put results into database
     const query = 'INSERT INTO league_rankings (continent_id, country_id, league_id, ranking, team_id) VALUES (?,?,?,?,?)';
 
@@ -88,7 +94,7 @@ export async function fillLeagueRankingsDatabase(continentsConnection, leagueCon
             eachTeam.team_id,
         ]
         try {
-            await leagueConnection.query(query, teamData);
+            await leaguesConnection.query(query, teamData);
         } catch (err) {
             console.error(`Problem inserting into the league ranking database. (fill-league-rankings.js)`);
             console.error(err);
