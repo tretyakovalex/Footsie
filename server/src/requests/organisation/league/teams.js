@@ -1,75 +1,11 @@
-// API Request
-import {
-    returnApiResponse,
-    COMP_EP,
-    DEFAULTS,
-} from '../../api-football/api-football-endpoints';
-import { options, errorMessage } from '../../general-api';
-// API Request for each standing
 import { getLeagueStandings } from '../../api-football/competitions';
 import { printJSON } from '../../api-football/global-functions';
+import { getLeagueIDs } from '../league_identifiers';
 
 
 // TODO:
-//    Look to potentially globalise this function
 //    ERROR HANDLE AND CLEAN UP CODE
 //    ERROR WITH MAX CALL
-
-// League Endpoints
-const LEAGUE_EP = 'https://api-football-v1.p.rapidapi.com/v3/leagues';
-// League API Host
-const API_HOST = process.env.AF_HOST;
-
-// Direct Access To League IDs
-function selectLeagueIDs(leagues) {
-    // Hold all league ID and Type
-    const leagueIDs = [];
-
-    // Go through each league to get ID and Type
-    for (const apiLeague of leagues) {
-        leagueIDs.push({
-            id: apiLeague.league.id,
-            competition: apiLeague.league.type
-        })
-    }
-
-    // Return IDs and Type from all leagues
-    return leagueIDs;
-}
-
-// Get all league ID for the API Calls
-async function getLeagueIDs() {
-    const response = await returnApiResponse(
-        options(LEAGUE_EP, API_HOST), 
-        errorMessage("Unable to get 'V3 - Leagues' via", "teams.js"));
-
-    
-
-    // Get all league IDs and Type
-    const organisedLeague = selectLeagueIDs(response);
-
-    const leagueCompetition = [];
-    const cupCompetition = [];
-
-    // Seperate leagues based on type
-    for (const league of organisedLeague) {
-        if (league.competition == 'League') {
-            leagueCompetition.push(league);
-        } else {
-            cupCompetition.push(league);
-        }
-    }
-
-    // Print out the amount of API calls that will be made
-    console.log(`API CALLS: ${leagueCompetition.length + cupCompetition.length}\nLeague Calls: ${leagueCompetition.length}\nCup Calls: ${cupCompetition.length}\n\n`);
-
-    // Return based on usage
-    // Filling league database vs cup database
-    return {
-        league: leagueCompetition,
-        cup: cupCompetition
-    }
-}
 
 // Organise Results
 function organiseLeagueStandings(currentLeague) {
@@ -193,7 +129,8 @@ export async function getAllTeamInformation() {
         // Display the loading bar
         callsCompleted++ 
 
-        if (callsCompleted > 4) {
+        // Error when just using totalCalls
+        if (callsCompleted > totalCalls - 5) {
             // Don't need to make anymore league calls after this number
             break;
         }

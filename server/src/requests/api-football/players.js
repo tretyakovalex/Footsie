@@ -4,6 +4,7 @@
 import {
   returnApiResponse,
   DEFAULTS,
+  TEAM_EP,
   PLAYER_EP,
 } from './api-football-endpoints';
 
@@ -125,9 +126,6 @@ function collectPlayerStats(statistics) {
     } = Team;
     const { tackles: tackles, duels: duels, fouls: fouls, cards: cards } = Team;
 
-    // TODO:
-    //   DOUBLE CHECK THIS UPDATE WORKS
-
     // Statistics Collected and Added to 'CollectiveStats'
     CollectiveStats.push({
       Competition: {
@@ -211,50 +209,38 @@ function squadPlayerStatistics(players) {
 
 const API_HOST = process.env.AF_HOST;
 
-// V3 - Player statistics by Team ID
+// V3 - Player Statistic by League
 // Basic Player Information & Statistics
-export async function getClubPlayerStatistics(params) {
+export async function getAllLeaguePlayerStatistics(params, purpose) {
   try {
     // Check if parameters have been added or use default
-    const teamID =
-      params != undefined ? StringCheck(params.teamID) : DEFAULTS.teamID;
+    const identifier =
+      params != undefined ? StringCheck(params.identifier) : DEFAULTS.leagueID;
     const season =
       params != undefined ? StringCheck(params.season) : DEFAULTS.season;
 
-    console.log(season);
+    const errorLog = purpose == "league" ? 
+    "Player statistics from 'V3 - Player Statistics by League ID' " : "Problem with API Request to 'V3 - Player Statistics by League ID'";
 
     // Make API Request
     const response = await returnApiResponse(
       options(PLAYER_EP.playersURL, API_HOST, {
-        team: teamID,
+        [purpose]: identifier,
         season: season,
+        page: 20
       }),
-      errorMessage(
-        "Player statistics from 'V3 - Player Statistics' ",
-        'players.js',
-      ),
+      errorMessage( errorLog, 'players.js'),
     );
+    
+    // TODO:
+    //// NOTE WHEN CALLING THIS FUNCTION GOT TO KEEP CHANGING THE PAGE NUMBER TO GET ALL PLAYERS
 
-    // Get information on Donny for the NPM Test
-    const donnyIndex = findDonnyForNPM(response);
-    // NPM Test - Returning for Test
-    const npmResult = undefined;
-    try {
-      npmResult = formatPlayerForNPM(response[donnyIndex]);
-    } catch (error) {
-      console.error(error);
-      console.error("The API response isn't what is expected");
-    }
-
-    // printJSON(npmResult, 1000);
-
-    return {
-      npmTest: npmResult,
-      dbResult: squadPlayerStatistics(response),
-    };
-
-    // console.log(JSON.stringify(DBPlayerInfo(response), null, 2));
+    // return squadPlayerStatistics(response);
   } catch (error) {
+    const errorLog = purpose == "league" ? 
+    `Problem with API Request to "V3 - Player Statistics by League ID" - (players.js)` : 'Problem with API Request to "V3 - Player Statistics by Team ID" - (players.js)';
+
+    console.error(errorLog)
     console.error(error);
   }
 }

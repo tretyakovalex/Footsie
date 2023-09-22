@@ -17,13 +17,18 @@ import { fillLeagueRankingsDatabase } from './fill-database/league/fill-league-r
 import { printJSON } from './requests/api-football/global-functions';
 import { getAllTeamInformation } from './requests/organisation/league/teams';
 
+import { getAllLeaguePlayerStatistics  } from './requests/api-football/players';
+
 
 
 // TODO:
 //    Look to globalise the SELECT .... from Database
 //    Only the [query, connection, error_message, formatResponse] changes
 
-
+getAllLeaguePlayerStatistics({
+  identifier: 39,
+  season: 2020
+}, "league");
 
 const app = express();
 
@@ -53,7 +58,11 @@ const databaseConnection = databaseName => {
 // Connect to continents database
 const continentsDatabase = databaseConnection('continents');
 // Connect to leagues database
-const leagueDatabase = databaseConnection('leagues');
+const leaguesDatabase = databaseConnection('leagues');
+// Connect to players database
+const playersDatabase = databaseConnection('players');
+// Connect to teams database
+const teamsDatabase = databaseConnection('teams');
 
 
 const PORT = process.env.PORT;
@@ -104,13 +113,13 @@ async function continentQueries(dbConnection) {
 async function leaguesQueries(dbConnection) {
   // Add all teams available to the teams Table
   // Takes 22 Mins To Complete
-  //fillTeamsDatabase(dbConnection, continentsDatabase);
+  fillTeamsDatabase(dbConnection, continentsDatabase);
 
   // Connect League and Teams. + Get each team ranking.
   fillLeagueRankingsDatabase(dbConnection, continentsDatabase)
 }
 // Execute leagues database queries
-// executeConnection(leagueDatabase, 'leagues', leaguesQueries);
+// executeConnection(leaguesDatabase, 'leagues', leaguesQueries);
 
 async function playerQueries(dbConnection) {
 
