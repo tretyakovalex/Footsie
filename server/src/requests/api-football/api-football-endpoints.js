@@ -44,7 +44,6 @@ export const TEAM_EP = {
   coachURL: 'https://api-football-v1.p.rapidapi.com/v3/coachs', // V3 - Coaches by Team ID
   leagueURL: 'https://api-football-v1.p.rapidapi.com/v3/standings', // V3 - Standings by Team ID
   playerURL: 'https://api-football-v1.p.rapidapi.com/v3/players/squads', // V3 - Player Squads
-  leaguePlayerURL: 'https://api-football-v1.p.rapidapi.com/v3/players' // V3 - Player Statistic By league ID
 };
 
 // Endpoints for player.js

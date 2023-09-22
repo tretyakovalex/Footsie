@@ -1,211 +1,217 @@
-// INFORMTION ON PLAYER
-const a = {
-    "0": {
-      "playerInfo": {
-        "name": "E. Cavani",
-        "first name": "Edinson Roberto",
-        "second name": "Cavani Gómez",
-        "age": 36,
-        "nationality": "Uruguay",
-        "height": "184 cm",
-        "injured": false,
-        "photo": "https://media-3.api-sports.io/football/players/274.png"
+// TEAM RESPONSE
+const b = [
+  {
+    "player": {
+      "id": 378,
+      "name": "Alex Telles",
+      "firstname": "Alex",
+      "lastname": "Nicolao Telles",
+      "age": 31,
+      "birth": {
+        "date": "1992-12-15",
+        "place": "Caxias do Sul",
+        "country": "Brazil"
       },
-      "statistics": [
-        {
-          "Competition": {
-            "teamname": "Manchester United",
-            "competition": "Premier League",
-            "competition logo": "https://media-3.api-sports.io/football/leagues/39.png"
-          },
-          "stats": {
-            "games": {
-              "appearences": 26,
-              "minutes": 1368
-            },
-            "attacking": {
-              "total shots": 27,
-              "shots on target": 15,
-              "total passes": 336,
-              "key passes": 14,
-              "pass accuracy": 10,
-              "attempted dribbles": 12,
-              "successful dribbles": 6,
-              "penalties scored": 0,
-              "penalties missed": 0
-            },
-            "defensive": {
-              "total tackles": 12,
-              "total blocks": null,
-              "total interceptions": 6,
-              "total duels": 104,
-              "duels won": 41,
-              "yellow card": 4,
-              "red card": 0
-            }
-          }
+      "nationality": "Brazil",
+      "height": "181 cm",
+      "weight": "71 kg",
+      "injured": false,
+      "photo": "https://media-4.api-sports.io/football/players/378.png"
+    },
+    "statistics": [
+      {
+        "team": {
+          "id": 33,
+          "name": "Manchester United",
+          "logo": "https://media-4.api-sports.io/football/teams/33.png"
         },
-        {
-          "Competition": {
-            "teamname": "Manchester United",
-            "competition": "League Cup",
-            "competition logo": "https://media-1.api-sports.io/football/leagues/48.png"
-          },
-          "stats": {
-            "games": {
-              "appearences": 1,
-              "minutes": 90
-            },
-            "attacking": {
-              "total shots": 5,
-              "shots on target": 4,
-              "total passes": 22,
-              "key passes": 1,
-              "pass accuracy": 19,
-              "attempted dribbles": 1,
-              "successful dribbles": 1,
-              "penalties scored": 0,
-              "penalties missed": 0
-            },
-            "defensive": {
-              "total tackles": null,
-              "total blocks": null,
-              "total interceptions": null,
-              "total duels": 10,
-              "duels won": 3,
-              "yellow card": 0,
-              "red card": 0
-            }
-          }
+        "league": {
+          "id": 39,
+          "name": "Premier League",
+          "country": "England",
+          "logo": "https://media-4.api-sports.io/football/leagues/39.png",
+          "flag": "https://media-4.api-sports.io/flags/gb.svg",
+          "season": 2023
         },
-        {
-          "Competition": {
-            "teamname": "Manchester United",
-            "competition": "FA Cup",
-            "competition logo": "https://media-2.api-sports.io/football/leagues/45.png"
-          },
-          "stats": {
-            "games": {
-              "appearences": 3,
-              "minutes": 150
-            },
-            "attacking": {
-              "total shots": 1,
-              "shots on target": null,
-              "total passes": 34,
-              "key passes": 1,
-              "pass accuracy": 7,
-              "attempted dribbles": null,
-              "successful dribbles": null,
-              "penalties scored": 0,
-              "penalties missed": 0
-            },
-            "defensive": {
-              "total tackles": null,
-              "total blocks": null,
-              "total interceptions": null,
-              "total duels": 9,
-              "duels won": 1,
-              "yellow card": 0,
-              "red card": 0
-            }
-          }
+        "games": {
+          "appearences": null,
+          "lineups": null,
+          "minutes": null,
+          "number": null,
+          "position": "Defender",
+          "rating": null,
+          "captain": false
         },
-        {
-          "Competition": {
-            "teamname": "Manchester United",
-            "competition": "UEFA Europa League",
-            "competition logo": "https://media-3.api-sports.io/football/leagues/3.png"
-          },
-          "stats": {
-            "games": {
-              "appearences": 5,
-              "minutes": 367
-            },
-            "attacking": {
-              "total shots": 12,
-              "shots on target": 9,
-              "total passes": 87,
-              "key passes": 6,
-              "pass accuracy": 14,
-              "attempted dribbles": 3,
-              "successful dribbles": 3,
-              "penalties scored": 0,
-              "penalties missed": 0
-            },
-            "defensive": {
-              "total tackles": 7,
-              "total blocks": null,
-              "total interceptions": 3,
-              "total duels": 35,
-              "duels won": 16,
-              "yellow card": 2,
-              "red card": 0
-            }
-          }
+        "substitutes": {
+          "in": null,
+          "out": null,
+          "bench": null
         },
-        {
-          "Competition": {
-            "teamname": "Manchester United",
-            "competition": "UEFA Champions League",
-            "competition logo": "https://media-1.api-sports.io/football/leagues/2.png"
-          },
-          "stats": {
-            "games": {
-              "appearences": 4,
-              "minutes": 207
-            },
-            "attacking": {
-              "total shots": 3,
-              "shots on target": 1,
-              "total passes": 56,
-              "key passes": 1,
-              "pass accuracy": 11,
-              "attempted dribbles": 2,
-              "successful dribbles": 2,
-              "penalties scored": 0,
-              "penalties missed": 0
-            },
-            "defensive": {
-              "total tackles": 1,
-              "total blocks": null,
-              "total interceptions": null,
-              "total duels": 17,
-              "duels won": 8,
-              "yellow card": 0,
-              "red card": 0
-            }
-          }
+        "shots": {
+          "total": null,
+          "on": null
         },
-        {
-          "Total Stats": {
-            "games": {
-              "appearences": 39,
-              "minutes": 2182
-            },
-            "attacking": {
-              "total shots": 48,
-              "shots on target": 29,
-              "total passes": 535,
-              "key passes": 23,
-              "pass accuracy": 61,
-              "attempted dribbles": 18,
-              "successful dribbles": 12,
-              "penalties scored": 0,
-              "penalties missed": 0
-            },
-            "defensive": {
-              "total tackles": 20,
-              "total blocks": 0,
-              "total interceptions": 9,
-              "total duels": 175,
-              "duels won": 69,
-              "fouls committed": null,
-              "yellow card": 6,
-              "red card": 0
-            }
-          }
+        "goals": {
+          "total": null,
+          "conceded": null,
+          "assists": null,
+          "saves": null
+        },
+        "passes": {
+          "total": null,
+          "key": null,
+          "accuracy": null
+        },
+        "tackles": {
+          "total": null,
+          "blocks": null,
+          "interceptions": null
+        },
+        "duels": {
+          "total": null,
+          "won": null
+        },
+        "dribbles": {
+          "attempts": null,
+          "success": null,
+          "past": null
+        },
+        "fouls": {
+          "drawn": null,
+          "committed": null
+        },
+        "cards": {
+          "yellow": null,
+          "yellowred": null,
+          "red": null
+        },
+        "penalty": {
+          "won": null,
+          "commited": null,
+          "scored": null,
+          "missed": null,
+          "saved": null
         }
-      ]
+      }
+    ]
+  }
+]
+
+
+// LEAGUE RESPONSE
+const a = [
+  {
+    "player": {
+      "id": 54,
+      "name": "Diego Costa",
+      "firstname": "Diego",
+      "lastname": "da Silva Costa",
+      "age": 35,
+      "birth": {
+        "date": "1988-10-07",
+        "place": "Lagarto",
+        "country": "Brazil"
+      },
+      "nationality": "Spain",
+      "height": "188 cm",
+      "weight": "83 kg",
+      "injured": false,
+      "photo": "https://media-4.api-sports.io/football/players/54.png"
+    },
+    "statistics": [
+      {
+        "team": {
+          "id": 39,
+          "name": "Wolves",
+          "logo": "https://media-4.api-sports.io/football/teams/39.png"
+        },
+        "league": {
+          "id": 39,
+          "name": "Premier League",
+          "country": "England",
+          "logo": "https://media-4.api-sports.io/football/leagues/39.png",
+          "flag": "https://media-4.api-sports.io/flags/gb.svg",
+          "season": 2023
+        },
+        "games": {
+          "appearences": null,
+          "lineups": null,
+          "minutes": null,
+          "number": null,
+          "position": "Attacker",
+          "rating": null,
+          "captain": false
+        },
+        "substitutes": {
+          "in": null,
+          "out": null,
+          "bench": null
+        },
+        "shots": {
+          "total": null,
+          "on": null
+        },
+        "goals": {
+          "total": null,
+          "conceded": null,
+          "assists": null,
+          "saves": null
+        },
+        "passes": {
+          "total": null,
+          "key": null,
+          "accuracy": null
+        },
+        "tackles": {
+          "total": null,
+          "blocks": null,
+          "interceptions": null
+        },
+        "duels": {
+          "total": null,
+          "won": null
+        },
+        "dribbles": {
+          "attempts": null,
+          "success": null,
+          "past": null
+        },
+        "fouls": {
+          "drawn": null,
+          "committed": null
+        },
+        "cards": {
+          "yellow": null,
+          "yellowred": null,
+          "red": null
+        },
+        "penalty": {
+          "won": null,
+          "commited": null,
+          "scored": null,
+          "missed": null,
+          "saved": null
+        }
+      }
+    ]
+  },
+  {
+    "player": {
+      "id": 178,
+      "name": "Lucas Moura",
+      "firstname": "Lucas",
+      "lastname": "Rodrigues Moura da Silva",
+      "age": 31,
+      "birth": {
+        "date": "1992-08-13",
+        "place": "São Paulo",
+        "country": "Brazil"
+      },
+      "nationality": "Brazil",
+      "height": "172 cm",
+      "weight": "72 kg",
+      "injured": false,
+      "photo": "https://media-4.api-sports.io/football/players/178.png"
     }
-}
+  }
+]

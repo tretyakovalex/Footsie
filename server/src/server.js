@@ -17,18 +17,13 @@ import { fillLeagueRankingsDatabase } from './fill-database/league/fill-league-r
 import { printJSON } from './requests/api-football/global-functions';
 import { getAllTeamInformation } from './requests/organisation/league/teams';
 
-import { getAllLeaguePlayerStatistics  } from './requests/api-football/players';
+import { getPlayerStatistics  } from './requests/api-football/players';
 
 
 
 // TODO:
 //    Look to globalise the SELECT .... from Database
 //    Only the [query, connection, error_message, formatResponse] changes
-
-getAllLeaguePlayerStatistics({
-  identifier: 39,
-  season: 2020
-}, "league");
 
 const app = express();
 
