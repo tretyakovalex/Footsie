@@ -20,6 +20,12 @@ import { getAllTeamInformation } from './requests/organisation/league/teams';
 import { getPlayerStatistics  } from './requests/api-football/players';
 
 
+getPlayerStatistics({
+  id: 33,
+  season: 2023,
+  purpose: 'team'
+});
+
 
 // TODO:
 //    Look to globalise the SELECT .... from Database

@@ -2,6 +2,7 @@
 import {
   returnApiResponse,
   DEFAULTS,
+  TEAM_EP,
   PLAYER_EP,
 } from './api-football-endpoints';
 
@@ -11,9 +12,9 @@ import { printJSON, StringCheck } from './global-functions';
 const API_HOST = process.env.AF_HOST;
 
 // Making the API Call
-async function makeRequest(params, errorNote) {
+async function makeRequest(url, params, errorNote) {
   const response = await returnApiResponse(
-    options(PLAYER_EP.playersURL, API_HOST, params),
+    options(url, API_HOST, params),
     errorMessage(errorNote, "players.js")
   );
 
@@ -45,73 +46,109 @@ function getErrorNote(callPurpose) {
     : "Problem with getting a response from 'V3 - Player Statistics by Team ID' ";
 }
 
-// Fetch player statistics
+// Get Player All Competition Statistics: V3 - Players by Team ID
+async function fetchPlayerStatistics(requestParams, callPurpose) {
+  try {
+    // Make API Call
+    const response = await makeRequest(PLAYER_EP.playersURL, requestParams, getErrorNote(callPurpose));
+
+    // Return response
+    return response;
+  } catch (err) {
+    // Problem with API Call
+    console.error(`Problem making the API Request 'getPlayerStatistics'. Calling with the purpose of ${callPurpose}. player.js`);
+
+    // Notify of the error
+    throw new Error(err);
+  }
+}
+
+// Get Squad Lineup, Basic Player: V3 - Player Squad
+async function fetchSquadPlayers(paramsId) {
+  try {
+    // Create paramter to make request
+    const squadParams = { team: paramsId };
+    // Error message
+    const uniqueErrorNote = "Problem with getting a response from 'V3 - Player Squad' ";
+
+    // Make API Request
+    const response = await makeRequest(TEAM_EP.playerURL, squadParams, uniqueErrorNote);
+
+    // Return response
+    return response;
+  } catch (err) {
+    // Problem with API Call
+    console.error(`Problem making the API Request 'getPlayerStatistics'. Problem with getting the squad line up. player.js`);
+
+    // Notify of the error
+    throw new Error(err);
+  }
+}
+
+// Fetch player statistics: {id: ..., season: ..., purpose: ...}
 export async function getPlayerStatistics(params) {
-  // Direct access to values in parameters
+  // Forgotten to put in parameters. A default is given
   const paramsId = params !== undefined ? StringCheck(params.id) : DEFAULTS.leagueID;
   const paramsYear = params !== undefined ? StringCheck(params.season) : DEFAULTS.season;
-  const callPurpose = params !== undefined ? StringCheck(params.purpose) : false; // league or team
 
-  // Check whether API call will actually be callable
+  // Ensure reason for calling this function
+  const callPurpose = params !== undefined ? StringCheck(params.purpose) : false;
+  // Throw error when no purpose given
   if (!callPurpose) {
-    throw new Error(
-      "Unable to make API Call due to lack of purpose.\nPlease call 'getPlayerStatistics' function with a 'purpose' parameter."
-    );
+    throw new Error("Unable to make API Call due to a lack of purpose.\nPlease call 'getPlayerStatistics' function with a 'purpose' (league / team) parameter.");
   }
 
-  // Keep track of page number
+  // Iterate through each page 
   let pageNumber = 1;
-  const requestParams = createPurposeParameter(callPurpose, paramsId, paramsYear, pageNumber)
+  // Create parameters based on purpose
+  const requestParams = createPurposeParameter(callPurpose, paramsId, paramsYear, pageNumber);
 
-  // Player stats via League ID require multiple pages to get all players
+  // Use function to get: All the players within a league
   if (callPurpose === 'league') {
+    // Hold all players in one array
     const combinedResponse = [];
 
+    // Continue making API call, whilst pages is valid
     while (true) {
       try {
+        // Make API Call - V3: Player Statistics Via League ID
+        const playerStatsResponse = await fetchPlayerStatistics(requestParams, callPurpose);
 
-        if (pageNumber > 3) {
-          break;
-        }
-
-        // Make the API Request
-        const response = await makeRequest(requestParams,
-          getErrorNote(callPurpose)
-        );
- 
-        // Add each player into combined response.
-        for (const player of response) {
+        // Add each player per page, into combined response
+        for (const player of playerStatsResponse) {
           combinedResponse.push(player);
         }
-        // Increment for more pages.
-        pageNumber++; 
 
+        // Increment Page Number
+        pageNumber++;
       } catch (err) {
-        // Failure to make API Call + Break Loop
-        console.error(`Problem making the API Request 'getPlayerStatistics'. Most likely due to invalid pageNumber. Calling with the purpose of ${callPurpose}. player.js`);
+        // Error with API Call - Most likely due to page not existing
+        console.error(`Problem making the API Request 'getPlayerStatistics'. Most likely due to an invalid pageNumber. Calling with the purpose of ${callPurpose}. player.js`);
         console.error(err);
+        // Break loop after each page for a league has been called
         break;
       }
     }
 
+    // Confirm when each player in a league has been recorded.
     console.log(`Returning All Players In ${paramsId} League`);
-    printJSON(combinedResponse, 3000);
-    console.log(combinedResponse.length);
-    // Array full of objects
-    return combinedResponse;
-  } else {
-    // Player Stats via Team ID. Makes 1 request per team
-    try {
-      // Make API Request
-      const response = await makeRequest(requestParams,getErrorNote(callPurpose));
 
-      console.log(`Returning All Players In ${paramsId} Team`);
-      // Return squad of players and their statistics. For every competition they are in
-      return response;
-    } catch (err) {
-      // Error Messaging - Easier to track
-      console.error(`Problem making the API Request 'getPlayerStatistics'. Calling with the purpose of ${callPurpose}. player.js`);
-      console.error(err);
+    // Return an array of objects. Object represent each player in a league
+    return combinedResponse;
+
+  } else { 
+    // Make API Request - V3: Player Statistics via Team ID
+    const playerStatsResponse = await fetchPlayerStatistics(requestParams, callPurpose);
+    // Make API Request - V3: Player Squads
+    // Need this to get the players kit number.
+    const squadLineup = await fetchSquadPlayers(paramsId);
+
+    // Confirm when each player has been recorded.
+    console.log(`Returning all players in ${paramsId} team`);
+
+    return {
+      playerStatistics: playerStatsResponse,
+      lineup: squadLineup
     }
   }
 }

@@ -1,5 +1,5 @@
 // TEAM RESPONSE
-const b = [
+const playerStatistics = [
   {
     "player": {
       "id": 378,
@@ -36,62 +36,49 @@ const b = [
         "games": {
           "appearences": null,
           "lineups": null,
-          "minutes": null,
-          "number": null,
-          "position": "Defender",
-          "rating": null,
-          "captain": false
-        },
-        "substitutes": {
-          "in": null,
-          "out": null,
-          "bench": null
-        },
-        "shots": {
-          "total": null,
-          "on": null
-        },
-        "goals": {
-          "total": null,
-          "conceded": null,
-          "assists": null,
-          "saves": null
-        },
-        "passes": {
-          "total": null,
-          "key": null,
-          "accuracy": null
-        },
-        "tackles": {
-          "total": null,
-          "blocks": null,
-          "interceptions": null
-        },
-        "duels": {
-          "total": null,
-          "won": null
-        },
-        "dribbles": {
-          "attempts": null,
-          "success": null,
-          "past": null
-        },
-        "fouls": {
-          "drawn": null,
-          "committed": null
-        },
-        "cards": {
-          "yellow": null,
-          "yellowred": null,
-          "red": null
-        },
-        "penalty": {
-          "won": null,
-          "commited": null,
-          "scored": null,
-          "missed": null,
-          "saved": null
         }
+      }]
+  }
+]
+  
+const squadLineup = [
+  {
+    "team": {
+      "id": 33,
+      "name": "Manchester United",
+      "logo": "https://media-4.api-sports.io/football/teams/33.png"
+    },
+    "players": [
+      {
+        "id": 50132,
+        "name": "A. Bayındır",
+        "age": 25,
+        "number": 1,
+        "position": "Goalkeeper",
+        "photo": "https://media-4.api-sports.io/football/players/50132.png"
+      },
+      {
+        "id": 2931,
+        "name": "T. Heaton",
+        "age": 37,
+        "number": 22,
+        "position": "Goalkeeper",
+        "photo": "https://media-4.api-sports.io/football/players/2931.png"
+      },
+      {
+        "id": 526,
+        "name": "A. Onana",
+        "age": 27,
+        "number": 24,
+        "position": "Goalkeeper",
+        "photo": "https://media-4.api-sports.io/football/players/526.png"
+      },
+      {
+        "id": 284361,
+        "name": "R. Vítek",
+        "age": 20,
+        "number": 40,
+        "position": "Goalkeeper",
       }
     ]
   }
@@ -213,5 +200,5 @@ const a = [
       "injured": false,
       "photo": "https://media-4.api-sports.io/football/players/178.png"
     }
-  }
+  } .player.
 ]
