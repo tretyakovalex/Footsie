@@ -36,44 +36,34 @@ function linkTeamWithId(dbResponseLeagues, apiResponseLeagues) {
     return linkedResult;
 }
 
-
-
 function organiseResultForDatabase(dbResponse, teamWithLeagueID) {
-    // Create a Map to associate team names with continent ID, country ID, and team ID
-    const teamMap = new Map();
-    
-    // Populate the teamMap using data from the database response
-    dbResponse.forEach((dbTeam) => {
-      teamMap.set(dbTeam.team_name, {
-        continent_id: dbTeam.continent_id,
-        country_id: dbTeam.country_id,
-        team_id: dbTeam.team_id,
-      });
+    // Map teams from API response to include additional data
+    const formattedResult = teamWithLeagueID.map((team) => {
+        const dbTeam = dbResponse.find((dbTeam) => dbTeam.team_name === team.team_name);
+        return {
+            continent_id: dbTeam?.continent_id || null,
+            country_id: dbTeam?.country_id || null,
+            league_id: team.league_id,
+            ranking: team.ranking,
+            team_id: dbTeam?.team_id || null,
+        };
     });
 
-    // Map teams from API response to include additional data
-    const formattedResult = teamWithLeagueID.map((team) => ({
-        continent_id: teamMap.get(team.team_name).continent_id,
-        country_id: teamMap.get(team.team_name).country_id,
-        league_id: team.league_id,
-        ranking: team.ranking,
-        team_id: teamMap.get(team.team_name).team_id
-      }));
-      
-  
+    console.log(`Data has been formatted. Ready for insertion. (fill-league-rankings.js)`);
+
     // The result now includes league_id, team_id, ranking, continent_id, country_id
-    return formattedResult;  
-} 
+    return formattedResult;
+}
 
 // Fill league ranking table with all the league teams, with their rankings
 export async function fillLeagueRankingsDatabase(leaguesConnection, continentsConnection) {
     // Get organised data from the database (MySQL)
     const dbResponse = await getTeamLocationDetails(leaguesConnection, continentsConnection);
+
     // Get formatted result from API Request
     const apiResponse = await getTeamRankings();
 
-
-    // Match each time with their respective league
+    // Match each team with their respective league
     const teamsWithLeagueID = linkTeamWithId(dbResponse.leagueResponse, apiResponse);
 
     // Organised the results, to insert into the database

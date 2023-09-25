@@ -110,6 +110,10 @@ export async function getPlayerStatistics(params) {
 
     // Continue making API call, whilst pages is valid
     while (true) {
+      if (pageNumber > 2) {
+        break;
+      }
+
       try {
         // Make API Call - V3: Player Statistics Via League ID
         const playerStatsResponse = await fetchPlayerStatistics(requestParams, callPurpose);

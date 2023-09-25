@@ -41,11 +41,12 @@ export async function getTeamRankings() {
     return teamNameAndRankings;
 }
 
-
 // Access the database to get [continent_id, country_id, league_id, team_id]
 export async function getTeamLocationDetails(leaguesConnection, continentsConnection) {
     return new Promise((resolve, reject) => {
+        // Query for the teams table
         const teamsQuery = 'SELECT continent_id, country_id, team_id, team_name from teams';
+        // Query for the league table
         const leagueQuery = 'SELECT league_id, league_name from league';
 
         // Try connect to the league database (Teams Table)

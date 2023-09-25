@@ -193,7 +193,6 @@ function standingStructure(league) {
 
 // V3 - Standings by League
 // Find Full League Standings and Points
-// Use this function for all league standings
 export async function getLeagueStandings(params) {
   try {
     // Check if parameters been inputted, else add defaults
