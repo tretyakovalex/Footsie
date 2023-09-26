@@ -109,7 +109,7 @@ export function gatherPlayerInformation(players) {
         role: eachPlayer.statistics[0].games.position || "N/A", 
         team: eachPlayer.statistics[0].team.id || "N/A", 
         kit_number: "", // Use a function to add kit number
-        injured: eachPlayer.player.injured || "N/A", 
+        injured: eachPlayer.player.injured ? "Injured" : "Fit", 
         player_url: eachPlayer.player.photo || "N/A", 
       });
     }
@@ -122,19 +122,21 @@ export function gatherPlayerInformation(players) {
   
 // Call this function after getting all players in a league
 // Gather Team IDs - Go through all teams in league
-export function getTeamID(apiResponse) {
+export function getTeamID(leagueAndPlayers) {
     // Hold each team ID
     const teamIdentifiers = [];
 
     // Loop through each player to get their team ID
-    for (const player of apiResponse) {
-        // Direct access to ID
-        const teamID = player.team;
-        
-        // Check if teamID is not already in teamIdentifiers
-        if (!teamIdentifiers.includes(teamID)) {
-            // If not then push to array
-            teamIdentifiers.push(teamID);
+    for (const league of leagueAndPlayers) {
+        for (const players of league.players) {
+            // Direct access to ID
+            const teamID = players.team;
+            
+            // Check if teamID is not already in teamIdentifiers
+            if (!teamIdentifiers.includes(teamID)) {
+                // If not then push to array
+                teamIdentifiers.push(teamID);
+            }
         }
     }
 

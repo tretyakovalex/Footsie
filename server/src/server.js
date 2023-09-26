@@ -17,8 +17,7 @@ import { fillLeagueRankingsDatabase } from './fill-database/league/fill-league-r
 import { printJSON } from './requests/api-football/global-functions';
 import { getTeamID, gatherPlayerInformation, organisePlayerStatistics, getPlayerKitNumber } from './requests/api-football/organisePlayers';
 
-import { getPlayerStatistics } from './requests/api-football/players';
-import { getTeamLocationDetails } from './requests/organisation/league/league_rankings';
+import { getPlayerDetails } from './requests/organisation/players/players';
 
 // TODO:
 //    Look to globalise the SELECT .... from Database
@@ -29,53 +28,6 @@ const app = express();
 // ChatGPT TODO:
 //    you can create a separate module (e.g., routes.js) to handle all your endpoint definitions.
 // TODO: endpoints will be initialized here
-
-
-async function test() {
-
-  console.log("Getting Player Statistics");
-  const testLeague = await getPlayerStatistics({ id: 39, season: 2023, purpose: "league" });
-
-  console.log("Getting Basic Player Information");
-  const basicPlayer = gatherPlayerInformation(testLeague);
-  console.log("Organise Team ID");
-  const testID = getTeamID(basicPlayer);
-
-  // Iterate through teams to get squad and match statistics
-  for (let i = 0; i < testID.length; i++) {
-    const teamId = testID[i];
-
-    // Fetch detailed player statistics and squad information for the team
-    console.log(`Getting Squad Information for Team ID: ${teamId}`);
-    const detailedAndSimple = await getPlayerStatistics({ id: teamId, season: 2023, purpose: "team" });
-
-    // Add kit numbers to basic player information
-    console.log("Getting Kit Number");
-    getPlayerKitNumber(basicPlayer, detailedAndSimple.lineup);
-
-    /*
-    // Process match statistics for each player
-    console.log("Getting Match Statistics");
-    const playerStatistics = organisePlayerStatistics(detailedAndSimple.playerStatistics.statistics);
-
-    // Add player statistics to basicPlayer based on player name
-    for (const player of basicPlayer) {
-      const matchingStats = playerStatistics.find(stat =>
-        stat[teamId] && 
-        stat[teamId].basic.firstname === player.firstname && 
-        stat[teamId].basic.lastname === player.lastname
-      );
-      if (matchingStats) {
-        player.statistics = matchingStats[teamId];
-      }
-    } */
-  }
-
-  printJSON(basicPlayer, 100000);
-}
-
-// test();
-  
 
 
 app.get('/', (req, res) => {
@@ -159,7 +111,7 @@ async function leaguesQueries(dbConnection) {
   // Connect League and Teams. + Get each team ranking.
   // fillLeagueRankingsDatabase(dbConnection, continentsDatabase)
 
-  // getTeamLocationDetails(dbConnection, continentsDatabase);
+  // await getPlayerDetails();
 }
 // Execute leagues database queries
 executeConnection(leaguesDatabase, 'leagues', leaguesQueries);

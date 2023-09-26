@@ -42,9 +42,9 @@ export async function getLeagueIDs() {
     // Seperate leagues based on type
     for (const league of organisedLeague) {
         if (league.competition == 'League') {
-            leagueCompetition.push(league);
+            leagueCompetition.push(league.id);
         } else {
-            cupCompetition.push(league);
+            cupCompetition.push(league.id);
         }
     }
     // Return based on usage

@@ -137,7 +137,8 @@ export async function getPlayerStatistics(params) {
     // Confirm when each player in a league has been recorded.
     console.log(`Returning All Players In ${paramsId} League`);
 
-    // Return an array of objects. Object represent each player in a league
+    // Return an array of objects. 
+    // Object represent each player in a league
     return combinedResponse;
 
   } else { 
@@ -150,9 +151,10 @@ export async function getPlayerStatistics(params) {
     // Confirm when each player has been recorded.
     console.log(`Returning all players in ${paramsId} team`);
 
+    // Return an array of objects
     return {
-      playerStatistics: playerStatsResponse,
-      lineup: squadLineup
+      playerStatistics: playerStatsResponse,  // Detailed Statistics All Comps
+      lineup: squadLineup    // Basic Information Including Kit Number
     }
   }
 }
