@@ -2,6 +2,8 @@
 Gets all competition information 
 */
 
+import { printJSON } from "./global-functions";
+
 // Organise the statistics of each player
 export function organisePlayerStatistics(statistics) {
     if (!statistics || !Array.isArray(statistics)) {
@@ -73,21 +75,37 @@ export function organisePlayerStatistics(statistics) {
 }
 
 // Get and add the players kit number to the player
-export function getPlayerKitNumber(detailedPlayerInfo, basicPlayerInfo) {
-    // Loop through each player in detailedPlayerInfo
-    for (const detailedPlayer of detailedPlayerInfo) {
-      // Find the matching player in basicPlayerInfo by name
-      const matchingPlayer = basicPlayerInfo.find(
-        (basicPlayer) =>
-          basicPlayer.firstname === detailedPlayer.firstname &&
-          basicPlayer.lastname === detailedPlayer.lastname
-      );
-  
-      // If a matching player is found, set the kit_number
-      if (matchingPlayer) {
-        detailedPlayer.kit_number = basicPlayer.number || "N/A";
-      }
+export function getPlayerKitNumber(teamPlayers, squadLineup) {
+
+    /*
+    const aa = [];
+    const bb = [];
+
+    for (const a of teamPlayers) {
+        aa.push(a.fullname);
     }
+    for (const b of squadLineup) {
+        bb.push(b.name);
+    }
+
+    console.log(aa)
+    console.log(bb)
+    */
+
+    /*
+    // Loop through each player in squadLineup
+    for (const detailedPlayerStats of teamPlayers) {
+        a.push()
+      // Find the matching player in squadLineup by name
+      for (const basicPlayerStats of squadLineup) {
+        console.log(`${basicPlayerStats.name} \n\n`)
+        if (basicPlayerStats.name == detailedPlayerStats.fullname) {
+            console.log(`Matched Names: ${detailedPlayerStats.fullname} and ${basicPlayerStats.name}`)
+            detailedPlayerStats.kit_number = basicPlayerStats.number || "N/A";
+        }
+        
+      }
+    }*/
 }
 
 // Call this function while getting all players in the league
@@ -95,12 +113,25 @@ export function getPlayerKitNumber(detailedPlayerInfo, basicPlayerInfo) {
 export function gatherPlayerInformation(players) {
     // Hold each players basic information
     const playerData = [];
+
+    // Testing for duplicates
+    const original = [];
+    const duplicates = [];
   
     // Go through each player
     for (const eachPlayer of players) {
+
+        const name = eachPlayer.player.name;
+
+        if (original.includes(name)) {
+            duplicates.push(name);
+        } else {
+            original.push(name);
+        }
   
       // Push the required information into playerData
       playerData.push({
+        fullname: eachPlayer.player.name || "N/A",
         firstname: eachPlayer.player.firstname || "N/A", 
         lastname: eachPlayer.player.lastname || "N/A", 
         country_id: eachPlayer.player.nationality || "N/A", 
@@ -113,7 +144,7 @@ export function gatherPlayerInformation(players) {
         player_url: eachPlayer.player.photo || "N/A", 
       });
     }
-  
+      
     // Return an array full of objects
     // Each player basic information
     return playerData;

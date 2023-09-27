@@ -111,7 +111,7 @@ async function leaguesQueries(dbConnection) {
   // Connect League and Teams. + Get each team ranking.
   // fillLeagueRankingsDatabase(dbConnection, continentsDatabase)
 
-  // await getPlayerDetails();
+  await getPlayerDetails();
 }
 // Execute leagues database queries
 executeConnection(leaguesDatabase, 'leagues', leaguesQueries);

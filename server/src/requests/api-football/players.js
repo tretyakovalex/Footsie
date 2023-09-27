@@ -22,7 +22,7 @@ async function makeRequest(url, params, errorNote) {
 }
 
 // Create parameter based on callPurpose. (League requires page)
-function createPurposeParameter(callPurpose, id, year, pageNumber) {
+function createPurposeParameter(callPurpose, id, year, paramsPageNumber) {
   // Create standard parameters for API Call
   const params = {
     [callPurpose]: id,
@@ -31,7 +31,7 @@ function createPurposeParameter(callPurpose, id, year, pageNumber) {
 
   // League requires page number for the calls
   if (callPurpose === 'league') {
-    params.page = pageNumber;
+    params.page = paramsPageNumber;
   }
 
   // Return parameters for the API Call
@@ -99,9 +99,13 @@ export async function getPlayerStatistics(params) {
   }
 
   // Iterate through each page 
-  let pageNumber = 1;
+  const paramsPageNumber = params.page !== undefined ? StringCheck(params.page) : 1;
+
+
   // Create parameters based on purpose
-  const requestParams = createPurposeParameter(callPurpose, paramsId, paramsYear, pageNumber);
+  const requestParams = createPurposeParameter(callPurpose, paramsId, paramsYear, paramsPageNumber);
+
+  console.log(params);
 
   // Use function to get: All the players within a league
   if (callPurpose === 'league') {
@@ -109,38 +113,28 @@ export async function getPlayerStatistics(params) {
     const combinedResponse = [];
 
     // Continue making API call, whilst pages is valid
-    while (true) {
-      if (pageNumber > 2) {
-        break;
+    try {
+      // Make API Call - V3: Player Statistics Via League ID
+      const playerStatsResponse = await fetchPlayerStatistics(requestParams, callPurpose);
+
+      if (playerStatsResponse.length == 0) {
+        console.log(`No players on page: ${paramsPageNumber}`)
       }
 
-      try {
-        // Make API Call - V3: Player Statistics Via League ID
-        const playerStatsResponse = await fetchPlayerStatistics(requestParams, callPurpose);
-
-        // Add each player per page, into combined response
-        for (const player of playerStatsResponse) {
-          combinedResponse.push(player);
-        }
-
-        // Increment Page Number
-        pageNumber++;
-      } catch (err) {
-        // Error with API Call - Most likely due to page not existing
-        console.error(`Problem making the API Request 'getPlayerStatistics'. Most likely due to an invalid pageNumber. Calling with the purpose of ${callPurpose}. player.js`);
-        console.error(err);
-        // Break loop after each page for a league has been called
-        break;
+      // Add each player per page, into combined response
+      for (const player of playerStatsResponse) {
+        combinedResponse.push(player);
       }
+
+    } catch (err) {
+      // Error with API Call - Most likely due to page not existing
+      console.error(`Problem making the API Request 'getPlayerStatistics'. Most likely due to an invalid pageNumber. Calling with the purpose of ${callPurpose}. player.js`);
+      console.error(err);
     }
-
-    // Confirm when each player in a league has been recorded.
-    console.log(`Returning All Players In ${paramsId} League`);
 
     // Return an array of objects. 
     // Object represent each player in a league
     return combinedResponse;
-
   } else { 
     // Make API Request - V3: Player Statistics via Team ID
     const playerStatsResponse = await fetchPlayerStatistics(requestParams, callPurpose);

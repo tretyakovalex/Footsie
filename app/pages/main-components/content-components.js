@@ -4,7 +4,7 @@ import { Text, ActivityIndicator, View } from 'react-native';
 import { loadingStyle, contentStyle } from '../styles/main-components/main-style';
 
 // Import Data
-import { pageByName, tabByName } from './main-storage';
+import { pageByName, tabByName } from './content-storage';
 
 // Import Components
 import { SearchPage } from '../components/search/search-homepage'; // Activate the search page (Different to other pages)
@@ -26,6 +26,7 @@ export function LoadingScreen() {
 //    Clean up this code
 //    Error loading search page
 export function DisplayContent({ page, tab, matches, userInput, setSearchInput, setSearchStatus }) {
+
     const contentMap = {
       // News section
       news: {

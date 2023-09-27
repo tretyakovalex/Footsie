@@ -5,7 +5,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { MainStructure } from '../../styles/global-styles/app-structure';
 
 // Import Data
-import { refreshTitles } from './main-storage';
+import { refreshTitles } from './content-storage';
 
 // Import Components
 import API_Matches from '../components/matches/matchAPI';         // API Request: All match information

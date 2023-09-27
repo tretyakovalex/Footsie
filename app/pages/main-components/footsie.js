@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import Header from './header';
 import Content from './content';
 import Footer from './footer';
-import { tabNames } from './main-storage';
+import { tabNames } from './content-storage';
 
 
 // Display tabs based on current page

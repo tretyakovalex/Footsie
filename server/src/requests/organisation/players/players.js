@@ -18,28 +18,36 @@ const currentYear = date.getFullYear();
 
 
 // Match every player and team
-function matchPlayers(everyPlayerInLeague, teamIdentifiers) {
+function matchPlayers(everyPlayerInLeague, teamId) {
     // Hold every player of the respective team
     const teamHolder = [];
 
-    for (const league of everyPlayerInLeague) {
-        for (const player of league.players) {
-            if (player.team == teamIdentifiers) {
-                teamHolder.push(player);
-            }
+    for (const player of everyPlayerInLeague.players) {
+        if (player.team == teamId) {
+            console.log(`Player: ${player.fullname} plays for ${player.team}`)
+            teamHolder.push(player);
         }
     }
 
     // Return an array of objects
+    console.log(`Returning players for ${teamId}`)
     return teamHolder;
 }
 
 // Make multiple API calls with different IDs for each call
-async function multiApiCalls(teamIdentifiers, everyPlayerInLeague) {
-    // Loop through each League Id
-    for (const id of teamIdentifiers) {
+async function multiApiCalls(allTeamsInLeague, everyPlayerInLeague) {
+
+    // Go through every team in a league
+    for (const teamId of allTeamsInLeague) {
         // Get every player for a specific team.
-        const teamPlayers = matchPlayers(everyPlayerInLeague, id);
+
+        // GO THROUGH EVERY PLAYER IN EACH ARRAY
+
+        const teamPlayers = matchPlayers(everyPlayerInLeague[0], teamId);
+
+        console.log(teamPlayers)
+        /*
+        
         // Get every player in a league - detailed
         const apiResponse = await getPlayerStatistics({
             id: id,
@@ -50,14 +58,12 @@ async function multiApiCalls(teamIdentifiers, everyPlayerInLeague) {
         const detailedPlayerStatistics = apiResponse.playerStatistics;
         const squadLineup = apiResponse.lineup;
 
+
         // Assign players with kit numbers
-        getPlayerKitNumber(teamPlayers, squadLineup)
-
-        for (const a of teamPlayers) {
-            console.log(a.kit_number);
-        }
-
+        // getPlayerKitNumber(teamPlayers, squadLineup[0].players);
+     */   
     }
+    
 }
 
 // Get every single player within a league
@@ -67,24 +73,40 @@ async function playerInEveryLeague(leagueIdentifiers) {
 
     // Go through every league and get all players
     for (const currentLeague of leagueIdentifiers) {
-        // Get every player in a league
-        const allLeaguePlayers = await getPlayerStatistics({
-            id: currentLeague,
-            season: currentYear,
-            purpose: "league"
-        })
+        let pageNumber = 1;
+        const tempPlayerHolder = [];
 
-        // Collect the basic information of each player
-        const basicPlayerDetails = gatherPlayerInformation(allLeaguePlayers);
+        while (true) {
+            if (pageNumber > 5) {
+                break;
+            }
+            // Get every player in a league
+            const allLeaguePlayers = await getPlayerStatistics({
+                id: currentLeague,
+                season: currentYear,
+                purpose: "league",
+                page: pageNumber,
+            });
+            pageNumber++;
 
-        // Organise it into league and their players
-        const organisePlayersInLeague = {
-            league: currentLeague,
-            players: basicPlayerDetails
+            // Check if there are players to add
+            if (allLeaguePlayers.length === 0) {
+                console.log(`Last Page For API Call : ${pageNumber}`);
+                break; // Exit the loop if no more players
+            }
+
+            // Collect the basic information of each player
+            const basicPlayerDetails = gatherPlayerInformation(allLeaguePlayers);
+            tempPlayerHolder.push(basicPlayerDetails);
         }
 
-        // Add all players in a league to everyPlayer holder
-        everyLeagueAndPlayers.push(organisePlayersInLeague);
+        // Add players for the current league to the result
+        everyLeagueAndPlayers.push({
+            league: currentLeague,
+            players: tempPlayerHolder,
+        });
+
+        console.log(`Returning players for league: ${currentLeague}`)
     }
 
     // Return an array of objects
@@ -102,15 +124,19 @@ export async function getPlayerDetails() {
     };
     */
 
-    const allLeagueId = [144, 39]; 
+    const allLeagueId = [39]; 
+    const allTeamsInLeague = [33];
 
     // Gather every player in a league
     const leagueAndPlayers = await playerInEveryLeague(allLeagueId);
     // Get Team Ids through player information
-    const allTeamInLeague = getTeamID(leagueAndPlayers);
+    // const allTeamsInLeague = getTeamID(leagueAndPlayers);
 
-    // Get detailed information on players and kit numbers
-    multiApiCalls(allTeamInLeague, leagueAndPlayers);
+    printJSON(leagueAndPlayers, 1000000);
+
+    // Go through each team individually to get more information
+    // On players
+    // multiApiCalls(allTeamsInLeague, leagueAndPlayers);
 
 
 }
