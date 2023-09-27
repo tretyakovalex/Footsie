@@ -7,7 +7,7 @@ import { loadingStyle, contentStyle } from '../styles/main-components/main-style
 import { pageByName, tabByName } from './content-storage';
 
 // Import Components
-import { SearchPage } from '../components/search/search-homepage'; // Activate the search page (Different to other pages)
+import SearchPage from '../components/search/search-homepage';  // Activate the search page (Different to other pages)
 import { MatchTemplate, LeagueTemplate } from '../components/matches/matches';
 
 
@@ -25,7 +25,7 @@ export function LoadingScreen() {
 // TODO:
 //    Clean up this code
 //    Error loading search page
-export function DisplayContent({ page, tab, matches, userInput, setSearchInput, setSearchStatus }) {
+export function DisplayContent({ page, tab, matches, userInput, setUserInput, setSearchStatus }) {
 
     const contentMap = {
       // News section
@@ -126,13 +126,11 @@ export function DisplayContent({ page, tab, matches, userInput, setSearchInput, 
       // Statistic Section
       search: {
         default: (
-          <>
-            <SearchPage
-              searchInput={userInput}
-              setSearch={setSearchInput}
-              setSearchStatus={setSearchStatus}
-            />
-          </>
+          <SearchPage
+            userInput={userInput}
+            setUserInput={setUserInput}
+            setSearchStatus={setSearchStatus}
+          />
         ),
       },
     };

@@ -11,11 +11,11 @@ import {
 
 // Initial Search Bar
 // TODO: Create loading page
-function SearchBar({ searchInput, setSearchInput, setSearchStatus}) {
+function SearchBar({ userInput, setUserInput, setSearchStatus}) {
 
   // - - - TEMPORARY FUNCTION - - -
   const hardSearch = () => {
-    setSearchInput(searchInput);
+    setUserInput(userInput);
     setSearchStatus(true);
   };
 
@@ -29,10 +29,10 @@ function SearchBar({ searchInput, setSearchInput, setSearchStatus}) {
           <TextInput
             style={{ width: '100%', textAlign: 'center', color: 'grey' }}
             onChangeText={(text) => {
-              setSearchInput(text);
+              setUserInput(text);
             }}
             onSubmitEditing={() => hardSearch()}
-            value={searchInput}
+            value={userInput}
             placeholder={'Search your favourite Players, Teams and Leagues...'}
             placeholderTextColor={'#91AB88'}
           />
@@ -43,7 +43,7 @@ function SearchBar({ searchInput, setSearchInput, setSearchStatus}) {
 }
 
 // Search Option Template
-function IndividualOptions({ option, setSearchInput, setSearchStatus}) {
+function IndividualOptions({ option, setUserInput, setSearchStatus}) {
   const pressAnimation = useRef(new Animated.Value(0)).current;
 
   const handlePress = (name) => {
@@ -56,7 +56,7 @@ function IndividualOptions({ option, setSearchInput, setSearchStatus}) {
       pressAnimation.setValue(0);
     });
 
-    setSearchInput(name);
+    setUserInput(name);
     setSearchStatus(true);
   };
 
@@ -110,7 +110,7 @@ function UnpressableDescriptor() {
 }
 
 // Search Options
-function SearchOptions({ userOptions, setSearchInput, setSearchStatus }) {
+function SearchOptions({ userOptions, setUserInput, setSearchStatus }) {
   return (
     <View style={SearchOptionStyle.container}>
       <UnpressableDescriptor />
@@ -118,7 +118,7 @@ function SearchOptions({ userOptions, setSearchInput, setSearchStatus }) {
         <IndividualOptions
           key={index}
           option={option}
-          setSearchInput={setSearchInput}
+          setUserInput={setUserInput}
           setSearchStatus={setSearchStatus}
         />
       ))}
@@ -131,7 +131,7 @@ function SearchOptions({ userOptions, setSearchInput, setSearchStatus }) {
 //        Base on popularity: User Popularity / General Popularity
 // - Rename parameters
 
-export default function SearchPage({ searchInput, setSearch, setSearchStatus }) {
+export default function SearchPage({ userInput, setUserInput, setSearchStatus }) {
 
   // TODO:
   //     Have the options shown be based on most popular searches
@@ -146,15 +146,16 @@ export default function SearchPage({ searchInput, setSearch, setSearchStatus }) 
   ];
   return (
     <View style={SearchPageStyle.container}>
+    
       <SearchBar
-        searchInput={searchInput}
-        setSearchInput={setSearch}
+        userInput={userInput}
+        setUserInput={setUserInput}
         setSearchStatus={setSearchStatus}
       />
 
       <SearchOptions
         userOptions={TEMPORARY_OPTIONS}
-        setSearchInput={setSearch}
+        setUserInput={setUserInput}
         setSearchStatus={setSearchStatus}
       />
     </View>

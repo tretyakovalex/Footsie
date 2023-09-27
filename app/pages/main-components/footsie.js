@@ -29,7 +29,7 @@ export default function Footsie() {
   const [currentPage, setCurrentPage] = useState(1);    // Nav
   const [currentTab, setCurrentTab] = useState(1);      // Tab
   // Value that go into the search bar
-  const [searchInput, setSearchInput] = useState('');
+  const [userInput, setUserInput] = useState('');
   // Activate / Deactivate Search Bar
   // False = No active search (Nothing in the search bar)
   const [searchStatus, setSearchStatus] = useState(false);
@@ -44,7 +44,7 @@ export default function Footsie() {
   // Re-render the application when page is changed.
   useEffect(() => {
     if (currentPage != 4) {
-      setSearchInput('');
+      setUserInput('');
       setSearchStatus(false);
     }
   }, [currentPage]);
@@ -63,8 +63,8 @@ export default function Footsie() {
       <Content
         liveNav={currentPage}
         liveTab={currentTab}
-        searchInput={searchInput}
-        setSearchInput={setSearchInput}
+        userInput={userInput}
+        setUserInput={setUserInput}
         searchStatus={searchStatus}
         setSearchStatus={setSearchStatus}
       />

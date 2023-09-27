@@ -12,7 +12,7 @@ import API_Matches from '../components/matches/matchAPI';         // API Request
 import PageHolder from '../components/search/temporary-page';     // Temporary Page
 import { LoadingScreen, DisplayContent } from './content-components';
 
-export default function Content({ liveTab, liveNav, searchInput, setSearchInput, setSearchStatus, searchStatus }) {
+export default function Content({ liveTab, liveNav, userInput, setUserInput, setSearchStatus, searchStatus }) {
   const [refreshing, setRefreshing] = useState(false);
   const [displayMatches, setDisplayMatches] = useState([]);
   const [isLoading, setLoading] = useState(true);
@@ -40,7 +40,7 @@ export default function Content({ liveTab, liveNav, searchInput, setSearchInput,
   //    When user searches something
   //    Catgeroies it then make sure that GetSearchPage gets the same information
   useEffect(() => {
-    setSearchInput('');
+    setUserInput('');
   }, [searchStatus]);
 
   // Make API request for information on matches
@@ -70,7 +70,7 @@ export default function Content({ liveTab, liveNav, searchInput, setSearchInput,
       {isLoading ? (<LoadingScreen />) : (
         <>
           {searchStatus ? (
-            <PageHolder setSearchStatus={setSearchStatus} searchOption={searchInput} />
+            <PageHolder setSearchStatus={setSearchStatus} searchOption={userInput} />
           ) : (
               <ScrollView
                 style={{ flex: 1 }}
@@ -90,8 +90,8 @@ export default function Content({ liveTab, liveNav, searchInput, setSearchInput,
                   tab={liveTab}
                   page={liveNav}
                   matches={displayMatches}
-                  userInput={searchInput}
-                  setSearchInput={setSearchInput}
+                  userInput={userInput}
+                  setUserInput={setUserInput}
                   setSearchStatus={setSearchStatus}
                 />
               </ScrollView>
