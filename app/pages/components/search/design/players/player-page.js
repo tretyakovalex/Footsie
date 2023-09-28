@@ -1,16 +1,13 @@
-// Public Imports
-import { View } from 'react-native';
+import { Text, Image, ScrollView, Pressable, View } from 'react-native';
+import HeaderSection from '../sections/top-section';
+import MainSection  from '../sections/main-section';
 
-// Private Imports
-import PlayerTeamStatistics from './components/player-statistics';
-import PlayerHeader from './components/player-statistics';
 
-export default function PlayerPage({ PlayerPlaceholder }) {
-  return (
-    <View style={{ flex: 1 }}>
-      <PlayerHeader Placeholder={PlayerPlaceholder} />
-
-      <PlayerTeamStatistics PlayerHistoryPlaceholder={PlayerPlaceholder} />
-    </View>
-  );
+export default function PlayerPage() {
+    return (
+        <ScrollView style={{flex: 1}}>
+            <HeaderSection />
+            <MainSection />
+        </ScrollView>
+    )
 }

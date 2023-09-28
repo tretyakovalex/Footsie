@@ -9,7 +9,7 @@ import { refreshTitles } from './content-storage';
 
 // Import Components
 import API_Matches from '../components/matches/matchAPI';         // API Request: All match information
-import PageHolder from '../components/search/temporary-page';     // Temporary Page
+import PageHolder from '../components/search/search-pageholder';     // Temporary Page
 import { LoadingScreen, DisplayContent } from './content-components';
 
 export default function Content({ liveTab, liveNav, userInput, setUserInput, setSearchStatus, searchStatus }) {
